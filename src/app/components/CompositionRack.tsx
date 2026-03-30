@@ -131,14 +131,14 @@ export function CompositionRack({ onCompositionClick, onViewAllClick }: Composit
           viewport={{ once: true }}
           className="mb-10 text-center"
         >
-          <div className="relative border-4 border-black inline-block px-8 py-4 bg-white">
+          <div className="relative border-2 sm:border-4 border-black inline-block px-4 py-3 sm:px-8 sm:py-4 bg-white">
             {/* Elaborate decorations */}
-            <LampPost className="absolute -top-16 right-4 w-8 h-16 text-neutral-500 pointer-events-none" />
-            <BirdFlying className="absolute -top-10 right-16 w-6 h-3 text-neutral-400 pointer-events-none" />
-            <BirdFlying className="absolute -top-12 right-24 w-4 h-2 text-neutral-300 pointer-events-none -scale-x-100" />
+            <LampPost className="absolute -top-16 right-4 w-8 h-16 text-neutral-500 pointer-events-none hidden sm:block" />
+            <BirdFlying className="absolute -top-10 right-16 w-6 h-3 text-neutral-400 pointer-events-none hidden sm:block" />
+            <BirdFlying className="absolute -top-12 right-24 w-4 h-2 text-neutral-300 pointer-events-none -scale-x-100 hidden md:block" />
             <GrandPiano className="absolute -top-10 left-4 w-14 h-10 text-neutral-300 pointer-events-none hidden md:block" />
             <MusicalNotes className="absolute -top-6 left-20 w-8 h-5 text-neutral-200 pointer-events-none hidden md:block" />
-            <h2 className="text-4xl md:text-6xl font-display font-black tracking-tight">
+            <h2 className="text-2xl sm:text-4xl md:text-6xl font-display font-black tracking-tight">
               Featured Compositions
             </h2>
             <div className="h-1 w-full bg-black mt-2"></div>
@@ -183,7 +183,7 @@ export function CompositionRack({ onCompositionClick, onViewAllClick }: Composit
                   onHoverStart={() => setHoveredId(composition.id)}
                   onHoverEnd={() => setHoveredId(null)}
                   onClick={() => onCompositionClick(composition)}
-                  className="group relative w-80 cursor-pointer border-4 border-black bg-white shadow-[6px_6px_0_0_rgb(24_24_24)] transition-[transform,box-shadow] hover:shadow-[9px_9px_0_0_rgb(24_24_24)]"
+                  className="group relative w-64 sm:w-72 md:w-80 cursor-pointer border-2 sm:border-4 border-black bg-white shadow-[4px_4px_0_0_rgb(24_24_24)] sm:shadow-[6px_6px_0_0_rgb(24_24_24)] transition-[transform,box-shadow] hover:shadow-[9px_9px_0_0_rgb(24_24_24)]"
                 >
                   {/* Whimsical decoration perched on card */}
                   <CardDecoration index={index} />

@@ -117,7 +117,7 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
       {isOpen && (
         <motion.div
           key="lili-library-overlay"
-          className="fixed inset-0 z-[1000] flex items-start justify-center overflow-y-auto overflow-x-hidden p-4 pt-10 sm:p-6 sm:pt-12"
+          className="fixed inset-0 z-[1000] flex items-start justify-center overflow-y-auto overflow-x-hidden px-2 py-4 sm:p-6 sm:pt-12"
           initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -133,14 +133,14 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
           <motion.div
             role="dialog"
             aria-modal="true"
-            className="relative z-10 mb-8 mt-4 w-full max-w-4xl"
+            className="relative z-10 mb-4 mt-2 sm:mb-8 sm:mt-4 w-full max-w-4xl"
             initial={{ scale: 0.985, y: 12, opacity: 1 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.985, y: 8, opacity: 0 }}
             transition={{ type: "spring", damping: 30, stiffness: 380 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative isolate border-8 border-black bg-white shadow-[10px_10px_0_0_rgb(24_24_24)]">
+            <div className="relative isolate border-4 sm:border-8 border-black bg-white shadow-[4px_4px_0_0_rgb(24_24_24)] sm:shadow-[10px_10px_0_0_rgb(24_24_24)]">
 
             {/* Close button */}
             <button
@@ -149,22 +149,22 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
                 e.stopPropagation();
                 onClose();
               }}
-              className="absolute right-2 top-2 z-[60] flex h-11 w-11 items-center justify-center border-[3px] border-white bg-black text-white transition-colors hover:bg-neutral-800"
+              className="absolute right-2 top-2 z-[60] flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center border-[3px] border-white bg-black text-white transition-colors hover:bg-neutral-800"
               aria-label="Close"
             >
-              <X className="h-6 w-6" />
+              <X className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
 
-            <div className="relative z-10 px-8 pb-8 pt-14 md:px-12 md:pb-12 md:pt-16">
+            <div className="relative z-10 px-4 pb-6 pt-10 sm:px-8 sm:pb-8 sm:pt-14 md:px-12 md:pb-12 md:pt-16">
               {/* Header */}
-              <div className={`border-8 border-double border-black p-6 mb-8 ${paperTint}`}>
-                <div className="flex items-center gap-4">
-                  <Music2 className="w-10 h-10" />
-                  <div>
-                    <h2 className="text-4xl md:text-5xl font-serif font-black uppercase">
+              <div className={`border-4 sm:border-8 border-double border-black p-3 sm:p-6 mb-4 sm:mb-8 ${paperTint}`}>
+                <div className="flex items-center gap-2 sm:gap-4">
+                  <Music2 className="w-7 h-7 sm:w-10 sm:h-10 shrink-0" />
+                  <div className="min-w-0">
+                    <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-black uppercase">
                       Lili Boulanger
                     </h2>
-                    <p className="text-lg font-serif italic mt-1">Works Catalogue &amp; Restored Editions</p>
+                    <p className="text-sm sm:text-lg font-serif italic mt-1">Works Catalogue &amp; Restored Editions</p>
                   </div>
                 </div>
                 <p className="mt-4 text-sm font-serif border-t-2 border-black pt-4">
@@ -257,10 +257,10 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
             </div>
 
             {/* Decorative corners */}
-            <div className="absolute top-0 left-0 w-16 h-16 border-l-8 border-t-8 border-black pointer-events-none"></div>
-            <div className="absolute top-0 right-0 w-16 h-16 border-r-8 border-t-8 border-black pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 w-16 h-16 border-l-8 border-b-8 border-black pointer-events-none"></div>
-            <div className="absolute bottom-0 right-0 w-16 h-16 border-r-8 border-b-8 border-black pointer-events-none"></div>
+            <div className="absolute top-0 left-0 w-8 h-8 sm:w-16 sm:h-16 border-l-4 border-t-4 sm:border-l-8 sm:border-t-8 border-black pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-8 h-8 sm:w-16 sm:h-16 border-r-4 border-t-4 sm:border-r-8 sm:border-t-8 border-black pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-8 h-8 sm:w-16 sm:h-16 border-l-4 border-b-4 sm:border-l-8 sm:border-b-8 border-black pointer-events-none"></div>
+            <div className="absolute bottom-0 right-0 w-8 h-8 sm:w-16 sm:h-16 border-r-4 border-b-4 sm:border-r-8 sm:border-b-8 border-black pointer-events-none"></div>
             </div>
           </motion.div>
         </motion.div>

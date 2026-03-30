@@ -34,12 +34,12 @@ export function ProgressiveTextReveal() {
   return (
     <div className="relative bg-transparent">
       <div className="flex h-screen items-center justify-center">
-        <div className="relative z-10 mx-4 cursor-default border-4 border-black bg-white px-12 py-16 shadow-2xl">
+        <div className="relative z-10 mx-2 sm:mx-4 cursor-default border-4 border-black bg-white px-4 py-8 sm:px-8 sm:py-12 md:px-12 md:py-16 shadow-2xl">
           <div className="absolute left-2 right-2 top-2 h-1 border-t-2 border-b-2 border-black" />
           <div className="absolute bottom-2 left-2 right-2 h-1 border-t-2 border-b-2 border-black" />
 
           <div
-            className="whitespace-nowrap text-5xl font-medium tracking-wide md:text-7xl"
+            className="whitespace-nowrap text-2xl font-medium tracking-wide sm:text-4xl md:text-6xl lg:text-7xl"
             style={{
               fontFamily: "'23 seconds to midnight', ui-serif, Georgia, serif",
             }}
