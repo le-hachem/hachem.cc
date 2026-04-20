@@ -1,8 +1,9 @@
 import { motion, AnimatePresence } from "motion/react";
 import { createPortal } from "react-dom";
-import { X, Music, Calendar, Clock, User, Lightbulb } from "lucide-react";
+import { X, Music, Calendar, Clock, User, Lightbulb, Award } from "lucide-react";
 import { useEffect } from "react";
 import type { Composition } from "./CompositionRack";
+import { AudioPlayer } from "./AudioPlayer";
 
 interface CompositionModalProps {
   composition: Composition | null;
@@ -31,7 +32,10 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
         transition={{ duration: 0.15, ease: "easeOut" }}
       >
         <div
-          className="absolute inset-0 bg-neutral-900/45"
+          // `fixed` (not `absolute`): keep the dim backdrop pinned to the
+          // viewport so it stays behind the whole modal when the user
+          // scrolls through long content inside.
+          className="fixed inset-0 bg-neutral-900/45"
           aria-hidden
           role="presentation"
           onClick={onClose}
@@ -69,15 +73,28 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
               <div className="absolute -bottom-1.5 -left-1.5 w-7 h-7 sm:w-12 sm:h-12 bg-white border-2 sm:border-4 border-black"></div>
               <div className="absolute -bottom-1.5 -right-1.5 w-7 h-7 sm:w-12 sm:h-12 bg-white border-2 sm:border-4 border-black"></div>
 
-              <div className="flex items-center gap-2 sm:gap-4 mb-4">
-                <Music className="w-8 h-8 sm:w-12 sm:h-12 shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <h2 className="text-2xl sm:text-4xl md:text-6xl font-serif font-black leading-tight uppercase break-words">
-                    {composition.title}
-                  </h2>
-                  <p className="text-base sm:text-xl md:text-2xl font-serif italic opacity-80 mt-1 sm:mt-2">
-                    {composition.subtitle}
-                  </p>
+              <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6 mb-4">
+                {composition.coverUrl && (
+                  <div className="relative mx-auto sm:mx-0 w-40 sm:w-48 md:w-56 flex-shrink-0 aspect-square border-2 sm:border-4 border-black shadow-[4px_4px_0_0_rgb(24_24_24)] overflow-hidden bg-white">
+                    <img
+                      src={composition.coverUrl}
+                      alt={`${composition.title} cover art`}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0 flex items-center gap-2 sm:gap-4">
+                  {!composition.coverUrl && (
+                    <Music className="w-8 h-8 sm:w-12 sm:h-12 shrink-0" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-black leading-tight uppercase break-words">
+                      {composition.title}
+                    </h2>
+                    <p className="text-base sm:text-xl md:text-2xl font-serif italic opacity-80 mt-1 sm:mt-2">
+                      {composition.subtitle}
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -93,6 +110,42 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
                 </div>
               </div>
             </div>
+
+            {/* Audio player (only if there's an audio file) */}
+            {composition.audioUrl && (
+              <div className="mb-4 sm:mb-8">
+                <AudioPlayer
+                  audioUrl={composition.audioUrl}
+                  peaksUrl={composition.peaksUrl}
+                  fallbackDuration={composition.durationSeconds}
+                  title={composition.title}
+                  subtitle={composition.subtitle}
+                />
+              </div>
+            )}
+
+            {/* Accolades */}
+            {composition.accolades && composition.accolades.length > 0 && (
+              <div className="mb-4 sm:mb-8">
+                <div className={`border-l-4 sm:border-l-8 border-black pl-3 sm:pl-6 py-2 ${paperTint}`}>
+                  <h3 className="text-lg sm:text-2xl font-serif font-bold mb-2 sm:mb-4 uppercase tracking-wide flex items-center gap-2">
+                    <Award className="w-5 h-5 sm:w-6 sm:h-6" />
+                    Accolades
+                  </h3>
+                </div>
+                <ul className="mt-3 sm:mt-4 space-y-2 sm:space-y-3">
+                  {composition.accolades.map((line, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-3 border-2 border-black bg-white px-3 py-2 sm:px-4 sm:py-3 shadow-[3px_3px_0_0_rgb(24_24_24)]"
+                    >
+                      <Award className="w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm sm:text-lg font-serif">{line}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {/* Description */}
             <div className="mb-4 sm:mb-8">

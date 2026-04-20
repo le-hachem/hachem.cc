@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Music, Clock, Calendar } from "lucide-react";
+import { Music, Clock, Calendar, Headphones, Award } from "lucide-react";
 import { useState } from "react";
 import { CardDecoration, LampPost, BirdFlying, GrandPiano, TrebleClefVine, MusicalNotes } from "./Deco";
 
@@ -12,6 +12,16 @@ export interface Composition {
   description: string;
   instrumentation: string[];
   inspired: string;
+  /** Relative URL of a streamable audio file (served from /public). */
+  audioUrl?: string;
+  /** Relative URL of the cover image (served from /public). */
+  coverUrl?: string;
+  /** Relative URL of a pre-computed peaks.json for waveform rendering. */
+  peaksUrl?: string;
+  /** Exact duration in seconds, used as a fallback while audio loads. */
+  durationSeconds?: number;
+  /** Prizes, awards, and other accolades (displayed as a ribbon). */
+  accolades?: string[];
 }
 
 interface CompositionRackProps {
@@ -21,89 +31,55 @@ interface CompositionRackProps {
 
 const compositions: Composition[] = [
   {
-    id: "1",
-    title: "Nocturne in D Minor",
-    subtitle: "Pour Piano et Violoncelle",
-    year: "2024",
-    duration: "8'30\"",
-    description: "A contemplative piece exploring the dialogue between piano and cello, inspired by moonlit conversations and the quiet intensity of nocturnal introspection. The harmonic language draws from late Romantic traditions while incorporating contemporary modal exploration.",
-    instrumentation: ["Piano", "Violoncello"],
-    inspired: "Lili Boulanger's 'D'un matin de printemps'"
+    id: "mephistopheles",
+    title: "Mephistopheles",
+    subtitle: "A Cantata on the Story of Faust",
+    year: "January 2025",
+    duration: "24'07\"",
+    durationSeconds: 1447.97,
+    description:
+      "A dramatic cantata drawn from Goethe's Faust, tracing the fateful pact between the restless scholar and the shadow that names itself Mephistopheles. The work moves through temptation, rapture and reckoning, setting the tempter's sly lyricism against Faust's searching, late-Romantic harmonic palette. Composed in January 2025, the piece alternates aria and chorus in the tradition of the German oratorio, while reaching for a more cinematic orchestral colour where the narrative turns infernal.",
+    instrumentation: [
+      "Piccolo",
+      "2 Flutes",
+      "2 Oboes",
+      "Cor Anglais",
+      "2 Clarinets",
+      "Bass Clarinet",
+      "2 Bassoons",
+      "Sarrusophone",
+      "4 Horns",
+      "3 Trumpets",
+      "3 Trombones",
+      "Tuba",
+      "Timpani",
+      "Celesta",
+      "2 Harps",
+      "Organ",
+      "Soprano",
+      "Alto",
+      "Tenor",
+      "Bass",
+      "Violins I",
+      "Violins II",
+      "Violas",
+      "Cellos",
+      "Double Basses",
+    ],
+    inspired:
+      "Goethe's Faust, Part One — and the long tradition of Faustian cantatas from Schumann to Berlioz.",
+    accolades: [
+      "ICS Composition Competition — 4th place overall",
+      "ICS Composition Competition — 1st place in Harmony & Orchestration",
+    ],
+    audioUrl: "/music/Mephistopheles/audio.mp3",
+    coverUrl: "/music/Mephistopheles/cover.png",
+    peaksUrl: "/music/Mephistopheles/peaks.json",
   },
-  {
-    id: "2",
-    title: "Psalms of Yesterday",
-    subtitle: "For Mixed Choir",
-    year: "2025",
-    duration: "12'15\"",
-    description: "A choral work that weaves together ancient psalm texts with modern harmonic progressions. The piece creates a timeless atmosphere through careful voice leading and the exploration of sustained sonorities.",
-    instrumentation: ["SATB Choir", "Soprano Solo"],
-    inspired: "Lili Boulanger's 'Psaume 24'"
-  },
-  {
-    id: "3",
-    title: "Étude Printanière",
-    subtitle: "Pour Orchestre",
-    year: "2025",
-    duration: "6'45\"",
-    description: "An orchestral study that captures the awakening of spring through delicate textures and gradually building intensity. The work explores timbral colors and the interplay between solo instruments and full ensemble.",
-    instrumentation: ["Full Orchestra", "Solo Flute", "Solo Violin"],
-    inspired: "Lili Boulanger's approach to orchestration"
-  },
-  {
-    id: "4",
-    title: "Trois Poèmes Sombres",
-    subtitle: "Song Cycle",
-    year: "2024",
-    duration: "15'00\"",
-    description: "A song cycle setting three poems exploring themes of loss, memory, and transcendence. The piano accompaniment creates a rich harmonic landscape that supports and enhances the vocal line.",
-    instrumentation: ["Mezzo-Soprano", "Piano"],
-    inspired: "Lili Boulanger's 'Clairières dans le ciel'"
-  },
-  {
-    id: "5",
-    title: "Variations on a Theme",
-    subtitle: "Pour Quatuor à Cordes",
-    year: "2026",
-    duration: "11'20\"",
-    description: "A set of variations exploring different aspects of a simple melodic theme. Each variation reveals new harmonic possibilities while maintaining the essential character of the original material.",
-    instrumentation: ["String Quartet"],
-    inspired: "Formal structures in Boulanger's chamber works"
-  },
-  {
-    id: "6",
-    title: "Hymne du Soir",
-    subtitle: "For Chamber Ensemble",
-    year: "2026",
-    duration: "9'30\"",
-    description: "An evening hymn for chamber ensemble that explores the transition from day to night through evolving textures and harmonic colors. The piece creates an atmosphere of reflection and peaceful resolution.",
-    instrumentation: ["Flute", "Clarinet", "Violin", "Cello", "Piano"],
-    inspired: "Lili Boulanger's use of color and atmosphere"
-  },
-  {
-    id: "7",
-    title: "Fantaisie Lyrique",
-    subtitle: "Pour Harpe et Cordes",
-    year: "2025",
-    duration: "10'15\"",
-    description: "A lyrical fantasy that places the harp at the center of a string tapestry, weaving arpeggiated passages through sustained harmonic fields. The piece draws on impressionist textures while maintaining a clear melodic through-line.",
-    instrumentation: ["Harp", "String Orchestra"],
-    inspired: "The timbral palette of early 20th-century French music"
-  },
-  {
-    id: "8",
-    title: "Messe Brève",
-    subtitle: "For Chorus and Organ",
-    year: "2026",
-    duration: "14'00\"",
-    description: "A concise setting of the ordinary of the Mass, blending Renaissance contrapuntal techniques with modern harmonic language. The organ accompaniment ranges from austere to lush, supporting the choral voices through moments of devotion and exaltation.",
-    instrumentation: ["SATB Choir", "Organ"],
-    inspired: "Lili Boulanger's sacred works"
-  }
 ];
 
-// Featured compositions to display in the rack (8 featured)
-const featuredCompositionIds = ["1", "2", "3", "4", "5", "6", "7", "8"];
+// Featured compositions to display in the rack.
+const featuredCompositionIds = ["mephistopheles"];
 
 export { compositions };
 
@@ -191,14 +167,42 @@ export function CompositionRack({ onCompositionClick, onViewAllClick }: Composit
                     {/* Corner decorations */}
                     <div className="absolute top-2 left-2 w-8 h-8 border-l-2 border-t-2 border-black"></div>
                     <div className="absolute top-2 right-2 w-8 h-8 border-r-2 border-t-2 border-black"></div>
-                    
+
                     {/* Number badge */}
                     <div className="absolute -top-4 -left-4 w-12 h-12 bg-black text-white border-4 border-white flex items-center justify-center">
                       <span className="text-2xl font-serif font-bold">{index + 1}</span>
                     </div>
 
+                    {/* Cover art (if present) */}
+                    {composition.coverUrl && (
+                      <div className="mt-4 mb-4 relative border-2 border-black aspect-square overflow-hidden bg-neutral-100">
+                        <img
+                          src={composition.coverUrl}
+                          alt={`${composition.title} cover art`}
+                          loading="lazy"
+                          className="h-full w-full object-cover"
+                        />
+                        {composition.accolades && composition.accolades.length > 0 && (
+                          <div className="absolute top-1 left-1 flex items-center gap-1 border-2 border-white bg-black px-2 py-0.5 text-white">
+                            <Award className="w-3 h-3" />
+                            <span className="text-[10px] font-serif uppercase tracking-wider">
+                              Awarded
+                            </span>
+                          </div>
+                        )}
+                        {composition.audioUrl && (
+                          <div className="absolute bottom-1 right-1 flex items-center gap-1 border-2 border-white bg-black px-2 py-0.5 text-white">
+                            <Headphones className="w-3 h-3" />
+                            <span className="text-[10px] font-serif uppercase tracking-wider">
+                              Listen
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
                     {/* Content */}
-                    <div className="mt-4">
+                    <div className={composition.coverUrl ? "mt-0" : "mt-4"}>
                       <div className="flex items-start gap-2 mb-2">
                         <Music className="w-6 h-6 flex-shrink-0 mt-1" />
                         <div className="flex-1">

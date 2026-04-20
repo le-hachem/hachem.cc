@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProgressiveTextReveal } from "./components/ProgressiveTextReveal";
 import { BookSection } from "./components/BookSection";
 import { CompositionRack, compositions } from "./components/CompositionRack";
@@ -12,10 +12,30 @@ export default function App() {
   const [selectedComposition, setSelectedComposition] = useState<Composition | null>(null);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
 
+  // Deep link: `?piece=<id>` opens that composition's modal on page load,
+  // regardless of whether the public rack is currently hidden. Matching is
+  // case-insensitive so share links survive casing tweaks.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("piece");
+    if (!id) return;
+    const match = compositions.find(
+      (c) => c.id.toLowerCase() === id.toLowerCase()
+    );
+    if (match) setSelectedComposition(match);
+  }, []);
+
   return (
     <div className="relative min-h-screen bg-white">
-      {/* Fixed background SVG — stays in place while content scrolls over it */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.07] z-0">
+      {/* Background SVG — one image stretched across the whole scrollable
+          page so it scrolls with content and never shows a tiling seam.
+          The SVG is a single illustration (viewBox ~1885×1242), so we use
+          `object-cover` to preserve its look rather than tile it. */}
+      <div
+        aria-hidden
+        className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.07] z-0"
+      >
         <img
           src={backgroundSvg}
           alt=""
