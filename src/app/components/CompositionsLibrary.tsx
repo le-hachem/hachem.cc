@@ -1,8 +1,8 @@
 import { motion, AnimatePresence } from "motion/react";
 import { createPortal } from "react-dom";
-import { X, Music, Calendar, Clock } from "lucide-react";
-import { useEffect } from "react";
-import type { Composition } from "./CompositionRack";
+import { X, Clock } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { Composition, CompositionCategory } from "./CompositionRack";
 
 interface CompositionsLibraryProps {
   isOpen: boolean;
@@ -11,154 +11,239 @@ interface CompositionsLibraryProps {
   onCompositionClick: (composition: Composition) => void;
 }
 
-const paperTint = "bg-neutral-100";
+const categoryOrder: CompositionCategory[] = [
+  "Large Ensemble",
+  "Chamber Music",
+  "Piano Solo",
+  "Voice & Piano",
+];
 
-export function CompositionsLibrary({ isOpen, onClose, compositions, onCompositionClick }: CompositionsLibraryProps) {
+const categoryDescriptions: Record<CompositionCategory, string> = {
+  "Large Ensemble": "Orchestra, chorus, and large forces",
+  "Chamber Music":  "Small instrumental combinations",
+  "Piano Solo":     "Works for piano alone",
+  "Voice & Piano":  "Songs and mélodies",
+};
+
+export function CompositionsLibrary({
+  isOpen,
+  onClose,
+  compositions,
+  onCompositionClick,
+}: CompositionsLibraryProps) {
+  const [activeCategory, setActiveCategory] = useState<CompositionCategory | "All">("All");
+
   useEffect(() => {
     if (!isOpen) return;
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen) setActiveCategory("All");
+  }, [isOpen]);
+
+  const populated = categoryOrder.filter(cat =>
+    compositions.some(c => c.category === cat)
+  );
+
+  const visibleCategories =
+    activeCategory === "All" ? populated : [activeCategory as CompositionCategory];
+
   return createPortal(
     <AnimatePresence>
       {isOpen && (
         <motion.div
           key="compositions-library-overlay"
-          className="fixed inset-0 z-[1000] flex items-start justify-center overflow-y-auto overflow-x-hidden px-2 py-4 sm:p-6 sm:pt-12"
-          initial={{ opacity: 1 }}
+          className="fixed inset-0 z-[1000] flex items-end sm:items-center justify-center p-0 sm:p-6"
+          initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.15, ease: "easeOut" }}
+          transition={{ duration: 0.2 }}
         >
+          {/* Scrim */}
           <div
-            className="absolute inset-0 bg-neutral-900/45"
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             aria-hidden
-            role="presentation"
             onClick={onClose}
           />
+
           <motion.div
             role="dialog"
             aria-modal="true"
-            className="relative z-10 mb-4 mt-2 sm:mb-8 sm:mt-4 w-full max-w-5xl"
-            initial={{ scale: 0.985, y: 12, opacity: 1 }}
-            animate={{ scale: 1, y: 0, opacity: 1 }}
-            exit={{ scale: 0.985, y: 8, opacity: 0 }}
-            transition={{ type: "spring", damping: 30, stiffness: 380 }}
-            onClick={(e) => e.stopPropagation()}
+            className="relative z-10 w-full sm:max-w-4xl max-h-[92vh] sm:max-h-[88vh] bg-white flex flex-col shadow-2xl sm:border sm:border-neutral-200"
+            initial={{ y: 40, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 20, opacity: 0 }}
+            transition={{ type: "spring", damping: 32, stiffness: 400 }}
+            onClick={e => e.stopPropagation()}
           >
-            <div className="relative isolate border-4 sm:border-8 border-black bg-white shadow-[4px_4px_0_0_rgb(24_24_24)] sm:shadow-[10px_10px_0_0_rgb(24_24_24)]">
-
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                onClose();
-              }}
-              className="absolute right-2 top-2 z-[60] flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center border-[3px] border-white bg-black text-white transition-colors hover:bg-neutral-800"
-              aria-label="Close"
-            >
-              <X className="h-5 w-5 sm:h-6 sm:w-6" />
-            </button>
-
-            <div className="relative z-10 px-4 pb-6 pt-10 sm:px-8 sm:pb-8 sm:pt-14 md:px-12 md:pb-12 md:pt-16">
-              {/* Header */}
-              <div className={`border-4 sm:border-8 border-double border-black p-3 sm:p-6 mb-4 sm:mb-8 ${paperTint}`}>
-                <div className="flex items-center gap-2 sm:gap-4">
-                  <Music className="w-7 h-7 sm:w-10 sm:h-10 shrink-0" />
-                  <div className="min-w-0">
-                    <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-black uppercase">
-                      Complete Works
-                    </h2>
-                    <p className="text-sm sm:text-lg font-serif italic mt-1">All Compositions</p>
-                  </div>
+            {/* Header */}
+            <div className="flex-none border-b border-neutral-200 px-5 sm:px-8 py-5">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-display font-black tracking-tight">
+                    Catalogue of Works
+                  </h2>
+                  <p className="text-xs tracking-[0.3em] uppercase text-neutral-400 mt-1"
+                     style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+                    Hachem H. · {compositions.length} compositions
+                  </p>
                 </div>
-              </div>
-
-              {/* Library grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto p-2">
-                {compositions.map((composition, index) => (
-                  <motion.div
-                    key={composition.id}
-                    initial={{ opacity: 1, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    whileHover={{ scale: 1.02, backgroundColor: "#e5e5e5" }}
-                    onClick={() => {
-                      onCompositionClick(composition);
-                      onClose();
-                    }}
-                    className="border-4 border-black p-5 bg-white relative group cursor-pointer"
-                  >
-                    {/* Number indicator */}
-                    <div className="absolute -left-3 -top-3 w-10 h-10 bg-black text-white flex items-center justify-center text-sm font-serif font-bold border-2 border-white">
-                      {index + 1}
-                    </div>
-
-                    <div className="mt-2">
-                      <div className="flex items-start gap-2 mb-3">
-                        <Music className="w-5 h-5 flex-shrink-0 mt-1" />
-                        <h3 className="text-xl font-serif font-bold leading-tight flex-1">
-                          {composition.title}
-                        </h3>
-                      </div>
-                      
-                      <p className="text-sm font-serif italic opacity-80 mb-3">
-                        {composition.subtitle}
-                      </p>
-
-                      <div className="flex flex-wrap gap-3 text-sm mb-3">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
-                          <span className="font-serif font-bold">{composition.year}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
-                          <span className="font-serif font-bold">{composition.duration}</span>
-                        </div>
-                      </div>
-
-                      <div className="border-t-2 border-dashed border-black pt-3">
-                        <div className="flex flex-wrap gap-1">
-                          {composition.instrumentation.map((inst, i) => (
-                            <span
-                              key={i}
-                              className="text-xs font-serif border border-black bg-neutral-200 px-2 py-1"
-                            >
-                              {inst}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Hover indicator */}
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        whileHover={{ opacity: 1 }}
-                        className="absolute bottom-3 right-3 text-xs font-serif italic opacity-0 group-hover:opacity-60 transition-opacity"
-                      >
-                        Click to view →
-                      </motion.div>
-                    </div>
-
-                    {/* Corner decoration */}
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-black opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Footer */}
-              <div className="mt-8 pt-6 border-t-4 border-black text-center">
-                <p className="text-sm font-serif italic opacity-60">
-                  {compositions.length} compositions in total • Click any work to view details
-                </p>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex h-8 w-8 items-center justify-center text-neutral-400 hover:text-black transition-colors shrink-0"
+                  aria-label="Close"
+                >
+                  <X className="h-5 w-5" />
+                </button>
               </div>
             </div>
 
-            {/* Decorative corners */}
-            <div className="absolute top-0 left-0 w-8 h-8 sm:w-16 sm:h-16 border-l-4 border-t-4 sm:border-l-8 sm:border-t-8 border-black pointer-events-none"></div>
-            <div className="absolute top-0 right-0 w-8 h-8 sm:w-16 sm:h-16 border-r-4 border-t-4 sm:border-r-8 sm:border-t-8 border-black pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 w-8 h-8 sm:w-16 sm:h-16 border-l-4 border-b-4 sm:border-l-8 sm:border-b-8 border-black pointer-events-none"></div>
-            <div className="absolute bottom-0 right-0 w-8 h-8 sm:w-16 sm:h-16 border-r-4 border-b-4 sm:border-r-8 sm:border-b-8 border-black pointer-events-none"></div>
+            {/* Body: sidebar + content */}
+            <div className="flex flex-1 min-h-0">
+
+              {/* Sidebar — desktop only */}
+              <aside className="hidden sm:flex flex-col w-48 shrink-0 border-r border-neutral-200 py-4">
+                <p className="px-4 text-[10px] tracking-[0.4em] uppercase text-neutral-400 mb-3"
+                   style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+                  By Instrumentation
+                </p>
+                <nav className="flex flex-col gap-0.5 px-2">
+                  {(["All", ...populated] as (CompositionCategory | "All")[]).map(cat => {
+                    const count = cat === "All"
+                      ? compositions.length
+                      : compositions.filter(c => c.category === cat).length;
+                    const active = activeCategory === cat;
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => setActiveCategory(cat)}
+                        className={`w-full text-left px-3 py-2.5 rounded-none transition-colors duration-150 border-l-2 ${
+                          active
+                            ? "border-black bg-neutral-50 text-black"
+                            : "border-transparent text-neutral-500 hover:text-black hover:bg-neutral-50"
+                        }`}
+                      >
+                        <span className="block text-sm font-serif font-bold leading-tight">
+                          {cat === "All" ? "All Works" : cat}
+                        </span>
+                        <span className="block text-[10px] text-neutral-400 mt-0.5"
+                              style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+                          {count} {count === 1 ? "work" : "works"}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </nav>
+              </aside>
+
+              {/* Main content */}
+              <div className="flex-1 min-w-0 flex flex-col min-h-0">
+                {/* Mobile category tabs */}
+                <div className="sm:hidden flex gap-1.5 px-5 py-3 border-b border-neutral-100 overflow-x-auto">
+                  {(["All", ...populated] as (CompositionCategory | "All")[]).map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setActiveCategory(cat)}
+                      className={`shrink-0 px-3 py-1 text-xs font-serif border transition-colors ${
+                        activeCategory === cat
+                          ? "border-black bg-black text-white"
+                          : "border-neutral-200 text-neutral-600 hover:border-neutral-400"
+                      }`}
+                    >
+                      {cat === "All" ? "All" : cat}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Works list */}
+                <div className="flex-1 overflow-y-auto">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeCategory}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.15 }}
+                    >
+                      {visibleCategories.map(cat => {
+                        const catWorks = compositions.filter(c => c.category === cat);
+                        return (
+                          <div key={cat}>
+                            {/* Category header */}
+                            <div className="sticky top-0 bg-neutral-50 border-b border-neutral-200 px-5 sm:px-6 py-2.5 z-10">
+                              <p className="text-[10px] tracking-[0.35em] uppercase text-neutral-500 font-semibold"
+                                 style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+                                {cat}
+                                <span className="ml-2 font-normal text-neutral-400">
+                                  — {categoryDescriptions[cat]}
+                                </span>
+                              </p>
+                            </div>
+
+                            {/* Work rows */}
+                            {catWorks.map((work, i) => (
+                              <motion.button
+                                key={work.id}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.2, delay: i * 0.04 }}
+                                onClick={() => { onCompositionClick(work); onClose(); }}
+                                className="group w-full text-left border-b border-neutral-100 px-5 sm:px-6 py-4 flex items-center gap-4 hover:bg-neutral-50 transition-colors"
+                              >
+                                {/* Year */}
+                                <span className="shrink-0 text-[10px] tracking-wider text-neutral-400 w-8"
+                                      style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+                                  {work.year}
+                                </span>
+
+                                {/* Title */}
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-baseline gap-2 flex-wrap">
+                                    <span className="font-serif font-bold text-base leading-tight">
+                                      {work.title}
+                                    </span>
+                                    {work.accolades && work.accolades.length > 0 && (
+                                      <span className="text-[9px] tracking-widest uppercase bg-black text-white px-1.5 py-0.5"
+                                            style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+                                        Awarded
+                                      </span>
+                                    )}
+                                  </div>
+                                  <span className="block text-xs sm:text-sm font-serif italic text-neutral-500 mt-0.5">
+                                    {work.subtitle}
+                                  </span>
+                                </div>
+
+                                {/* Duration + arrow */}
+                                <div className="shrink-0 flex items-center gap-3">
+                                  <span className="hidden sm:flex items-center gap-1 text-xs text-neutral-400 font-serif"
+                                        style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+                                    <Clock className="w-3 h-3" />
+                                    {work.duration}
+                                  </span>
+                                  <span className="text-neutral-300 group-hover:text-black transition-colors text-sm font-serif">
+                                    →
+                                  </span>
+                                </div>
+                              </motion.button>
+                            ))}
+                          </div>
+                        );
+                      })}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="flex-none border-t border-neutral-200 px-5 sm:px-8 py-3 text-center">
+              <p className="text-xs font-serif italic text-neutral-400">
+                Click any work to view the full score and details
+              </p>
             </div>
           </motion.div>
         </motion.div>

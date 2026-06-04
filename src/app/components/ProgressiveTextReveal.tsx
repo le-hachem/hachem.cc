@@ -2,81 +2,101 @@ import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 
 export function ProgressiveTextReveal() {
-  const text = "Hi! I am Hachem";
-  const [visibleCount, setVisibleCount] = useState(0);
-  const [done, setDone] = useState(false);
+  const [showCipher, setShowCipher]     = useState(false);
+  const [showSubtitle, setShowSubtitle] = useState(false);
+  const [showScroll, setShowScroll]     = useState(false);
 
-  // Block scrolling until typing is complete
+  // Block scrolling until intro is complete
   useEffect(() => {
     document.body.style.overflow = "hidden";
+
+    const t1 = setTimeout(() => setShowCipher(true),   200);
+    const t2 = setTimeout(() => setShowSubtitle(true), 900);
+    const t3 = setTimeout(() => {
+      document.body.style.overflow = "";
+    }, 1100);
+    const t4 = setTimeout(() => setShowScroll(true),   1500);
+
     return () => {
       document.body.style.overflow = "";
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
     };
   }, []);
-
-  // Pop in letters one by one — fast
-  useEffect(() => {
-    if (visibleCount >= text.length) {
-      const timeout = setTimeout(() => {
-        setDone(true);
-        document.body.style.overflow = "";
-      }, 250);
-      return () => clearTimeout(timeout);
-    }
-
-    const delay = 45 + Math.random() * 30;
-    const timeout = setTimeout(() => {
-      setVisibleCount((c) => c + 1);
-    }, delay);
-    return () => clearTimeout(timeout);
-  }, [visibleCount, text.length]);
 
   return (
     <div className="relative bg-transparent">
       <div className="flex h-screen items-center justify-center">
-        <div className="relative z-10 mx-2 sm:mx-4 cursor-default border-4 border-black bg-white px-4 py-8 sm:px-8 sm:py-12 md:px-12 md:py-16 shadow-2xl">
-          <div className="absolute left-2 right-2 top-2 h-1 border-t-2 border-b-2 border-black" />
-          <div className="absolute bottom-2 left-2 right-2 h-1 border-t-2 border-b-2 border-black" />
+        <div className="relative z-10 text-center px-8">
 
-          <div
-            className="whitespace-nowrap text-2xl font-medium tracking-wide sm:text-4xl md:text-6xl lg:text-7xl"
-            style={{
-              fontFamily: "'23 seconds to midnight', ui-serif, Georgia, serif",
-            }}
+          {/* Top rule */}
+          <motion.div
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="mx-auto mb-8 w-12 h-px bg-black origin-center"
+          />
+
+          {/* Musical cipher replacing the name */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: showCipher ? 1 : 0, y: showCipher ? 0 : 10 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="flex justify-center"
           >
-            {text.split("").map((char, i) => (
-              <span
-                key={i}
-                className="inline-block"
-                style={{ visibility: i < visibleCount ? "visible" : "hidden" }}
-              >
-                {i < visibleCount ? (
-                  <motion.span
-                    className="inline-block"
-                    initial={{ scale: 3, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 700,
-                      damping: 30,
-                      mass: 0.5,
-                    }}
-                  >
-                    {char === " " ? "\u00A0" : char}
-                  </motion.span>
-                ) : (
-                  <span>{char === " " ? "\u00A0" : char}</span>
-                )}
-              </span>
-            ))}
-          </div>
+            <img
+              src="/hachem-cipher.svg"
+              alt="Hachem H."
+              className="w-[95vw] sm:w-[85vw] md:w-[75vw] max-w-5xl"
+              draggable={false}
+            />
+          </motion.div>
 
-          <div className="absolute left-4 top-4 h-6 w-6 border-l-4 border-t-4 border-black" />
-          <div className="absolute right-4 top-4 h-6 w-6 border-r-4 border-t-4 border-black" />
-          <div className="absolute bottom-4 left-4 h-6 w-6 border-b-4 border-l-4 border-black" />
-          <div className="absolute bottom-4 right-4 h-6 w-6 border-b-4 border-r-4 border-black" />
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: showSubtitle ? 1 : 0, y: showSubtitle ? 0 : 6 }}
+            transition={{ duration: 0.7 }}
+            className="-mt-2 text-xs sm:text-sm tracking-[0.45em] uppercase text-neutral-500"
+            style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
+          >
+            Composer · Pianist · Conductor
+          </motion.p>
+
+          {/* Bottom rule */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: showSubtitle ? 1 : 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mx-auto mt-8 w-12 h-px bg-black origin-center"
+          />
         </div>
       </div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: showScroll ? 1 : 0 }}
+        transition={{ duration: 0.8 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5"
+      >
+        <span
+          className="text-[9px] tracking-[0.35em] uppercase text-neutral-400"
+          style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
+        >
+          Scroll
+        </span>
+        <motion.div
+          animate={{ y: [0, 5, 0] }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-neutral-400">
+            <path d="M1 3.5L6 8.5L11 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

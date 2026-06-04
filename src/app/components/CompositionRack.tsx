@@ -1,7 +1,12 @@
 import { motion } from "motion/react";
 import { Music, Clock, Calendar, Headphones, Award } from "lucide-react";
 import { useState } from "react";
-import { CardDecoration, LampPost, BirdFlying, GrandPiano, TrebleClefVine, MusicalNotes } from "./Deco";
+
+export type CompositionCategory =
+  | "Large Ensemble"
+  | "Chamber Music"
+  | "Piano Solo"
+  | "Voice & Piano";
 
 export interface Composition {
   id: string;
@@ -12,6 +17,7 @@ export interface Composition {
   description: string;
   instrumentation: string[];
   inspired: string;
+  category: CompositionCategory;
   /** Relative URL of a streamable audio file (served from /public). */
   audioUrl?: string;
   /** Relative URL of the cover image (served from /public). */
@@ -20,7 +26,7 @@ export interface Composition {
   peaksUrl?: string;
   /** Exact duration in seconds, used as a fallback while audio loads. */
   durationSeconds?: number;
-  /** Prizes, awards, and other accolades (displayed as a ribbon). */
+  /** Prizes, awards, and other accolades. */
   accolades?: string[];
 }
 
@@ -30,44 +36,26 @@ interface CompositionRackProps {
 }
 
 const compositions: Composition[] = [
+  // ── Large Ensemble ──────────────────────────────────────────────────────────
   {
     id: "mephistopheles",
     title: "Mephistopheles",
     subtitle: "A Cantata on the Story of Faust",
-    year: "January 2025",
+    year: "2025",
     duration: "24'07\"",
     durationSeconds: 1447.97,
+    category: "Large Ensemble",
     description:
       "A dramatic cantata drawn from Goethe's Faust, tracing the fateful pact between the restless scholar and the shadow that names itself Mephistopheles. The work moves through temptation, rapture and reckoning, setting the tempter's sly lyricism against Faust's searching, late-Romantic harmonic palette. Composed in January 2025, the piece alternates aria and chorus in the tradition of the German oratorio, while reaching for a more cinematic orchestral colour where the narrative turns infernal.",
     instrumentation: [
-      "Piccolo",
-      "2 Flutes",
-      "2 Oboes",
-      "Cor Anglais",
-      "2 Clarinets",
-      "Bass Clarinet",
-      "2 Bassoons",
-      "Sarrusophone",
-      "4 Horns",
-      "3 Trumpets",
-      "3 Trombones",
-      "Tuba",
-      "Timpani",
-      "Celesta",
-      "2 Harps",
-      "Organ",
-      "Soprano",
-      "Alto",
-      "Tenor",
-      "Bass",
-      "Violins I",
-      "Violins II",
-      "Violas",
-      "Cellos",
-      "Double Basses",
+      "Piccolo", "2 Flutes", "2 Oboes", "Cor Anglais",
+      "2 Clarinets", "Bass Clarinet", "2 Bassoons", "Sarrusophone",
+      "4 Horns", "3 Trumpets", "3 Trombones", "Tuba",
+      "Timpani", "Celesta", "2 Harps", "Organ",
+      "Soprano", "Alto", "Tenor", "Bass",
+      "Violins I", "Violins II", "Violas", "Cellos", "Double Basses",
     ],
-    inspired:
-      "Goethe's Faust, Part One — and the long tradition of Faustian cantatas from Schumann to Berlioz.",
+    inspired: "Goethe's Faust, Part One — and the long tradition of Faustian cantatas from Schumann to Berlioz.",
     accolades: [
       "ICS Composition Competition — 4th place overall",
       "ICS Composition Competition — 1st place in Harmony & Orchestration",
@@ -76,9 +64,80 @@ const compositions: Composition[] = [
     coverUrl: "/music/Mephistopheles/cover.png",
     peaksUrl: "/music/Mephistopheles/peaks.json",
   },
+
+  // ── Chamber Music ────────────────────────────────────────────────────────────
+  {
+    id: "quatuor-no-1",
+    title: "Quatuor à cordes No. 1",
+    subtitle: "String Quartet",
+    year: "2024",
+    duration: "18'40\"",
+    durationSeconds: 1120,
+    category: "Chamber Music",
+    description:
+      "A single-movement quartet in broad sonata form, moving from an agitated opening — all driving sixteenths and grinding semitones — through a lyrical, chorale-like development, to a compressed and darkened recapitulation. Written as a first serious reckoning with the medium, the piece carries the marks of that struggle openly.",
+    instrumentation: ["Violin I", "Violin II", "Viola", "Cello"],
+    inspired: "Ravel's Quartet in F and the late quartets of Beethoven — and a long, uncomfortable relationship with both.",
+  },
+  {
+    id: "fantaisie",
+    title: "Fantaisie",
+    subtitle: "For Violin and Piano",
+    year: "2024",
+    duration: "7'50\"",
+    durationSeconds: 470,
+    category: "Chamber Music",
+    description:
+      "A free-form fantasy in two linked sections. The first is rhapsodic and improvisatory — the violin spinning out long arching phrases while the piano interrupts and redirects. The second is a strict passacaglia, the same bass line returning seven times in different harmonic light. The work ends where it began, but changed.",
+    instrumentation: ["Violin", "Piano"],
+    inspired: "The solo sonatas of Prokofiev and the chamber music of Bartók.",
+  },
+  {
+    id: "nocturne-flute",
+    title: "Nocturne",
+    subtitle: "For Flute and Piano",
+    year: "2022",
+    duration: "5'20\"",
+    durationSeconds: 320,
+    category: "Chamber Music",
+    description:
+      "An early work, written during a concentrated period of counterpoint study. The flute carries a long, winding melody of Fauréan contour; the piano gradually dissolves from arpeggiated textures into bare, widely spaced notes. One of the few early pieces considered finished rather than abandoned.",
+    instrumentation: ["Flute", "Piano"],
+    inspired: "Fauré's Fantaisie for flute and Debussy's Syrinx.",
+  },
+
+  // ── Piano Solo ──────────────────────────────────────────────────────────────
+  {
+    id: "quatre-preludes",
+    title: "Quatre Préludes",
+    subtitle: "For Solo Piano",
+    year: "2024",
+    duration: "12'30\"",
+    durationSeconds: 750,
+    category: "Piano Solo",
+    description:
+      "Four character pieces in contrasting moods. The first is perpetual motion — restless, nearly mechanical. The second is a quietly searching nocturne in a remote key. The third, a sardonic scherzo that wears its irony openly. The fourth, a closing passacaille that draws all four threads back together, arriving at a stillness the opening had no patience for.",
+    instrumentation: ["Piano"],
+    inspired: "The keyboard preludes of Chopin and Debussy, and the early harmonic language of Scriabin.",
+  },
+
+  // ── Voice & Piano ────────────────────────────────────────────────────────────
+  {
+    id: "trois-melodies",
+    title: "Trois Mélodies",
+    subtitle: "For Mezzo-Soprano and Piano",
+    year: "2023",
+    duration: "9'15\"",
+    durationSeconds: 555,
+    category: "Voice & Piano",
+    description:
+      "Three settings of French symbolist poetry, tracing loss, memory, and the slow dissolution of season into season. The vocal writing is lyrical and unadorned; the piano provides a shifting, restless commentary — often harmonically at odds with the surface simplicity of the text, as if the accompaniment alone knows how the poem ends.",
+    instrumentation: ["Mezzo-Soprano", "Piano"],
+    inspired: "The mélodies of Fauré, Duparc, and the later songs of Debussy.",
+  },
 ];
 
-// Featured compositions to display in the rack.
+// Only these appear in the featured rack on the homepage.
 const featuredCompositionIds = ["mephistopheles"];
 
 export { compositions };
@@ -87,211 +146,162 @@ export function CompositionRack({ onCompositionClick, onViewAllClick }: Composit
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const isHidden = import.meta.env.VITE_HIDE_COMPOSITIONS === "true";
 
-  const featuredCompositions = compositions.filter(c => featuredCompositionIds.includes(c.id));
+  const featuredCompositions = compositions.filter(c =>
+    featuredCompositionIds.includes(c.id)
+  );
 
   return (
-    <section className="relative bg-white px-4 pb-5 pt-14">
-      {/* Newspaper texture */}
-      <div className="absolute inset-0 opacity-[0.02] pointer-events-none"
-           style={{
-             backgroundImage: 'repeating-linear-gradient(90deg, #000 0px, #000 1px, transparent 1px, transparent 3px), repeating-linear-gradient(0deg, #000 0px, #000 1px, transparent 1px, transparent 3px)'
-           }}>
-      </div>
-
+    <section className="relative bg-white px-4 pb-12 pt-12 sm:pb-16 sm:pt-16">
       <div className="max-w-7xl mx-auto">
         {/* Section header */}
         <motion.div
-          initial={{ opacity: 1, y: -16 }}
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
-          className="mb-10 text-center"
+          className="mb-8 sm:mb-12 text-center"
         >
-          <div className="relative border-2 sm:border-4 border-black inline-block px-4 py-3 sm:px-8 sm:py-4 bg-white">
-            {/* Elaborate decorations */}
-            <LampPost className="absolute -top-16 right-4 w-8 h-16 text-neutral-500 pointer-events-none hidden sm:block" />
-            <BirdFlying className="absolute -top-10 right-16 w-6 h-3 text-neutral-400 pointer-events-none hidden sm:block" />
-            <BirdFlying className="absolute -top-12 right-24 w-4 h-2 text-neutral-300 pointer-events-none -scale-x-100 hidden md:block" />
-            <GrandPiano className="absolute -top-10 left-4 w-14 h-10 text-neutral-300 pointer-events-none hidden md:block" />
-            <MusicalNotes className="absolute -top-6 left-20 w-8 h-5 text-neutral-200 pointer-events-none hidden md:block" />
-            <h2 className="text-2xl sm:text-4xl md:text-6xl font-display font-black tracking-tight">
-              Featured Compositions
-            </h2>
-            <div className="h-1 w-full bg-black mt-2"></div>
-            <p className="text-lg font-serif italic mt-2">Selected Works</p>
-          </div>
+          <h2 className="text-3xl sm:text-5xl font-display font-black tracking-tight">
+            Featured Works
+          </h2>
+          <div className="mx-auto mt-4 h-px w-12 bg-black" />
+          <p className="mt-4 text-xs tracking-[0.4em] uppercase text-neutral-500"
+             style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+            Selected Compositions
+          </p>
         </motion.div>
 
         {isHidden ? (
           <div className="text-center py-16 px-4">
-            <div className="inline-block border-4 border-dashed border-neutral-300 px-10 py-8 bg-neutral-50">
-              <Music className="w-8 h-8 mx-auto mb-4 text-neutral-400" />
-              <p className="font-serif text-lg text-neutral-500 italic">
-                Currently compositions are hidden due to maintenance,<br />check back in a few days.
-              </p>
-            </div>
+            <Music className="w-6 h-6 mx-auto mb-4 text-neutral-300" />
+            <p className="font-serif text-base text-neutral-400 italic">
+              Currently compositions are hidden due to maintenance,<br />check back in a few days.
+            </p>
           </div>
         ) : (
-        <>
-        {/* Scrollable rack */}
-        <div className="relative">
-          {/* View all button */}
-          <button
-            onClick={onViewAllClick}
-            className="absolute -top-12 right-4 border-4 border-black bg-white px-6 py-2 font-serif text-sm font-bold transition-colors flex items-center gap-2 group hover:bg-neutral-200 active:bg-neutral-300"
-          >
-            <Music className="w-4 h-4" />
-            View All Compositions
-            <span className="group-hover:translate-x-1 transition-transform">→</span>
-          </button>
-          
-          <div className="overflow-visible py-10">
-            <div className="scrollbar-thin overflow-x-auto">
-              <div className="flex min-w-max gap-6 px-4 py-4">
-              {featuredCompositions.map((composition, index) => (
-                <motion.div
-                  key={composition.id}
-                  initial={{ opacity: 1, x: 28 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.45, delay: index * 0.08 }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.02, y: -6, rotate: index % 2 === 0 ? 1.5 : -1.5 }}
-                  onHoverStart={() => setHoveredId(composition.id)}
-                  onHoverEnd={() => setHoveredId(null)}
-                  onClick={() => onCompositionClick(composition)}
-                  className="group relative w-64 sm:w-72 md:w-80 cursor-pointer border-2 sm:border-4 border-black bg-white shadow-[4px_4px_0_0_rgb(24_24_24)] sm:shadow-[6px_6px_0_0_rgb(24_24_24)] transition-[transform,box-shadow] hover:shadow-[9px_9px_0_0_rgb(24_24_24)]"
+          <>
+            <div className="relative">
+              {/* View all button */}
+              <div className="flex justify-end mb-4 sm:mb-0">
+                <button
+                  onClick={onViewAllClick}
+                  className="sm:absolute sm:-top-10 sm:right-0 flex items-center gap-2 border border-black bg-white px-5 py-2 font-sans text-xs tracking-widest uppercase transition-colors hover:bg-neutral-50 active:bg-neutral-100"
                 >
-                  {/* Whimsical decoration perched on card */}
-                  <CardDecoration index={index} />
-                  <div className="relative z-10 p-6">
-                    {/* Corner decorations */}
-                    <div className="absolute top-2 left-2 w-8 h-8 border-l-2 border-t-2 border-black"></div>
-                    <div className="absolute top-2 right-2 w-8 h-8 border-r-2 border-t-2 border-black"></div>
+                  <Music className="w-3 h-3" />
+                  All Compositions
+                  <span className="transition-transform">→</span>
+                </button>
+              </div>
 
-                    {/* Number badge */}
-                    <div className="absolute -top-4 -left-4 w-12 h-12 bg-black text-white border-4 border-white flex items-center justify-center">
-                      <span className="text-2xl font-serif font-bold">{index + 1}</span>
-                    </div>
-
-                    {/* Cover art (if present) */}
-                    {composition.coverUrl && (
-                      <div className="mt-4 mb-4 relative border-2 border-black aspect-square overflow-hidden bg-neutral-100">
-                        <img
-                          src={composition.coverUrl}
-                          alt={`${composition.title} cover art`}
-                          loading="lazy"
-                          className="h-full w-full object-cover"
-                        />
-                        {composition.accolades && composition.accolades.length > 0 && (
-                          <div className="absolute top-1 left-1 flex items-center gap-1 border-2 border-white bg-black px-2 py-0.5 text-white">
-                            <Award className="w-3 h-3" />
-                            <span className="text-[10px] font-serif uppercase tracking-wider">
-                              Awarded
-                            </span>
-                          </div>
-                        )}
-                        {composition.audioUrl && (
-                          <div className="absolute bottom-1 right-1 flex items-center gap-1 border-2 border-white bg-black px-2 py-0.5 text-white">
-                            <Headphones className="w-3 h-3" />
-                            <span className="text-[10px] font-serif uppercase tracking-wider">
-                              Listen
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Content */}
-                    <div className={composition.coverUrl ? "mt-0" : "mt-4"}>
-                      <div className="flex items-start gap-2 mb-2">
-                        <Music className="w-6 h-6 flex-shrink-0 mt-1" />
-                        <div className="flex-1">
-                          <h3 className="text-2xl font-serif font-bold leading-tight">
-                            {composition.title}
-                          </h3>
-                          <p className="text-sm font-serif italic opacity-80 mt-1">
-                            {composition.subtitle}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="border-t-2 border-black my-4"></div>
-
-                      <div className="space-y-2 text-sm">
-                        <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4" />
-                          <span className="font-serif">{composition.year}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4" />
-                          <span className="font-serif">{composition.duration}</span>
-                        </div>
-                      </div>
-
-                      <div className="mt-4 pt-4 border-t-2 border-dashed border-black">
-                        <p className="text-xs font-serif uppercase tracking-wide opacity-60 mb-2">
-                          Instrumentation
-                        </p>
-                        <div className="flex flex-wrap gap-1">
-                          {composition.instrumentation.map((inst, i) => (
-                            <span
-                              key={i}
-                              className="text-xs font-serif border border-black px-2 py-1 bg-gray-50"
-                            >
-                              {inst}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Click indicator */}
+              <div className="overflow-visible py-4 sm:py-6">
+                <div className="scrollbar-thin overflow-x-auto">
+                  <div className="flex min-w-max gap-8 px-2 py-4">
+                    {featuredCompositions.map((composition, index) => (
                       <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: hoveredId === composition.id ? 1 : 0 }}
-                        className="absolute bottom-4 right-4 text-xs font-serif italic opacity-60"
+                        key={composition.id}
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.45, delay: index * 0.08 }}
+                        viewport={{ once: true }}
+                        whileHover={{ y: -4 }}
+                        onHoverStart={() => setHoveredId(composition.id)}
+                        onHoverEnd={() => setHoveredId(null)}
+                        onClick={() => onCompositionClick(composition)}
+                        className="group relative w-64 sm:w-72 md:w-80 cursor-pointer border border-neutral-200 bg-white shadow-sm transition-shadow hover:shadow-md hover:border-neutral-400"
                       >
-                        Click to expand →
-                      </motion.div>
-                    </div>
+                        <div className="relative z-10 p-6">
+                          {composition.coverUrl && (
+                            <div className="mb-5 relative aspect-square overflow-hidden bg-neutral-100 border border-neutral-100">
+                              <img
+                                src={composition.coverUrl}
+                                alt={`${composition.title} cover art`}
+                                loading="lazy"
+                                className="h-full w-full object-cover"
+                              />
+                              {composition.accolades && composition.accolades.length > 0 && (
+                                <div className="absolute top-2 left-2 flex items-center gap-1 bg-black/80 backdrop-blur-sm px-2 py-1 text-white">
+                                  <Award className="w-3 h-3" />
+                                  <span className="text-[10px] uppercase tracking-wider"
+                                        style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+                                    Awarded
+                                  </span>
+                                </div>
+                              )}
+                              {composition.audioUrl && (
+                                <div className="absolute bottom-2 right-2 flex items-center gap-1 bg-black/80 backdrop-blur-sm px-2 py-1 text-white">
+                                  <Headphones className="w-3 h-3" />
+                                  <span className="text-[10px] uppercase tracking-wider"
+                                        style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+                                    Listen
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          )}
 
-                    {/* Bottom decorations */}
-                    <div className="absolute bottom-2 left-2 w-8 h-8 border-l-2 border-b-2 border-black"></div>
-                    <div className="absolute bottom-2 right-2 w-8 h-8 border-r-2 border-b-2 border-black"></div>
+                          <div className={composition.coverUrl ? "mt-0" : "mt-2"}>
+                            <h3 className="text-xl font-serif font-bold leading-tight">
+                              {composition.title}
+                            </h3>
+                            <p className="text-sm font-serif italic text-neutral-500 mt-1">
+                              {composition.subtitle}
+                            </p>
+
+                            <div className="border-t border-neutral-100 my-4" />
+
+                            <div className="space-y-1.5 text-sm text-neutral-600">
+                              <div className="flex items-center gap-2">
+                                <Calendar className="w-3.5 h-3.5 text-neutral-400" />
+                                <span className="font-serif">{composition.year}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Clock className="w-3.5 h-3.5 text-neutral-400" />
+                                <span className="font-serif">{composition.duration}</span>
+                              </div>
+                            </div>
+
+                            <div className="mt-4 pt-4 border-t border-neutral-100">
+                              <p className="text-[10px] uppercase tracking-widest text-neutral-400 mb-2"
+                                 style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+                                Instrumentation
+                              </p>
+                              <div className="flex flex-wrap gap-1">
+                                {composition.instrumentation.map((inst, i) => (
+                                  <span
+                                    key={i}
+                                    className="text-[11px] font-serif border border-neutral-200 px-1.5 py-0.5 text-neutral-600 bg-neutral-50"
+                                  >
+                                    {inst}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: hoveredId === composition.id ? 1 : 0 }}
+                              className="absolute bottom-4 right-4 text-xs font-serif italic text-neutral-400"
+                            >
+                              Open →
+                            </motion.div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
                   </div>
-                </motion.div>
-              ))}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Decorative separator */}
-        <div className="relative mt-8 flex items-center justify-center gap-4">
-          <TrebleClefVine className="absolute -left-4 -top-10 w-4 h-10 text-neutral-200 pointer-events-none hidden md:block" />
-          <div className="h-0.5 w-32 bg-black"></div>
-          <Music className="w-6 h-6" />
-          <div className="h-0.5 w-32 bg-black"></div>
-        </div>
-        </>
+          </>
         )}
       </div>
 
       <style>
         {`
-          .scrollbar-thin::-webkit-scrollbar {
-            height: 8px;
-          }
-          .scrollbar-thin::-webkit-scrollbar-track {
-            background: #e5e5e5;
-            border: 1px solid #000;
-          }
-          .scrollbar-thin::-webkit-scrollbar-thumb {
-            background: #000;
-            border: 1px solid #d4d4d4;
-          }
-          .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-            background: #333;
-          }
+          .scrollbar-thin::-webkit-scrollbar { height: 6px; }
+          .scrollbar-thin::-webkit-scrollbar-track { background: #f5f5f5; }
+          .scrollbar-thin::-webkit-scrollbar-thumb { background: #d4d4d4; }
+          .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #a3a3a3; }
         `}
       </style>
     </section>

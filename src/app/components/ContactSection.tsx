@@ -1,0 +1,89 @@
+import { motion } from "motion/react";
+import { Mail } from "lucide-react";
+
+export function ContactSection() {
+  return (
+    <section className="relative bg-white px-4 py-12 sm:py-16 md:py-20">
+      <div className="max-w-5xl mx-auto">
+
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="mb-10 sm:mb-14 text-center"
+        >
+          <h2 className="text-3xl sm:text-5xl font-display font-black tracking-tight">
+            Contact
+          </h2>
+          <div className="mx-auto mt-4 h-px w-12 bg-black" />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          viewport={{ once: true }}
+          className="max-w-2xl mx-auto"
+        >
+          <motion.div
+            whileHover={{ y: -2 }}
+            transition={{ type: "spring", stiffness: 320, damping: 28 }}
+            className="relative bg-white border border-neutral-200 shadow-sm hover:shadow-md transition-shadow"
+            style={{
+              backgroundImage:
+                "repeating-linear-gradient(transparent, transparent 31px, rgba(0,0,0,0.04) 31px, rgba(0,0,0,0.04) 32px)",
+              backgroundPosition: "0 20px",
+            }}
+          >
+            {/* Red margin line — only on sm+ where indentation makes sense */}
+            <div
+              className="absolute top-0 bottom-0 w-px bg-red-200/70 hidden sm:block"
+              style={{ left: "60px" }}
+            />
+
+            <div className="p-5 sm:p-8 sm:pl-14 md:p-10 md:pl-20 font-serif text-sm sm:text-base leading-relaxed text-neutral-800">
+              <p className="text-[10px] tracking-[0.35em] uppercase text-neutral-400 mb-6 sm:mb-8 text-center"
+                 style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+                — A note from the composer —
+              </p>
+
+              <p>Dear reader,</p>
+
+              <p className="mt-5 sm:mt-8">
+                I am open to collaborating with performers, ensembles and institutions
+                seeking new work, be it new original compositions or the revival of
+                overlooked repertoire.
+              </p>
+
+              <p className="mt-5 sm:mt-8">
+                Alongside this, I offer engraving, orchestration and arrangement
+                services, as well as piano and composition teaching.
+              </p>
+
+              <p className="mt-5 sm:mt-8">
+                Each project begins simply with a conversation. Reach out:
+              </p>
+
+              <div className="mt-5 sm:mt-8 mb-2">
+                <a
+                  href="mailto:contact@hachem.cc"
+                  className="inline-flex items-center gap-2 border border-black bg-black text-white px-4 py-2.5 sm:px-5 text-sm tracking-wide transition-colors hover:bg-neutral-800 active:bg-neutral-700"
+                  style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
+                >
+                  <Mail className="h-3.5 w-3.5" />
+                  contact@hachem.cc
+                </a>
+              </div>
+
+              <p className="mt-10 sm:mt-16">Warmly,</p>
+              <p className="mt-5 sm:mt-8 text-xl sm:text-2xl italic">— Hachem H.</p>
+            </div>
+          </motion.div>
+        </motion.div>
+
+      </div>
+    </section>
+  );
+}
