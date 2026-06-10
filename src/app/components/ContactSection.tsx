@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Mail } from "lucide-react";
+import { Mail, Coffee } from "lucide-react";
 import { PerchedDeco } from "./PerchedDeco";
 import { CatStretching } from "./Deco";
 
@@ -77,7 +77,7 @@ export function ContactSection() {
                 If any of this sounds useful, write to me here:
               </p>
 
-              <div className="mt-5 sm:mt-8 mb-2">
+              <div className="mt-5 sm:mt-8 mb-2 flex flex-wrap items-center gap-3">
                 <a
                   href="mailto:contact@hachem.cc"
                   className="inline-flex items-center gap-2 border border-black bg-black text-white px-4 py-2.5 sm:px-5 text-sm tracking-wide transition-colors hover:bg-neutral-800 active:bg-neutral-700"
@@ -85,6 +85,24 @@ export function ContactSection() {
                 >
                   <Mail className="h-3.5 w-3.5" />
                   contact@hachem.cc
+                </a>
+              </div>
+
+              <p className="mt-5 sm:mt-8">
+                And if you simply enjoy what I do and want to support it, you
+                can buy me a coffee:
+              </p>
+
+              <div className="mt-5 sm:mt-8 mb-2">
+                <a
+                  href="https://ko-fi.com/hachem_mp3"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 border border-black bg-white px-4 py-2.5 sm:px-5 text-sm tracking-wide transition-colors hover:bg-neutral-50 active:bg-neutral-100"
+                  style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
+                >
+                  <Coffee className="h-3.5 w-3.5" />
+                  Support on Ko-fi
                 </a>
               </div>
 

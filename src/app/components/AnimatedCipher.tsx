@@ -68,8 +68,12 @@ export function AnimatedCipher({
           return;
         }
 
+        // Include <text> too: the tuplet "3", the 5/4 time signature and the
+        // letter names are text elements, not paths.
         const els = Array.from(
-          svg.querySelectorAll<SVGGraphicsElement>("path, rect, ellipse, circle")
+          svg.querySelectorAll<SVGGraphicsElement>(
+            "path, rect, ellipse, circle, text"
+          )
         ).filter((el) => !el.closest("clipPath") && !el.closest("defs"));
 
         // Horizontal extent, for the left→right stagger
@@ -90,6 +94,22 @@ export function AnimatedCipher({
         const BASE = 300;   // ms before the first glyph starts
         const TOTAL = 1700; // ms across which glyph delays are spread
         let lastEnd = 0;
+
+        // Rank the late group (flags and other tall fills) left→right so
+        // they draw strictly one by one at the end.
+        const flagRank = new Map<number, number>();
+        els.forEach((el, i) => {
+          const b = boxes[i];
+          if (!b) return;
+          const style = el.getAttribute("style") ?? "";
+          if (style.includes("fill:none")) return;
+          if (el.tagName.toLowerCase() === "text") return;
+          const isBeam = b.width > b.height * 2 && b.width > 10;
+          if (!isBeam && b.height > b.width * 1.5) flagRank.set(i, b.x);
+        });
+        [...flagRank.entries()]
+          .sort((a, b) => a[1] - b[1])
+          .forEach(([i], rank) => flagRank.set(i, rank));
 
         els.forEach((el, i) => {
           const b = boxes[i];
@@ -142,26 +162,62 @@ export function AnimatedCipher({
             };
             lastEnd = Math.max(lastEnd, delay + duration);
           } else {
-            // Filled glyphs: opacity fade only — never animate transforms.
-            const duration = 300;
-            el.style.opacity = "0";
-            const anim = el.animate([{ opacity: 0 }, { opacity: 1 }], {
-              delay,
-              duration,
-              easing: "ease-out",
-              fill: "forwards",
-            });
-            anim.onfinish = () => {
-              el.style.opacity = "";
-              anim.cancel();
-            };
-            lastEnd = Math.max(lastEnd, delay + duration);
+            // Filled glyphs and text. Wide fills (beams) wipe in left to
+            // right and tall fills (flags, accidentals, the brace) wipe in
+            // top to bottom along the stem, just after it, so they read as
+            // drawn. Everything else (noteheads, letters, numerals) fades.
+            // Only opacity and clip-path are animated, never transforms.
+            const isText = el.tagName.toLowerCase() === "text";
+            const isBeam = !isText && b.width > b.height * 2 && b.width > 10;
+            const isFlag = !isText && !isBeam && b.height > b.width * 1.5;
+
+            if (isBeam || isFlag) {
+              const hidden = isBeam
+                ? "inset(0 100% 0 0)" // reveal left → right
+                : "inset(0 0 100% 0)"; // reveal top → bottom
+              const shown = "inset(0 0 0 0)";
+              // Flags are the finishing touch: they wait for the whole
+              // system, then draw one by one, left to right.
+              const start = isFlag
+                ? BASE + TOTAL + 150 + (flagRank.get(i) ?? 0) * 240
+                : delay + 80; // beams just let their stems land first
+              const duration = isBeam ? 260 : 220;
+              el.style.clipPath = hidden;
+              const anim = el.animate(
+                [{ clipPath: hidden }, { clipPath: shown }],
+                {
+                  delay: start,
+                  duration,
+                  easing: "ease-out",
+                  fill: "forwards",
+                }
+              );
+              anim.onfinish = () => {
+                el.style.clipPath = "";
+                anim.cancel();
+              };
+              lastEnd = Math.max(lastEnd, start + duration);
+            } else {
+              const duration = 300;
+              el.style.opacity = "0";
+              const anim = el.animate([{ opacity: 0 }, { opacity: 1 }], {
+                delay,
+                duration,
+                easing: "ease-out",
+                fill: "forwards",
+              });
+              anim.onfinish = () => {
+                el.style.opacity = "";
+                anim.cancel();
+              };
+              lastEnd = Math.max(lastEnd, delay + duration);
+            }
           }
         });
 
         window.setTimeout(() => {
           if (!cancelled) doneRef.current?.();
-        }, Math.min(lastEnd, 2600));
+        }, Math.min(lastEnd, 3800));
       })
       .catch(() => {
         if (!cancelled) {

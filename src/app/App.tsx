@@ -125,6 +125,16 @@ export default function App() {
           </a>
           <span className="text-neutral-200" aria-hidden>𝄐</span>
           <a
+            href="https://ko-fi.com/hachem_mp3"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs tracking-widest uppercase text-neutral-400 hover:text-black transition-colors"
+            style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
+          >
+            Ko-fi
+          </a>
+          <span className="text-neutral-200" aria-hidden>𝄐</span>
+          <a
             href="mailto:contact@hachem.cc"
             className="text-xs tracking-widest uppercase text-neutral-400 hover:text-black transition-colors"
             style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
