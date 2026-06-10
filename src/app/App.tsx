@@ -5,8 +5,11 @@ import { CompositionRack, compositions } from "./components/CompositionRack";
 import { CompositionModal } from "./components/CompositionModal";
 import { CompositionsLibrary } from "./components/CompositionsLibrary";
 import { AboutSection } from "./components/AboutSection";
+import { ServicesSection } from "./components/ServicesSection";
+import { CommissionsSection } from "./components/CommissionsSection";
 import { ContactSection } from "./components/ContactSection";
 import { NavHeader } from "./components/NavHeader";
+import { StaffDivider } from "./components/StaffDivider";
 import type { Composition } from "./components/CompositionRack";
 import backgroundSvg from "../assets/background.svg";
 
@@ -45,14 +48,13 @@ export default function App() {
       </div>
 
       {/* About */}
-      <div id="about" className="relative z-10 bg-white">
-        <div className="h-px bg-neutral-200 mx-8 sm:mx-16" />
+      <div id="about" className="relative z-10 bg-white scroll-mt-12">
+        <StaffDivider className="pt-10" />
         <AboutSection />
       </div>
 
       {/* Featured works */}
-      <div id="works" className="relative z-10 bg-white">
-        <div className="h-px bg-neutral-200 mx-8 sm:mx-16" />
+      <div id="works" className="relative z-10 bg-white scroll-mt-12">
         <CompositionRack
           onCompositionClick={setSelectedComposition}
           onViewAllClick={() => setIsLibraryOpen(true)}
@@ -60,14 +62,26 @@ export default function App() {
       </div>
 
       {/* Lili Boulanger Restoration Project */}
-      <div id="projects" className="relative z-10 bg-neutral-50">
-        <div className="h-px bg-neutral-200 mx-8 sm:mx-16" />
+      <div id="projects" className="relative z-10 bg-neutral-50 scroll-mt-12">
+        <StaffDivider className="pt-10" />
         <BookSection />
       </div>
 
+      {/* Services */}
+      <div id="services" className="relative z-10 bg-white scroll-mt-12">
+        <StaffDivider className="pt-10" />
+        <ServicesSection />
+      </div>
+
+      {/* Commissions */}
+      <div id="commissions" className="relative z-10 bg-neutral-50 scroll-mt-12">
+        <StaffDivider className="pt-10" />
+        <CommissionsSection />
+      </div>
+
       {/* Contact */}
-      <div id="contact" className="relative z-10 bg-white">
-        <div className="h-px bg-neutral-200 mx-8 sm:mx-16" />
+      <div id="contact" className="relative z-10 bg-white scroll-mt-12">
+        <StaffDivider className="pt-10" />
         <ContactSection />
       </div>
 
@@ -88,8 +102,8 @@ export default function App() {
       />
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-neutral-200 bg-white px-4 py-8 text-center">
-        <div className="flex items-center justify-center gap-6 mb-4">
+      <footer className="relative z-10 border-t border-neutral-200 bg-white px-4 py-10 text-center">
+        <div className="flex items-center justify-center gap-6 mb-5">
           <a
             href="https://www.youtube.com/@hachem.mp3"
             target="_blank"
@@ -99,7 +113,7 @@ export default function App() {
           >
             YouTube
           </a>
-          <span className="text-neutral-200">·</span>
+          <span className="text-neutral-200" aria-hidden>𝄐</span>
           <a
             href="https://www.instagram.com/hachem.mp3/"
             target="_blank"
@@ -109,8 +123,19 @@ export default function App() {
           >
             Instagram
           </a>
+          <span className="text-neutral-200" aria-hidden>𝄐</span>
+          <a
+            href="mailto:contact@hachem.cc"
+            className="text-xs tracking-widest uppercase text-neutral-400 hover:text-black transition-colors"
+            style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
+          >
+            Email
+          </a>
         </div>
-        <p className="font-serif text-sm text-neutral-300">© 2026 Hachem H.</p>
+        <p className="font-serif text-sm text-neutral-300">
+          © 2026 Hachem H. <span className="mx-1.5" aria-hidden>·</span>
+          <span className="italic"> 𝄂    fine.</span>
+        </p>
       </footer>
     </div>
   );

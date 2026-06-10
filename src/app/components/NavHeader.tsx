@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useScroll, useSpring } from "motion/react";
 import { X, Menu } from "lucide-react";
 
 const navLinks = [
   { label: "About",    href: "#about" },
   { label: "Works",    href: "#works" },
   { label: "Projects", href: "#projects" },
+  { label: "Services", href: "#services" },
+  { label: "Commissions", href: "#commissions" },
   { label: "Contact",  href: "#contact" },
 ];
 
@@ -17,6 +19,14 @@ function scrollTo(href: string) {
 export function NavHeader() {
   const [scrolled, setScrolled]   = useState(false);
   const [menuOpen, setMenuOpen]   = useState(false);
+
+  // Scroll "playhead" — a thin line tracing reading progress like a score
+  const { scrollYProgress } = useScroll();
+  const playhead = useSpring(scrollYProgress, {
+    stiffness: 140,
+    damping: 28,
+    mass: 0.4,
+  });
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 60);
@@ -76,6 +86,13 @@ export function NavHeader() {
             {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
+
+        {/* Playhead */}
+        <motion.div
+          aria-hidden
+          className="absolute bottom-0 left-0 right-0 h-[2px] bg-neutral-900 origin-left"
+          style={{ scaleX: playhead }}
+        />
       </motion.header>
 
       {/* Mobile full-screen menu */}
@@ -93,7 +110,7 @@ export function NavHeader() {
             <div className="h-12 border-b border-neutral-200 shrink-0" />
 
             {/* Links */}
-            <nav className="flex-1 flex flex-col justify-center items-center gap-10 px-8">
+            <nav className="flex-1 flex flex-col justify-center items-center gap-7 px-8">
               {navLinks.map((link, i) => (
                 <motion.a
                   key={link.href}

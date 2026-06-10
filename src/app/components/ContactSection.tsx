@@ -1,5 +1,7 @@
 import { motion } from "motion/react";
 import { Mail } from "lucide-react";
+import { PerchedDeco } from "./PerchedDeco";
+import { CatStretching } from "./Deco";
 
 export function ContactSection() {
   return (
@@ -37,6 +39,15 @@ export function ContactSection() {
               backgroundPosition: "0 20px",
             }}
           >
+            {/* A cat stretching along the letter's top edge */}
+            <PerchedDeco
+              className="absolute -top-[26px] right-10 w-12 h-7"
+              idle="sway"
+              delay={0.6}
+            >
+              <CatStretching className="w-full h-full" />
+            </PerchedDeco>
+
             {/* Red margin line — only on sm+ where indentation makes sense */}
             <div
               className="absolute top-0 bottom-0 w-px bg-red-200/70 hidden sm:block"
@@ -46,24 +57,24 @@ export function ContactSection() {
             <div className="p-5 sm:p-8 sm:pl-14 md:p-10 md:pl-20 font-serif text-sm sm:text-base leading-relaxed text-neutral-800">
               <p className="text-[10px] tracking-[0.35em] uppercase text-neutral-400 mb-6 sm:mb-8 text-center"
                  style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                — A note from the composer —
+                A note from the composer
               </p>
 
               <p>Dear reader,</p>
 
               <p className="mt-5 sm:mt-8">
-                I am open to collaborating with performers, ensembles and institutions
-                seeking new work, be it new original compositions or the revival of
-                overlooked repertoire.
+                I am always glad to hear from performers, ensembles and
+                institutions looking for new work, whether that means an
+                original composition or the revival of overlooked repertoire.
               </p>
 
               <p className="mt-5 sm:mt-8">
-                Alongside this, I offer engraving, orchestration and arrangement
-                services, as well as piano and composition teaching.
+                I also take on engraving, orchestration and arrangement work,
+                and teach piano and composition.
               </p>
 
               <p className="mt-5 sm:mt-8">
-                Each project begins simply with a conversation. Reach out:
+                If any of this sounds useful, write to me here:
               </p>
 
               <div className="mt-5 sm:mt-8 mb-2">
@@ -78,7 +89,7 @@ export function ContactSection() {
               </div>
 
               <p className="mt-10 sm:mt-16">Warmly,</p>
-              <p className="mt-5 sm:mt-8 text-xl sm:text-2xl italic">— Hachem H.</p>
+              <p className="mt-5 sm:mt-8 text-xl sm:text-2xl italic">Hachem H.</p>
             </div>
           </motion.div>
         </motion.div>

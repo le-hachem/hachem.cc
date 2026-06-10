@@ -178,7 +178,7 @@ export function CompositionsLibrary({
                                  style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
                                 {cat}
                                 <span className="ml-2 font-normal text-neutral-400">
-                                  — {categoryDescriptions[cat]}
+                                  · {categoryDescriptions[cat]}
                                 </span>
                               </p>
                             </div>

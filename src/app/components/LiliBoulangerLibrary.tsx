@@ -202,7 +202,7 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
                                  style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
                                 {cat}
                                 <span className="ml-2 font-normal text-neutral-400">
-                                  — {categoryDescriptions[cat]}
+                                  · {categoryDescriptions[cat]}
                                 </span>
                               </p>
                             </div>
@@ -272,7 +272,7 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
             {/* Footer */}
             <div className="flex-none border-t border-neutral-200 px-5 sm:px-8 py-3 text-center">
               <p className="text-xs font-serif italic text-neutral-400">
-                More editions in progress — the library continues to grow.
+                More editions are on the way.
               </p>
             </div>
           </motion.div>

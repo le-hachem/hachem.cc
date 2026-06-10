@@ -1,6 +1,14 @@
 import { motion } from "motion/react";
 import { Music, Clock, Calendar, Headphones, Award } from "lucide-react";
 import { useState } from "react";
+import { PerchedDeco } from "./PerchedDeco";
+import { CatSitting, MusicalNotes, BirdOnBranch } from "./Deco";
+
+const cardPerches = [
+  { Deco: CatSitting,   className: "absolute -top-[34px] right-5 w-9 h-9",  idle: "sway"  as const },
+  { Deco: BirdOnBranch, className: "absolute -top-[30px] right-4 w-12 h-8", idle: "bob"   as const },
+  { Deco: MusicalNotes, className: "absolute -top-6 left-6 w-9 h-6",        idle: "bob"   as const },
+];
 
 export type CompositionCategory =
   | "Large Ensemble"
@@ -46,7 +54,7 @@ const compositions: Composition[] = [
     durationSeconds: 1447.97,
     category: "Large Ensemble",
     description:
-      "A dramatic cantata drawn from Goethe's Faust, tracing the fateful pact between the restless scholar and the shadow that names itself Mephistopheles. The work moves through temptation, rapture and reckoning, setting the tempter's sly lyricism against Faust's searching, late-Romantic harmonic palette. Composed in January 2025, the piece alternates aria and chorus in the tradition of the German oratorio, while reaching for a more cinematic orchestral colour where the narrative turns infernal.",
+      "A dramatic cantata after Goethe's Faust, following the pact between the restless scholar and Mephistopheles. Written in January 2025, it alternates aria and chorus in the tradition of the German oratorio, moving through temptation, rapture and reckoning. The harmonic language is late Romantic, with a broader, almost cinematic orchestral colour in the infernal scenes.",
     instrumentation: [
       "Piccolo", "2 Flutes", "2 Oboes", "Cor Anglais",
       "2 Clarinets", "Bass Clarinet", "2 Bassoons", "Sarrusophone",
@@ -55,10 +63,10 @@ const compositions: Composition[] = [
       "Soprano", "Alto", "Tenor", "Bass",
       "Violins I", "Violins II", "Violas", "Cellos", "Double Basses",
     ],
-    inspired: "Goethe's Faust, Part One — and the long tradition of Faustian cantatas from Schumann to Berlioz.",
+    inspired: "Goethe's Faust, Part One, and the tradition of Faustian cantatas from Schumann to Berlioz.",
     accolades: [
-      "ICS Composition Competition — 4th place overall",
-      "ICS Composition Competition — 1st place in Harmony & Orchestration",
+      "ICS Composition Competition · 4th place overall",
+      "ICS Composition Competition · 1st place in Harmony & Orchestration",
     ],
     audioUrl: "/music/Mephistopheles/audio.mp3",
     coverUrl: "/music/Mephistopheles/cover.png",
@@ -75,9 +83,9 @@ const compositions: Composition[] = [
     durationSeconds: 1120,
     category: "Chamber Music",
     description:
-      "A single-movement quartet in broad sonata form, moving from an agitated opening — all driving sixteenths and grinding semitones — through a lyrical, chorale-like development, to a compressed and darkened recapitulation. Written as a first serious reckoning with the medium, the piece carries the marks of that struggle openly.",
+      "A single-movement quartet in broad sonata form. An agitated opening, all driving sixteenths and grinding semitones, leads into a lyrical, chorale-like development and a compressed, darker recapitulation. It was a first serious attempt at the medium.",
     instrumentation: ["Violin I", "Violin II", "Viola", "Cello"],
-    inspired: "Ravel's Quartet in F and the late quartets of Beethoven — and a long, uncomfortable relationship with both.",
+    inspired: "Ravel's Quartet in F and the late quartets of Beethoven.",
   },
   {
     id: "fantaisie",
@@ -88,7 +96,7 @@ const compositions: Composition[] = [
     durationSeconds: 470,
     category: "Chamber Music",
     description:
-      "A free-form fantasy in two linked sections. The first is rhapsodic and improvisatory — the violin spinning out long arching phrases while the piano interrupts and redirects. The second is a strict passacaglia, the same bass line returning seven times in different harmonic light. The work ends where it began, but changed.",
+      "A free fantasy in two linked sections. The first is rhapsodic and improvisatory, the violin spinning out long phrases while the piano interrupts and redirects. The second is a strict passacaglia, the same bass line returning seven times under changing harmony.",
     instrumentation: ["Violin", "Piano"],
     inspired: "The solo sonatas of Prokofiev and the chamber music of Bartók.",
   },
@@ -101,7 +109,7 @@ const compositions: Composition[] = [
     durationSeconds: 320,
     category: "Chamber Music",
     description:
-      "An early work, written during a concentrated period of counterpoint study. The flute carries a long, winding melody of Fauréan contour; the piano gradually dissolves from arpeggiated textures into bare, widely spaced notes. One of the few early pieces considered finished rather than abandoned.",
+      "An early work, written during a period of concentrated counterpoint study. The flute carries a long, winding melody in the manner of Fauré, over a piano part that thins from arpeggios to bare, widely spaced notes. One of the few early pieces considered finished rather than abandoned.",
     instrumentation: ["Flute", "Piano"],
     inspired: "Fauré's Fantaisie for flute and Debussy's Syrinx.",
   },
@@ -116,7 +124,7 @@ const compositions: Composition[] = [
     durationSeconds: 750,
     category: "Piano Solo",
     description:
-      "Four character pieces in contrasting moods. The first is perpetual motion — restless, nearly mechanical. The second is a quietly searching nocturne in a remote key. The third, a sardonic scherzo that wears its irony openly. The fourth, a closing passacaille that draws all four threads back together, arriving at a stillness the opening had no patience for.",
+      "Four character pieces in contrasting moods: a restless perpetual motion, a quiet nocturne in a remote key, a sardonic scherzo, and a closing passacaille that gathers up material from the other three.",
     instrumentation: ["Piano"],
     inspired: "The keyboard preludes of Chopin and Debussy, and the early harmonic language of Scriabin.",
   },
@@ -131,7 +139,7 @@ const compositions: Composition[] = [
     durationSeconds: 555,
     category: "Voice & Piano",
     description:
-      "Three settings of French symbolist poetry, tracing loss, memory, and the slow dissolution of season into season. The vocal writing is lyrical and unadorned; the piano provides a shifting, restless commentary — often harmonically at odds with the surface simplicity of the text, as if the accompaniment alone knows how the poem ends.",
+      "Three settings of French symbolist poetry on loss, memory and the turning of the seasons. The vocal lines are plain and lyrical; the piano underneath is restless, and often harmonically at odds with the apparent simplicity of the text.",
     instrumentation: ["Mezzo-Soprano", "Piano"],
     inspired: "The mélodies of Fauré, Duparc, and the later songs of Debussy.",
   },
@@ -185,17 +193,17 @@ export function CompositionRack({ onCompositionClick, onViewAllClick }: Composit
               <div className="flex justify-end mb-4 sm:mb-0">
                 <button
                   onClick={onViewAllClick}
-                  className="sm:absolute sm:-top-10 sm:right-0 flex items-center gap-2 border border-black bg-white px-5 py-2 font-sans text-xs tracking-widest uppercase transition-colors hover:bg-neutral-50 active:bg-neutral-100"
+                  className="group sm:absolute sm:-top-10 sm:right-0 flex items-center gap-2 border border-black bg-white px-5 py-2 font-sans text-xs tracking-widest uppercase transition-colors hover:bg-neutral-50 active:bg-neutral-100"
                 >
                   <Music className="w-3 h-3" />
                   All Compositions
-                  <span className="transition-transform">→</span>
+                  <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
                 </button>
               </div>
 
               <div className="overflow-visible py-4 sm:py-6">
                 <div className="scrollbar-thin overflow-x-auto">
-                  <div className="flex min-w-max gap-8 px-2 py-4">
+                  <div className="flex min-w-max gap-8 px-2 pt-12 pb-4">
                     {featuredCompositions.map((composition, index) => (
                       <motion.div
                         key={composition.id}
@@ -209,6 +217,15 @@ export function CompositionRack({ onCompositionClick, onViewAllClick }: Composit
                         onClick={() => onCompositionClick(composition)}
                         className="group relative w-64 sm:w-72 md:w-80 cursor-pointer border border-neutral-200 bg-white shadow-sm transition-shadow hover:shadow-md hover:border-neutral-400"
                       >
+                        {/* Silhouette perched on the card's top edge */}
+                        {(() => {
+                          const perch = cardPerches[index % cardPerches.length];
+                          return (
+                            <PerchedDeco className={perch.className} idle={perch.idle} delay={0.5}>
+                              <perch.Deco className="w-full h-full" />
+                            </PerchedDeco>
+                          );
+                        })()}
                         <div className="relative z-10 p-6">
                           {composition.coverUrl && (
                             <div className="mb-5 relative aspect-square overflow-hidden bg-neutral-100 border border-neutral-100">

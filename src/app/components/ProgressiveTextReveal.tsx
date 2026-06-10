@@ -1,35 +1,61 @@
-import { useState, useEffect } from "react";
-import { motion } from "motion/react";
+import { useState, useEffect, useRef } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useReducedMotion,
+} from "motion/react";
+import { AnimatedCipher } from "./AnimatedCipher";
+import { AmbientNotes } from "./AmbientNotes";
 
 export function ProgressiveTextReveal() {
-  const [showCipher, setShowCipher]     = useState(false);
+  const [cipherDone, setCipherDone]   = useState(false);
   const [showSubtitle, setShowSubtitle] = useState(false);
-  const [showScroll, setShowScroll]     = useState(false);
+  const [showScroll, setShowScroll]   = useState(false);
 
-  // Block scrolling until intro is complete
+  // Parallax: the hero recedes and fades as it scrolls away
+  const heroRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const heroY       = useTransform(scrollYProgress, [0, 1], [0, 140]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
+  const heroScale   = useTransform(scrollYProgress, [0, 1], [1, 0.96]);
+
+  // Block scrolling until the intro is mostly complete
   useEffect(() => {
     document.body.style.overflow = "hidden";
 
-    const t1 = setTimeout(() => setShowCipher(true),   200);
-    const t2 = setTimeout(() => setShowSubtitle(true), 900);
-    const t3 = setTimeout(() => {
+    const t1 = setTimeout(() => setShowSubtitle(true), 1500);
+    const t2 = setTimeout(() => {
       document.body.style.overflow = "";
-    }, 1100);
-    const t4 = setTimeout(() => setShowScroll(true),   1500);
+    }, 1700);
+    const t3 = setTimeout(() => setShowScroll(true), 2300);
 
     return () => {
       document.body.style.overflow = "";
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
-      clearTimeout(t4);
     };
   }, []);
 
   return (
-    <div className="relative bg-transparent">
+    <div ref={heroRef} className="relative bg-transparent">
+      {/* Faint drifting notes behind the cipher */}
+      <AmbientNotes />
+
       <div className="flex h-screen items-center justify-center">
-        <div className="relative z-10 text-center px-8">
+        <motion.div
+          className="relative z-10 text-center px-8"
+          style={
+            reduceMotion
+              ? undefined
+              : { y: heroY, opacity: heroOpacity, scale: heroScale }
+          }
+        >
 
           {/* Top rule */}
           <motion.div
@@ -39,25 +65,21 @@ export function ProgressiveTextReveal() {
             className="mx-auto mb-8 w-12 h-px bg-black origin-center"
           />
 
-          {/* Musical cipher replacing the name */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: showCipher ? 1 : 0, y: showCipher ? 0 : 10 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="flex justify-center"
-          >
-            <img
-              src="/hachem-cipher.svg"
-              alt="Hachem H."
-              className="w-[95vw] sm:w-[85vw] md:w-[75vw] max-w-5xl"
-              draggable={false}
+          {/* Musical cipher — writes itself in, stroke by stroke */}
+          <div className="flex justify-center">
+            <AnimatedCipher
+              className="w-[95vw] sm:w-[85vw] md:w-[75vw] max-w-5xl select-none"
+              onDone={() => setCipherDone(true)}
             />
-          </motion.div>
+          </div>
 
           {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: showSubtitle ? 1 : 0, y: showSubtitle ? 0 : 6 }}
+            animate={{
+              opacity: showSubtitle || cipherDone ? 1 : 0,
+              y: showSubtitle || cipherDone ? 0 : 6,
+            }}
             transition={{ duration: 0.7 }}
             className="-mt-2 text-xs sm:text-sm tracking-[0.45em] uppercase text-neutral-500"
             style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
@@ -68,11 +90,11 @@ export function ProgressiveTextReveal() {
           {/* Bottom rule */}
           <motion.div
             initial={{ scaleX: 0 }}
-            animate={{ scaleX: showSubtitle ? 1 : 0 }}
+            animate={{ scaleX: showSubtitle || cipherDone ? 1 : 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mx-auto mt-8 w-12 h-px bg-black origin-center"
           />
-        </div>
+        </motion.div>
       </div>
 
       {/* Scroll indicator */}

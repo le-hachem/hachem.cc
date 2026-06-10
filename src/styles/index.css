@@ -5,10 +5,29 @@
 @layer base {
   html {
     cursor: default;
+    scroll-behavior: smooth;
   }
   a[href],
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]) {
     cursor: pointer;
+  }
+
+  /* Ink-on-paper text selection */
+  ::selection {
+    background: #171717;
+    color: #ffffff;
+  }
+
+  /* Visible keyboard focus, consistent with the b/w identity */
+  :focus-visible {
+    outline: 1.5px solid #171717;
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 }

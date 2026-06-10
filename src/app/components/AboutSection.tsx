@@ -1,5 +1,12 @@
-import { motion } from "motion/react";
+import {
+  motion,
+  useScroll,
+  useSpring,
+  useReducedMotion,
+} from "motion/react";
+import { useRef } from "react";
 import { Youtube, Instagram } from "lucide-react";
+import { ProfilePortrait } from "./ProfilePortrait";
 
 const milestones = [
   {
@@ -8,7 +15,7 @@ const milestones = [
   },
   {
     age: "6",
-    text: "Started composing — writing melodies in solfège syllables, having not yet learned to read a stave.",
+    text: "Started composing, writing melodies in solfège syllables before learning to read a stave.",
   },
   {
     age: "13",
@@ -25,8 +32,8 @@ const milestones = [
 ];
 
 const accolades = [
-  { title: "1st place — Harmony & Orchestration", body: "ICS Composition Competition" },
-  { title: "4th place — Overall",                 body: "ICS Composition Competition" },
+  { title: "1st Place · Harmony & Orchestration", body: "ICS Composition Competition" },
+  { title: "4th Place · Overall",                 body: "ICS Composition Competition" },
 ];
 
 const socials = [
@@ -43,6 +50,19 @@ const socials = [
 ];
 
 export function AboutSection() {
+  // The timeline's rail fills with ink as the reader scrolls through it
+  const timelineRef = useRef<HTMLOListElement>(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start 0.85", "end 0.45"],
+  });
+  const railScale = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 24,
+    mass: 0.5,
+  });
+
   return (
     <section className="relative bg-white px-4 py-12 sm:py-16 md:py-20">
       <div className="max-w-5xl mx-auto">
@@ -69,7 +89,14 @@ export function AboutSection() {
                  style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
                 Timeline
               </p>
-              <ol className="relative border-l border-neutral-200 space-y-0">
+              <ol ref={timelineRef} className="relative space-y-0">
+                {/* Rail track + ink fill driven by scroll */}
+                <div className="absolute left-0 top-0 bottom-0 w-px bg-neutral-200" aria-hidden />
+                <motion.div
+                  aria-hidden
+                  className="absolute left-0 top-0 bottom-0 w-px bg-neutral-900 origin-top"
+                  style={{ scaleY: reduceMotion ? 1 : railScale }}
+                />
                 {milestones.map((m, i) => (
                   <motion.li
                     key={i}
@@ -92,37 +119,35 @@ export function AboutSection() {
               </ol>
             </div>
 
-            {/* Right — prose */}
+            {/* Right — prose with inset portrait */}
             <div className="font-serif text-base sm:text-lg leading-relaxed text-neutral-800 space-y-6">
+              <ProfilePortrait className="float-right w-36 sm:w-44 ml-5 sm:ml-6 mb-2 !mt-1" />
               <p>
-                Hachem began his musical life at four and was composing by six —
-                inventing his own notation using solfège syllables before he had learned
-                to read a stave. It was an early sign of the self-reliance that would
-                define his formation.
+                Hachem began learning music at four and was composing by six,
+                writing melodies in solfège syllables because he had not yet
+                learned to read a stave.
               </p>
               <p>
-                By thirteen, driven by curiosity and a growing library of scores, he had
-                turned to serious self-study: working through harmony and counterpoint,
-                writing canons, sonatas and fugues, building a fluency in the classical
-                forms without formal instruction.
+                At thirteen he took up serious self-study, working through
+                harmony and counterpoint on his own and writing canons, sonatas
+                and fugues. Most of what he knows of the classical forms he
+                learned this way, from scores rather than teachers.
               </p>
               <p>
-                Born in Lebanon, he left at seventeen to pursue physics and mathematics
-                at university in France and Belgium — the analytical rigour leaving a
-                clear mark on how he approaches structure and form. In 2026 he left
-                academia to devote himself entirely to composition, and is currently
-                studying at the Sorbonne in Paris.
+                Born in Lebanon, he left at seventeen to study physics and
+                mathematics in France and then Belgium. In 2026 he left academia
+                for music entirely, and now studies composition at the Sorbonne
+                in Paris.
               </p>
               <p>
-                His work spans original composition for large forces and a quieter
-                scholarly practice: the{" "}
+                Alongside his own writing, he runs the{" "}
                 <span className="italic">Lili Boulanger Restoration Project</span>,
-                producing new critical editions of her manuscripts and releasing them
+                preparing new editions of her manuscripts and publishing them
                 freely on IMSLP.
               </p>
 
               {/* Social links */}
-              <div className="flex items-center gap-5 pt-2">
+              <div className="clear-both flex items-center gap-5 pt-2">
                 {socials.map(({ label, href, icon: Icon }) => (
                   <a
                     key={label}

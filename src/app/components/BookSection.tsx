@@ -1,8 +1,15 @@
-import { motion } from "motion/react";
-import { useState } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useReducedMotion,
+} from "motion/react";
+import { useState, useRef } from "react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { Library } from "lucide-react";
 import { LiliBoulangerLibrary } from "./LiliBoulangerLibrary";
+import { PerchedDeco } from "./PerchedDeco";
+import { BirdOnBranch, Butterfly } from "./Deco";
 
 /** Bain News Service, 1918; Library of Congress (public domain) via Wikimedia Commons */
 const LILI_BOULANGER_PORTRAIT =
@@ -11,8 +18,17 @@ const LILI_BOULANGER_PORTRAIT =
 export function BookSection() {
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
 
+  // Parallax: the portrait drifts slower than the letter as the section scrolls
+  const sectionRef = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const portraitY = useTransform(scrollYProgress, [0, 1], [26, -26]);
+
   return (
-    <section className="relative bg-neutral-50 px-4 pb-12 pt-12 sm:pb-16 sm:pt-16">
+    <section ref={sectionRef} className="relative bg-neutral-50 px-4 pb-12 pt-12 sm:pb-16 sm:pt-16">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -37,6 +53,14 @@ export function BookSection() {
             transition={{ type: "spring", stiffness: 320, damping: 28 }}
             className="relative z-20 w-full cursor-default border border-neutral-200 bg-white shadow-sm hover:shadow-md transition-shadow md:max-w-xl lg:max-w-2xl"
           >
+            {/* A bird perched on the letter's top edge */}
+            <PerchedDeco
+              className="absolute -top-[30px] right-8 w-12 h-8"
+              idle="bob"
+              delay={0.6}
+            >
+              <BirdOnBranch className="w-full h-full" />
+            </PerchedDeco>
             <div className="relative z-10 p-6 sm:p-10 md:p-12 font-serif"
                  style={{
                    backgroundImage:
@@ -63,16 +87,15 @@ export function BookSection() {
                 </p>
 
                 <p>
-                  The Restoration Project aims to change that. Through a careful study of her original
-                  manuscripts and sketches, each piece is given a new, clean engraving, faithful to
-                  her notation, correcting errors accumulated over a century of copies, and making her
-                  music accessible to performers everywhere.
+                  The Restoration Project aims to change that. Each piece is re-engraved from her
+                  manuscripts and sketches, faithful to her notation and free of the errors that
+                  crept in over a century of copies, so that performers anywhere can simply pick
+                  up the score and play.
                 </p>
 
                 <p>
-                  This is an ongoing effort. The library is growing as more works are completed and
-                  published freely on IMSLP. Every edition is a small act of restoration, bringing
-                  her voice back into the world, one score at a time.
+                  This is ongoing work. The library grows as editions are finished, and every one
+                  of them is published freely on IMSLP.
                 </p>
 
                 <div className="clear-both pt-2 flex justify-start">
@@ -93,7 +116,7 @@ export function BookSection() {
               {/* Signature */}
               <div className="mt-10 text-right clear-both">
                 <div className="inline-block border-t border-neutral-300 pt-3">
-                  <p className="text-xl font-serif italic text-neutral-600">— H. H.</p>
+                  <p className="text-xl font-serif italic text-neutral-600">H. H.</p>
                 </div>
               </div>
             </div>
@@ -101,10 +124,17 @@ export function BookSection() {
 
           {/* Portrait */}
           <motion.div
-            whileHover={{ y: -2 }}
-            transition={{ type: "spring", stiffness: 320, damping: 28 }}
+            style={reduceMotion ? undefined : { y: portraitY }}
             className="relative z-0 mx-auto mt-10 w-full max-w-[14rem] sm:max-w-xs cursor-default border border-neutral-200 bg-white shadow-sm hover:shadow-md transition-shadow md:absolute md:right-6 md:top-24 md:mx-0 md:mt-0 md:w-[min(100%,260px)] lg:right-10 lg:top-28"
           >
+            {/* A butterfly resting on the portrait frame */}
+            <PerchedDeco
+              className="absolute -top-3 -left-3 w-7 h-5"
+              idle="flutter"
+              delay={0.8}
+            >
+              <Butterfly className="w-full h-full" />
+            </PerchedDeco>
             <div className="p-3">
               <div className="aspect-[3/4] overflow-hidden border border-neutral-100 bg-neutral-50">
                 <ImageWithFallback
@@ -116,7 +146,7 @@ export function BookSection() {
 
               <div className="mt-3 text-center border-t border-neutral-100 pt-3">
                 <h3 className="text-base font-serif font-bold uppercase tracking-wide">Lili Boulanger</h3>
-                <p className="text-xs font-serif italic text-neutral-500 mt-0.5">1893 — 1918</p>
+                <p className="text-xs font-serif italic text-neutral-500 mt-0.5">1893–1918</p>
                 <p className="text-xs font-sans mt-1.5 text-neutral-400 tracking-wide">
                   First woman to win the Prix de Rome
                 </p>
