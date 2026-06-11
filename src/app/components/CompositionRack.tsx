@@ -46,6 +46,27 @@ interface CompositionRackProps {
 const compositions: Composition[] = [
   // ── Large Ensemble ──────────────────────────────────────────────────────────
   {
+    id: "myrrha",
+    title: "Myrrha",
+    subtitle: "A Cantata on the Death of Sardanapalus",
+    year: "2026",
+    duration: "23'08\"",
+    durationSeconds: 1387.9,
+    category: "Large Ensemble",
+    description:
+      "A dramatic cantata on the fall of Nineveh. As the city falls to invading forces, the slave Myrrha begs King Sardanapalus to flee with her, while the high priest Bélésis insists he accept his fate rather than live in dishonour. Torn between love and duty, the king orders a great pyre built and chooses to die in the flames rather than be taken by his enemies. Myrrha refuses to leave him, and the two die together as the kingdom burns. First performed in Prague in June 2026.",
+    instrumentation: [
+      "2 Flutes", "2 Oboes", "2 Clarinets in A", "2 Bassoons",
+      "4 Horns", "4 Trumpets", "3 Trombones",
+      "3 Timpani", "Cymbals", "Harp",
+      "Soprano", "Alto", "Tenor",
+      "Violins I", "Violins II", "Violas", "Cellos", "Double Basses",
+    ],
+    inspired: "Byron's tragedy Sardanapalus.",
+    audioUrl: "/music/Myrrha/audio.mp3",
+    peaksUrl: "/music/Myrrha/peaks.json",
+  },
+  {
     id: "mephistopheles",
     title: "Mephistopheles",
     subtitle: "A Cantata on the Story of Faust",
@@ -146,7 +167,7 @@ const compositions: Composition[] = [
 ];
 
 // Only these appear in the featured rack on the homepage.
-const featuredCompositionIds = ["mephistopheles"];
+const featuredCompositionIds = ["myrrha", "mephistopheles"];
 
 export { compositions };
 

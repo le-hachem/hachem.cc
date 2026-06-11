@@ -1,7 +1,10 @@
 import { defineConfig } from 'vite'
 import path from 'path'
+import fs from 'fs'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
+
+let spaFallbackOutDir = path.resolve(__dirname, 'dist')
 
 export default defineConfig({
   plugins: [
@@ -9,6 +12,21 @@ export default defineConfig({
     // Tailwind is not being actively used – do not remove them
     react(),
     tailwindcss(),
+    {
+      // GitHub Pages serves 404.html for unknown paths; copying index.html
+      // there makes deep links like hachem.cc/myrrha load the app, which
+      // then opens the right piece from the pathname.
+      name: 'spa-404-fallback',
+      configResolved(config: { root: string; build: { outDir: string } }) {
+        spaFallbackOutDir = path.resolve(config.root, config.build.outDir)
+      },
+      closeBundle() {
+        const index = path.join(spaFallbackOutDir, 'index.html')
+        if (fs.existsSync(index)) {
+          fs.copyFileSync(index, path.join(spaFallbackOutDir, '404.html'))
+        }
+      },
+    },
   ],
   resolve: {
     alias: {

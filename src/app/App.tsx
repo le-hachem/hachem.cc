@@ -17,17 +17,28 @@ export default function App() {
   const [selectedComposition, setSelectedComposition] = useState<Composition | null>(null);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
 
-  // Deep link: `?piece=<id>` opens that composition's modal on page load
+  // Deep link: `hachem.cc/<id>` or `?piece=<id>` opens that composition's
+  // modal on page load. Works even when the rack is hidden by
+  // VITE_HIDE_COMPOSITIONS, since it bypasses the listing entirely.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("piece");
+    const fromQuery = new URLSearchParams(window.location.search).get("piece");
+    const fromPath = decodeURIComponent(window.location.pathname)
+      .replace(/^\/+|\/+$/g, "");
+    const id = (fromQuery ?? fromPath).toLowerCase();
     if (!id) return;
-    const match = compositions.find(
-      (c) => c.id.toLowerCase() === id.toLowerCase()
-    );
+    const match = compositions.find((c) => c.id.toLowerCase() === id);
     if (match) setSelectedComposition(match);
   }, []);
+
+  // Keep the URL in sync: /<id> while a piece is open, / otherwise
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const target = selectedComposition ? `/${selectedComposition.id}` : "/";
+    if (window.location.pathname !== target) {
+      window.history.replaceState(null, "", target);
+    }
+  }, [selectedComposition]);
 
   return (
     <div className="relative min-h-screen bg-white">
