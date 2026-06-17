@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Play, Pause, Volume2, VolumeX, Loader2 } from "lucide-react";
+import { useLanguage } from "../i18n/LanguageContext";
 
 interface PeaksData {
   duration: number;
@@ -48,6 +49,7 @@ export function AudioPlayer({
   subtitle,
   barCount,
 }: AudioPlayerProps) {
+  const { t } = useLanguage();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const barsRef = useRef<HTMLDivElement | null>(null);
   const rafRef = useRef<number | null>(null);
@@ -284,7 +286,7 @@ export function AudioPlayer({
         <button
           type="button"
           onClick={togglePlay}
-          aria-label={isPlaying ? "Pause" : "Play"}
+          aria-label={isPlaying ? t.audio.pause : t.audio.play}
           className="flex h-12 w-12 sm:h-14 sm:w-14 flex-shrink-0 items-center justify-center border-2 sm:border-4 border-black bg-black text-white transition-colors hover:bg-neutral-800 active:scale-95"
         >
           {isLoading ? (
@@ -300,7 +302,7 @@ export function AudioPlayer({
         <div
           ref={barsRef}
           role="slider"
-          aria-label="Seek"
+          aria-label={t.audio.seek}
           aria-valuemin={0}
           aria-valuemax={Math.round(duration)}
           aria-valuenow={Math.round(currentTime)}
@@ -360,7 +362,7 @@ export function AudioPlayer({
         <button
           type="button"
           onClick={toggleMute}
-          aria-label={isMuted ? "Unmute" : "Mute"}
+          aria-label={isMuted ? t.audio.unmute : t.audio.mute}
           className="hidden sm:flex h-10 w-10 flex-shrink-0 items-center justify-center border-2 border-black bg-white transition-colors hover:bg-neutral-200"
         >
           {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}

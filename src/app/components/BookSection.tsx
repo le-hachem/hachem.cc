@@ -10,13 +10,19 @@ import { Library } from "lucide-react";
 import { LiliBoulangerLibrary } from "./LiliBoulangerLibrary";
 import { PerchedDeco } from "./PerchedDeco";
 import { BirdOnBranch, Butterfly } from "./Deco";
+import { useLanguage } from "../i18n/LanguageContext";
 
 /** Bain News Service, 1918; Library of Congress (public domain) via Wikimedia Commons */
 const LILI_BOULANGER_PORTRAIT =
   "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Lili_Boulanger.jpg/960px-Lili_Boulanger.jpg";
 
 export function BookSection() {
+  const { t } = useLanguage();
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
+  // The first paragraph opens with an ornamental drop cap, so split off its
+  // first character and render the remainder as flowing text.
+  const dropCap = t.book.p1.charAt(0);
+  const p1Rest = t.book.p1.slice(1);
 
   // Parallax: the portrait drifts slower than the letter as the section scrolls
   const sectionRef = useRef<HTMLElement>(null);
@@ -39,8 +45,8 @@ export function BookSection() {
         {/* Section header */}
         <div className="mb-8 sm:mb-12 text-center">
           <h2 className="text-3xl sm:text-5xl font-display font-black tracking-tight">
-            The Lili Boulanger<br />
-            <span className="text-xl sm:text-3xl font-normal italic">Restoration Project</span>
+            {t.book.titleTop}<br />
+            <span className="text-xl sm:text-3xl font-normal italic">{t.book.titleSub}</span>
           </h2>
           <div className="mx-auto mt-4 h-px w-12 bg-black" />
         </div>
@@ -75,28 +81,15 @@ export function BookSection() {
 
               {/* Ornamental initial cap */}
               <div className="float-left text-5xl sm:text-7xl font-serif font-black leading-none mr-3 sm:mr-5 mt-1 border border-neutral-200 px-3 py-1">
-                L
+                {dropCap}
               </div>
 
               <div className="text-base md:text-lg leading-relaxed text-justify space-y-5 text-neutral-800">
-                <p>
-                  ili Boulanger (1893–1918) was the first woman to win the Prix de Rome, yet many
-                  of her works remain without proper modern editions and some have never been formally
-                  published at all. Her manuscripts, scattered across archives, deserve to be heard
-                  as she intended.
-                </p>
+                <p>{p1Rest}</p>
 
-                <p>
-                  The Restoration Project aims to change that. Each piece is re-engraved from her
-                  manuscripts and sketches, faithful to her notation and free of the errors that
-                  crept in over a century of copies, so that performers anywhere can simply pick
-                  up the score and play.
-                </p>
+                <p>{t.book.p2}</p>
 
-                <p>
-                  This is ongoing work. The library grows as editions are finished, and every one
-                  of them is published freely on IMSLP.
-                </p>
+                <p>{t.book.p3}</p>
 
                 <div className="clear-both pt-2 flex justify-start">
                   <button
@@ -108,7 +101,7 @@ export function BookSection() {
                     className="inline-flex cursor-pointer items-center gap-2 border border-black bg-white px-4 py-2 font-sans text-xs tracking-widest uppercase transition-colors hover:bg-neutral-50 active:bg-neutral-100"
                   >
                     <Library className="h-3.5 w-3.5 shrink-0" />
-                    View her complete catalogue
+                    {t.book.viewCatalogue}
                   </button>
                 </div>
               </div>
@@ -148,7 +141,7 @@ export function BookSection() {
                 <h3 className="text-base font-serif font-bold uppercase tracking-wide">Lili Boulanger</h3>
                 <p className="text-xs font-serif italic text-neutral-500 mt-0.5">1893–1918</p>
                 <p className="text-xs font-sans mt-1.5 text-neutral-400 tracking-wide">
-                  First woman to win the Prix de Rome
+                  {t.book.portraitCaption}
                 </p>
               </div>
             </div>

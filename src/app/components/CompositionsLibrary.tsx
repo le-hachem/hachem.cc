@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { X, Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Composition, CompositionCategory } from "./CompositionRack";
+import { useLanguage } from "../i18n/LanguageContext";
 
 interface CompositionsLibraryProps {
   isOpen: boolean;
@@ -18,19 +19,13 @@ const categoryOrder: CompositionCategory[] = [
   "Voice & Piano",
 ];
 
-const categoryDescriptions: Record<CompositionCategory, string> = {
-  "Large Ensemble": "Orchestra, chorus, and large forces",
-  "Chamber Music":  "Small instrumental combinations",
-  "Piano Solo":     "Works for piano alone",
-  "Voice & Piano":  "Songs and mélodies",
-};
-
 export function CompositionsLibrary({
   isOpen,
   onClose,
   compositions,
   onCompositionClick,
 }: CompositionsLibraryProps) {
+  const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<CompositionCategory | "All">("All");
 
   useEffect(() => {
@@ -83,18 +78,18 @@ export function CompositionsLibrary({
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <h2 className="text-xl sm:text-2xl font-display font-black tracking-tight">
-                    Catalogue of Works
+                    {t.library.title}
                   </h2>
                   <p className="text-xs tracking-[0.3em] uppercase text-neutral-400 mt-1"
                      style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                    Hachem H. · {compositions.length} compositions
+                    {t.library.countLine(compositions.length)}
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={onClose}
                   className="flex h-8 w-8 items-center justify-center text-neutral-400 hover:text-black transition-colors shrink-0"
-                  aria-label="Close"
+                  aria-label={t.modal.close}
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -108,7 +103,7 @@ export function CompositionsLibrary({
               <aside className="hidden sm:flex flex-col w-48 shrink-0 border-r border-neutral-200 py-4">
                 <p className="px-4 text-[10px] tracking-[0.4em] uppercase text-neutral-400 mb-3"
                    style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                  By Instrumentation
+                  {t.library.byInstrumentation}
                 </p>
                 <nav className="flex flex-col gap-0.5 px-2">
                   {(["All", ...populated] as (CompositionCategory | "All")[]).map(cat => {
@@ -127,11 +122,11 @@ export function CompositionsLibrary({
                         }`}
                       >
                         <span className="block text-sm font-serif font-bold leading-tight">
-                          {cat === "All" ? "All Works" : cat}
+                          {cat === "All" ? t.library.allWorks : t.categories.labels[cat]}
                         </span>
                         <span className="block text-[10px] text-neutral-400 mt-0.5"
                               style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                          {count} {count === 1 ? "work" : "works"}
+                          {t.library.workCount(count)}
                         </span>
                       </button>
                     );
@@ -153,7 +148,7 @@ export function CompositionsLibrary({
                           : "border-neutral-200 text-neutral-600 hover:border-neutral-400"
                       }`}
                     >
-                      {cat === "All" ? "All" : cat}
+                      {cat === "All" ? t.library.all : t.categories.labels[cat]}
                     </button>
                   ))}
                 </div>
@@ -176,9 +171,9 @@ export function CompositionsLibrary({
                             <div className="sticky top-0 bg-neutral-50 border-b border-neutral-200 px-5 sm:px-6 py-2.5 z-10">
                               <p className="text-[10px] tracking-[0.35em] uppercase text-neutral-500 font-semibold"
                                  style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                                {cat}
+                                {t.categories.labels[cat]}
                                 <span className="ml-2 font-normal text-neutral-400">
-                                  · {categoryDescriptions[cat]}
+                                  · {t.categories.descriptions[cat]}
                                 </span>
                               </p>
                             </div>
@@ -208,7 +203,7 @@ export function CompositionsLibrary({
                                     {work.accolades && work.accolades.length > 0 && (
                                       <span className="text-[9px] tracking-widest uppercase bg-black text-white px-1.5 py-0.5"
                                             style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                                        Awarded
+                                        {t.rack.awarded}
                                       </span>
                                     )}
                                   </div>
@@ -242,7 +237,7 @@ export function CompositionsLibrary({
             {/* Footer */}
             <div className="flex-none border-t border-neutral-200 px-5 sm:px-8 py-3 text-center">
               <p className="text-xs font-serif italic text-neutral-400">
-                Click any work to view the full score and details
+                {t.library.footer}
               </p>
             </div>
           </motion.div>

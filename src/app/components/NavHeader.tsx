@@ -1,15 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useSpring } from "motion/react";
 import { X, Menu } from "lucide-react";
-
-const navLinks = [
-  { label: "About",    href: "#about" },
-  { label: "Works",    href: "#works" },
-  { label: "Projects", href: "#projects" },
-  { label: "Services", href: "#services" },
-  { label: "Commissions", href: "#commissions" },
-  { label: "Contact",  href: "#contact" },
-];
+import { useLanguage } from "../i18n/LanguageContext";
+import { LanguageToggle } from "./LanguageToggle";
 
 function scrollTo(href: string) {
   const target = document.querySelector(href);
@@ -17,6 +10,16 @@ function scrollTo(href: string) {
 }
 
 export function NavHeader() {
+  const { t } = useLanguage();
+  const navLinks = [
+    { label: t.nav.about,       href: "#about" },
+    { label: t.nav.works,       href: "#works" },
+    { label: t.nav.projects,    href: "#projects" },
+    { label: t.nav.services,    href: "#services" },
+    { label: t.nav.commissions, href: "#commissions" },
+    { label: t.nav.contact,     href: "#contact" },
+  ];
+
   const [scrolled, setScrolled]   = useState(false);
   const [menuOpen, setMenuOpen]   = useState(false);
 
@@ -75,16 +78,21 @@ export function NavHeader() {
                 {link.label}
               </a>
             ))}
+            <span className="h-3 w-px bg-neutral-200" aria-hidden />
+            <LanguageToggle />
           </nav>
 
-          {/* Hamburger — visible below md */}
-          <button
-            className="md:hidden flex items-center justify-center w-8 h-8 text-neutral-600 hover:text-black transition-colors"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            onClick={() => setMenuOpen(v => !v)}
-          >
-            {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          {/* Mobile: language toggle + hamburger — visible below md */}
+          <div className="flex items-center gap-4 md:hidden">
+            <LanguageToggle />
+            <button
+              className="flex items-center justify-center w-8 h-8 text-neutral-600 hover:text-black transition-colors"
+              aria-label={menuOpen ? t.nav.closeMenu : t.nav.openMenu}
+              onClick={() => setMenuOpen(v => !v)}
+            >
+              {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
 
         {/* Playhead */}

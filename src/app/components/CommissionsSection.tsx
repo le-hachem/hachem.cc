@@ -1,30 +1,13 @@
 import { motion } from "motion/react";
 import { Mail, Hourglass } from "lucide-react";
+import { useLanguage } from "../i18n/LanguageContext";
 
 /** Single source of truth for commission availability (set in .env). */
 export const commissionsOpen =
   import.meta.env.VITE_COMMISSIONS_OPEN === "true";
 
-const steps = [
-  {
-    title: "Inquiry",
-    body: "Write with the essentials: the ensemble, the occasion, the desired duration and the premiere date.",
-  },
-  {
-    title: "Conversation",
-    body: "We discuss character, programme context and practical constraints, then agree on scope, fee and schedule.",
-  },
-  {
-    title: "Sketch & Draft",
-    body: "You receive a sketch early in the writing for feedback, before the full draft is completed.",
-  },
-  {
-    title: "Score & Parts",
-    body: "Delivery of the final engraved score and parts, with revisions through the first rehearsals.",
-  },
-];
-
 function StatusSeal() {
+  const { t } = useLanguage();
   return (
     <div className="inline-flex items-center gap-3 border border-neutral-900 px-5 py-2.5">
       {commissionsOpen ? (
@@ -37,7 +20,7 @@ function StatusSeal() {
             className="text-xs tracking-[0.3em] uppercase text-neutral-900"
             style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
           >
-            Commissions open
+            {t.commissions.sealOpen}
           </span>
         </>
       ) : (
@@ -47,7 +30,7 @@ function StatusSeal() {
             className="text-xs tracking-[0.3em] uppercase text-neutral-500"
             style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
           >
-            Commissions closed
+            {t.commissions.sealClosed}
           </span>
         </>
       )}
@@ -56,6 +39,8 @@ function StatusSeal() {
 }
 
 export function CommissionsSection() {
+  const { t } = useLanguage();
+  const steps = t.commissions.steps;
   return (
     <section className="relative bg-neutral-50 px-4 py-12 sm:py-16 md:py-20">
       <div className="max-w-5xl mx-auto">
@@ -68,7 +53,7 @@ export function CommissionsSection() {
           className="mb-8 sm:mb-12 text-center"
         >
           <h2 className="text-3xl sm:text-5xl font-display font-black tracking-tight">
-            Commissions
+            {t.commissions.title}
           </h2>
           <div className="mx-auto mt-4 h-px w-12 bg-black" />
           <div className="mt-6">
@@ -85,17 +70,9 @@ export function CommissionsSection() {
           className="max-w-2xl mx-auto text-center font-serif text-base sm:text-lg leading-relaxed text-neutral-700"
         >
           {commissionsOpen ? (
-            <p>
-              I am currently taking on a limited number of commissions, from
-              solo and chamber pieces to large ensemble and choral works.
-              Slots are taken in order of premiere date.
-            </p>
+            <p>{t.commissions.ledeOpen}</p>
           ) : (
-            <p>
-              The commission diary is full for the moment while current works
-              are completed. Inquiries are still welcome! Write ahead and
-              you'll be first in line when the diary reopens.
-            </p>
+            <p>{t.commissions.ledeClosed}</p>
           )}
         </motion.div>
 
@@ -142,7 +119,7 @@ export function CommissionsSection() {
               style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
             >
               <Mail className="h-3.5 w-3.5" />
-              Inquire about a commission
+              {t.commissions.ctaOpen}
             </a>
           ) : (
             <a
@@ -151,7 +128,7 @@ export function CommissionsSection() {
               style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
             >
               <Mail className="h-3.5 w-3.5" />
-              Ask about future availability
+              {t.commissions.ctaClosed}
             </a>
           )}
         </motion.div>

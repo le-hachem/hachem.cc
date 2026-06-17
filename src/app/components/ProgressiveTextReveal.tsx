@@ -7,8 +7,10 @@ import {
 } from "motion/react";
 import { AnimatedCipher } from "./AnimatedCipher";
 import { AmbientNotes } from "./AmbientNotes";
+import { useLanguage } from "../i18n/LanguageContext";
 
 export function ProgressiveTextReveal() {
+  const { t } = useLanguage();
   const [cipherDone, setCipherDone]   = useState(false);
   const [showSubtitle, setShowSubtitle] = useState(false);
   const [showScroll, setShowScroll]   = useState(false);
@@ -84,7 +86,7 @@ export function ProgressiveTextReveal() {
             className="-mt-2 text-xs sm:text-sm tracking-[0.45em] uppercase text-neutral-500"
             style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
           >
-            Composer · Pianist · Conductor
+            {t.hero.subtitle}
           </motion.p>
 
           {/* Bottom rule */}
@@ -108,7 +110,7 @@ export function ProgressiveTextReveal() {
           className="text-[9px] tracking-[0.35em] uppercase text-neutral-400"
           style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
         >
-          Scroll
+          {t.hero.scroll}
         </span>
         <motion.div
           animate={{ y: [0, 5, 0] }}

@@ -3,6 +3,12 @@ import { Music, Clock, Calendar, Headphones, Award } from "lucide-react";
 import { useState } from "react";
 import { PerchedDeco } from "./PerchedDeco";
 import { CatSitting, MusicalNotes, BirdOnBranch } from "./Deco";
+import { useLanguage } from "../i18n/LanguageContext";
+import { tInstrument } from "../i18n/translations";
+import { featuredCompositionIds } from "../i18n/compositions";
+
+export type { Composition, CompositionCategory } from "../i18n/compositions";
+import type { Composition } from "../i18n/compositions";
 
 const cardPerches = [
   { Deco: CatSitting,   className: "absolute -top-[34px] right-5 w-9 h-9",  idle: "sway"  as const },
@@ -10,168 +16,14 @@ const cardPerches = [
   { Deco: MusicalNotes, className: "absolute -top-6 left-6 w-9 h-6",        idle: "bob"   as const },
 ];
 
-export type CompositionCategory =
-  | "Large Ensemble"
-  | "Chamber Music"
-  | "Piano Solo"
-  | "Voice & Piano";
-
-export interface Composition {
-  id: string;
-  title: string;
-  subtitle: string;
-  year: string;
-  duration: string;
-  description: string;
-  instrumentation: string[];
-  inspired: string;
-  category: CompositionCategory;
-  /** Relative URL of a streamable audio file (served from /public). */
-  audioUrl?: string;
-  /** Relative URL of the cover image (served from /public). */
-  coverUrl?: string;
-  /** Relative URL of a pre-computed peaks.json for waveform rendering. */
-  peaksUrl?: string;
-  /** Exact duration in seconds, used as a fallback while audio loads. */
-  durationSeconds?: number;
-  /** Prizes, awards, and other accolades. */
-  accolades?: string[];
-}
-
 interface CompositionRackProps {
+  compositions: Composition[];
   onCompositionClick: (composition: Composition) => void;
   onViewAllClick: () => void;
 }
 
-const compositions: Composition[] = [
-  // ── Large Ensemble ──────────────────────────────────────────────────────────
-  {
-    id: "myrrha",
-    title: "Myrrha",
-    subtitle: "A Cantata on the Death of Sardanapalus",
-    year: "2026",
-    duration: "23'08\"",
-    durationSeconds: 1387.9,
-    category: "Large Ensemble",
-    description:
-      "A dramatic cantata on the fall of Nineveh. As the city falls to invading forces, the slave Myrrha begs King Sardanapalus to flee with her, while the high priest Bélésis insists he accept his fate rather than live in dishonour. Torn between love and duty, the king orders a great pyre built and chooses to die in the flames rather than be taken by his enemies. Myrrha refuses to leave him, and the two die together as the kingdom burns. First performed in Prague in June 2026.",
-    instrumentation: [
-      "2 Flutes", "2 Oboes", "2 Clarinets in A", "2 Bassoons",
-      "4 Horns", "4 Trumpets", "3 Trombones",
-      "3 Timpani", "Cymbals", "Harp",
-      "Soprano", "Alto", "Tenor",
-      "Violins I", "Violins II", "Violas", "Cellos", "Double Basses",
-    ],
-    inspired: "Byron's tragedy Sardanapalus.",
-    audioUrl: "/music/Myrrha/audio.mp3",
-    peaksUrl: "/music/Myrrha/peaks.json",
-  },
-  {
-    id: "mephistopheles",
-    title: "Mephistopheles",
-    subtitle: "A Cantata on the Story of Faust",
-    year: "2025",
-    duration: "24'07\"",
-    durationSeconds: 1447.97,
-    category: "Large Ensemble",
-    description:
-      "A dramatic cantata after Goethe's Faust, following the pact between the restless scholar and Mephistopheles. Written in January 2025, it alternates aria and chorus in the tradition of the German oratorio, moving through temptation, rapture and reckoning. The harmonic language is late Romantic, with a broader, almost cinematic orchestral colour in the infernal scenes.",
-    instrumentation: [
-      "Piccolo", "2 Flutes", "2 Oboes", "Cor Anglais",
-      "2 Clarinets", "Bass Clarinet", "2 Bassoons", "Sarrusophone",
-      "4 Horns", "3 Trumpets", "3 Trombones", "Tuba",
-      "Timpani", "Celesta", "2 Harps", "Organ",
-      "Soprano", "Alto", "Tenor", "Bass",
-      "Violins I", "Violins II", "Violas", "Cellos", "Double Basses",
-    ],
-    inspired: "Goethe's Faust, Part One, and the tradition of Faustian cantatas from Schumann to Berlioz.",
-    accolades: [
-      "ICS Composition Competition · 4th place overall",
-      "ICS Composition Competition · 1st place in Harmony & Orchestration",
-    ],
-    audioUrl: "/music/Mephistopheles/audio.mp3",
-    coverUrl: "/music/Mephistopheles/cover.png",
-    peaksUrl: "/music/Mephistopheles/peaks.json",
-  },
-
-  // ── Chamber Music ────────────────────────────────────────────────────────────
-  {
-    id: "quatuor-no-1",
-    title: "Quatuor à cordes No. 1",
-    subtitle: "String Quartet",
-    year: "2024",
-    duration: "18'40\"",
-    durationSeconds: 1120,
-    category: "Chamber Music",
-    description:
-      "A single-movement quartet in broad sonata form. An agitated opening, all driving sixteenths and grinding semitones, leads into a lyrical, chorale-like development and a compressed, darker recapitulation. It was a first serious attempt at the medium.",
-    instrumentation: ["Violin I", "Violin II", "Viola", "Cello"],
-    inspired: "Ravel's Quartet in F and the late quartets of Beethoven.",
-  },
-  {
-    id: "fantaisie",
-    title: "Fantaisie",
-    subtitle: "For Violin and Piano",
-    year: "2024",
-    duration: "7'50\"",
-    durationSeconds: 470,
-    category: "Chamber Music",
-    description:
-      "A free fantasy in two linked sections. The first is rhapsodic and improvisatory, the violin spinning out long phrases while the piano interrupts and redirects. The second is a strict passacaglia, the same bass line returning seven times under changing harmony.",
-    instrumentation: ["Violin", "Piano"],
-    inspired: "The solo sonatas of Prokofiev and the chamber music of Bartók.",
-  },
-  {
-    id: "nocturne-flute",
-    title: "Nocturne",
-    subtitle: "For Flute and Piano",
-    year: "2022",
-    duration: "5'20\"",
-    durationSeconds: 320,
-    category: "Chamber Music",
-    description:
-      "An early work, written during a period of concentrated counterpoint study. The flute carries a long, winding melody in the manner of Fauré, over a piano part that thins from arpeggios to bare, widely spaced notes. One of the few early pieces considered finished rather than abandoned.",
-    instrumentation: ["Flute", "Piano"],
-    inspired: "Fauré's Fantaisie for flute and Debussy's Syrinx.",
-  },
-
-  // ── Piano Solo ──────────────────────────────────────────────────────────────
-  {
-    id: "quatre-preludes",
-    title: "Quatre Préludes",
-    subtitle: "For Solo Piano",
-    year: "2024",
-    duration: "12'30\"",
-    durationSeconds: 750,
-    category: "Piano Solo",
-    description:
-      "Four character pieces in contrasting moods: a restless perpetual motion, a quiet nocturne in a remote key, a sardonic scherzo, and a closing passacaille that gathers up material from the other three.",
-    instrumentation: ["Piano"],
-    inspired: "The keyboard preludes of Chopin and Debussy, and the early harmonic language of Scriabin.",
-  },
-
-  // ── Voice & Piano ────────────────────────────────────────────────────────────
-  {
-    id: "trois-melodies",
-    title: "Trois Mélodies",
-    subtitle: "For Mezzo-Soprano and Piano",
-    year: "2023",
-    duration: "9'15\"",
-    durationSeconds: 555,
-    category: "Voice & Piano",
-    description:
-      "Three settings of French symbolist poetry on loss, memory and the turning of the seasons. The vocal lines are plain and lyrical; the piano underneath is restless, and often harmonically at odds with the apparent simplicity of the text.",
-    instrumentation: ["Mezzo-Soprano", "Piano"],
-    inspired: "The mélodies of Fauré, Duparc, and the later songs of Debussy.",
-  },
-];
-
-// Only these appear in the featured rack on the homepage.
-const featuredCompositionIds = ["myrrha", "mephistopheles"];
-
-export { compositions };
-
-export function CompositionRack({ onCompositionClick, onViewAllClick }: CompositionRackProps) {
+export function CompositionRack({ compositions, onCompositionClick, onViewAllClick }: CompositionRackProps) {
+  const { lang, t } = useLanguage();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const isHidden = import.meta.env.VITE_HIDE_COMPOSITIONS === "true";
 
@@ -191,12 +43,12 @@ export function CompositionRack({ onCompositionClick, onViewAllClick }: Composit
           className="mb-8 sm:mb-12 text-center"
         >
           <h2 className="text-3xl sm:text-5xl font-display font-black tracking-tight">
-            Featured Works
+            {t.rack.title}
           </h2>
           <div className="mx-auto mt-4 h-px w-12 bg-black" />
           <p className="mt-4 text-xs tracking-[0.4em] uppercase text-neutral-500"
              style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-            Selected Compositions
+            {t.rack.subtitle}
           </p>
         </motion.div>
 
@@ -204,7 +56,7 @@ export function CompositionRack({ onCompositionClick, onViewAllClick }: Composit
           <div className="text-center py-16 px-4">
             <Music className="w-6 h-6 mx-auto mb-4 text-neutral-300" />
             <p className="font-serif text-base text-neutral-400 italic">
-              Currently compositions are hidden due to maintenance,<br />check back in a few days.
+              {t.rack.maintenanceLine1}<br />{t.rack.maintenanceLine2}
             </p>
           </div>
         ) : (
@@ -217,7 +69,7 @@ export function CompositionRack({ onCompositionClick, onViewAllClick }: Composit
                   className="group sm:absolute sm:-top-10 sm:right-0 flex items-center gap-2 border border-black bg-white px-5 py-2 font-sans text-xs tracking-widest uppercase transition-colors hover:bg-neutral-50 active:bg-neutral-100"
                 >
                   <Music className="w-3 h-3" />
-                  All Compositions
+                  {t.rack.allCompositions}
                   <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
                 </button>
               </div>
@@ -261,7 +113,7 @@ export function CompositionRack({ onCompositionClick, onViewAllClick }: Composit
                                   <Award className="w-3 h-3" />
                                   <span className="text-[10px] uppercase tracking-wider"
                                         style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                                    Awarded
+                                    {t.rack.awarded}
                                   </span>
                                 </div>
                               )}
@@ -270,7 +122,7 @@ export function CompositionRack({ onCompositionClick, onViewAllClick }: Composit
                                   <Headphones className="w-3 h-3" />
                                   <span className="text-[10px] uppercase tracking-wider"
                                         style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                                    Listen
+                                    {t.rack.listen}
                                   </span>
                                 </div>
                               )}
@@ -301,7 +153,7 @@ export function CompositionRack({ onCompositionClick, onViewAllClick }: Composit
                             <div className="mt-4 pt-4 border-t border-neutral-100">
                               <p className="text-[10px] uppercase tracking-widest text-neutral-400 mb-2"
                                  style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                                Instrumentation
+                                {t.rack.instrumentation}
                               </p>
                               <div className="flex flex-wrap gap-1">
                                 {composition.instrumentation.map((inst, i) => (
@@ -309,7 +161,7 @@ export function CompositionRack({ onCompositionClick, onViewAllClick }: Composit
                                     key={i}
                                     className="text-[11px] font-serif border border-neutral-200 px-1.5 py-0.5 text-neutral-600 bg-neutral-50"
                                   >
-                                    {inst}
+                                    {tInstrument(inst, lang)}
                                   </span>
                                 ))}
                               </div>
@@ -320,7 +172,7 @@ export function CompositionRack({ onCompositionClick, onViewAllClick }: Composit
                               animate={{ opacity: hoveredId === composition.id ? 1 : 0 }}
                               className="absolute bottom-4 right-4 text-xs font-serif italic text-neutral-400"
                             >
-                              Open →
+                              {t.rack.open}
                             </motion.div>
                           </div>
                         </div>

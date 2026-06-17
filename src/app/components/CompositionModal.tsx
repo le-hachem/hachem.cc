@@ -4,6 +4,8 @@ import { X, Music, Calendar, Clock, Award } from "lucide-react";
 import { useEffect } from "react";
 import type { Composition } from "./CompositionRack";
 import { AudioPlayer } from "./AudioPlayer";
+import { useLanguage } from "../i18n/LanguageContext";
+import { tInstrument } from "../i18n/translations";
 
 interface CompositionModalProps {
   composition: Composition | null;
@@ -11,6 +13,7 @@ interface CompositionModalProps {
 }
 
 export function CompositionModal({ composition, onClose }: CompositionModalProps) {
+  const { lang, t } = useLanguage();
   useEffect(() => {
     if (!composition) return;
     document.body.style.overflow = "hidden";
@@ -79,7 +82,7 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
                       <Clock className="w-3 h-3" /> {composition.duration}
                     </span>
                     <span className="tracking-widest uppercase text-[10px]">
-                      {composition.category}
+                      {t.categories.labels[composition.category]}
                     </span>
                   </div>
                 </div>
@@ -88,7 +91,7 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
                 type="button"
                 onClick={onClose}
                 className="shrink-0 flex h-8 w-8 items-center justify-center text-neutral-400 hover:text-black transition-colors"
-                aria-label="Close"
+                aria-label={t.modal.close}
               >
                 <X className="h-5 w-5" />
               </button>
@@ -115,7 +118,7 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
                 <div>
                   <p className="text-[10px] tracking-[0.4em] uppercase text-neutral-400 mb-3"
                      style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                    Recognition
+                    {t.modal.recognition}
                   </p>
                   <div className="space-y-2">
                     {composition.accolades.map((line, i) => (
@@ -132,7 +135,7 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
               <div>
                 <p className="text-[10px] tracking-[0.4em] uppercase text-neutral-400 mb-3"
                    style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                  About this work
+                  {t.modal.about}
                 </p>
                 <div className="border-l-2 border-neutral-200 pl-4">
                   <p className="text-sm sm:text-base font-serif leading-relaxed text-neutral-800">
@@ -145,7 +148,7 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
               <div>
                 <p className="text-[10px] tracking-[0.4em] uppercase text-neutral-400 mb-3"
                    style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                  Influences
+                  {t.modal.influences}
                 </p>
                 <p className="text-sm font-serif italic text-neutral-600 border border-neutral-200 px-4 py-3 bg-neutral-50">
                   "{composition.inspired}"
@@ -156,7 +159,7 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
               <div>
                 <p className="text-[10px] tracking-[0.4em] uppercase text-neutral-400 mb-3"
                    style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                  Instrumentation
+                  {t.modal.instrumentation}
                 </p>
                 <div className="flex flex-wrap gap-1.5">
                   {composition.instrumentation.map((inst, i) => (
@@ -164,7 +167,7 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
                       key={i}
                       className="text-xs font-serif border border-neutral-200 bg-neutral-50 px-2 py-1 text-neutral-700"
                     >
-                      {inst}
+                      {tInstrument(inst, lang)}
                     </span>
                   ))}
                 </div>
@@ -176,7 +179,7 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
           {/* Footer */}
           <div className="flex-none border-t border-neutral-200 px-5 sm:px-8 py-3 text-center">
             <p className="text-xs font-serif italic text-neutral-400">
-              Click outside to close
+              {t.modal.clickOutside}
             </p>
           </div>
         </motion.div>

@@ -7,34 +7,10 @@ import {
 import { useRef } from "react";
 import { Youtube, Instagram } from "lucide-react";
 import { ProfilePortrait } from "./ProfilePortrait";
+import { useLanguage } from "../i18n/LanguageContext";
 
-const milestones = [
-  {
-    age: "4",
-    text: "Began learning music.",
-  },
-  {
-    age: "6",
-    text: "Started composing, writing melodies in solfège syllables before learning to read a stave.",
-  },
-  {
-    age: "13",
-    text: "Turned to serious self-study: harmony, counterpoint, form. Writing canons, sonatas and fugues without formal instruction.",
-  },
-  {
-    age: "17",
-    text: "Left Lebanon to pursue physics and mathematics, studying at university in France and then Belgium.",
-  },
-  {
-    age: "2026",
-    text: "Left academia to focus entirely on music. Now studying composition at the Sorbonne, Paris.",
-  },
-];
-
-const accolades = [
-  { title: "1st Place · Harmony & Orchestration", body: "ICS Composition Competition" },
-  { title: "4th Place · Overall",                 body: "ICS Composition Competition" },
-];
+/** Ages/years align by index with t.about.milestones. */
+const milestoneAges = ["4", "6", "13", "17", "2026"];
 
 const socials = [
   {
@@ -50,6 +26,7 @@ const socials = [
 ];
 
 export function AboutSection() {
+  const { t } = useLanguage();
   // The timeline's rail fills with ink as the reader scrolls through it
   const timelineRef = useRef<HTMLOListElement>(null);
   const reduceMotion = useReducedMotion();
@@ -75,7 +52,7 @@ export function AboutSection() {
           {/* Header */}
           <div className="mb-10 sm:mb-14 text-center">
             <h2 className="text-3xl sm:text-5xl font-display font-black tracking-tight">
-              Biography
+              {t.about.title}
             </h2>
             <div className="mx-auto mt-4 h-px w-12 bg-black" />
           </div>
@@ -87,7 +64,7 @@ export function AboutSection() {
             <div className="relative">
               <p className="text-[10px] tracking-[0.4em] uppercase text-neutral-400 mb-6"
                  style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                Timeline
+                {t.about.timeline}
               </p>
               <ol ref={timelineRef} className="relative space-y-0">
                 {/* Rail track + ink fill driven by scroll */}
@@ -97,7 +74,7 @@ export function AboutSection() {
                   className="absolute left-0 top-0 bottom-0 w-px bg-neutral-900 origin-top"
                   style={{ scaleY: reduceMotion ? 1 : railScale }}
                 />
-                {milestones.map((m, i) => (
+                {milestoneAges.map((age, i) => (
                   <motion.li
                     key={i}
                     initial={{ opacity: 0, x: -8 }}
@@ -109,10 +86,10 @@ export function AboutSection() {
                     <span className="absolute -left-[4.5px] top-[5px] w-2 h-2 rounded-full bg-black border-2 border-white ring-1 ring-black" />
                     <p className="text-[11px] tracking-widest uppercase text-neutral-400 mb-1"
                        style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                      {isNaN(Number(m.age)) ? m.age : `Age ${m.age}`}
+                      {t.about.ageLabel(age)}
                     </p>
                     <p className="text-sm font-serif text-neutral-700 leading-relaxed">
-                      {m.text}
+                      {t.about.milestones[i]}
                     </p>
                   </motion.li>
                 ))}
@@ -122,28 +99,13 @@ export function AboutSection() {
             {/* Right — prose with inset portrait */}
             <div className="font-serif text-base sm:text-lg leading-relaxed text-neutral-800 space-y-6">
               <ProfilePortrait className="float-right w-36 sm:w-44 ml-5 sm:ml-6 mb-2 !mt-1" />
+              <p>{t.about.bio1}</p>
+              <p>{t.about.bio2}</p>
+              <p>{t.about.bio3}</p>
               <p>
-                Hachem began learning music at four and was composing by six,
-                writing melodies in solfège syllables because he had not yet
-                learned to read a stave.
-              </p>
-              <p>
-                At thirteen he took up serious self-study, working through
-                harmony and counterpoint on his own and writing canons, sonatas
-                and fugues. Most of what he knows of the classical forms he
-                learned this way, from scores rather than teachers.
-              </p>
-              <p>
-                Born in Lebanon, he left at seventeen to study physics and
-                mathematics in France and then Belgium. In 2026 he left academia
-                for music entirely, and now studies composition at the Sorbonne
-                in Paris.
-              </p>
-              <p>
-                Alongside his own writing, he runs the{" "}
-                <span className="italic">Lili Boulanger Restoration Project</span>,
-                preparing new editions of her manuscripts and publishing them
-                freely on IMSLP.
+                {t.about.bio4Pre}
+                <span className="italic">{t.about.bio4Project}</span>
+                {t.about.bio4Post}
               </p>
 
               {/* Social links */}
@@ -178,10 +140,10 @@ export function AboutSection() {
           >
             <p className="text-[10px] tracking-[0.4em] uppercase text-neutral-400 mb-6 text-center"
                style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-              Recognition
+              {t.about.recognition}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-10">
-              {accolades.map((a, i) => (
+              {t.about.accolades.map((a, i) => (
                 <div key={i} className="text-center">
                   <p className="font-serif font-bold text-sm text-neutral-800">{a.title}</p>
                   <p className="text-xs text-neutral-400 mt-0.5"

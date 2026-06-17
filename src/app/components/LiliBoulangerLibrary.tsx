@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { createPortal } from "react-dom";
 import { X, ExternalLink } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useLanguage } from "../i18n/LanguageContext";
+import { tLiliInstrumentation, tLiliText } from "../i18n/translations";
 
 type Category = "All" | "Piano" | "Chamber" | "Voice" | "Choral";
 
@@ -55,15 +57,8 @@ const works: LibraryWork[] = [
 
 const categoryOrder: Category[] = ["Piano", "Chamber", "Voice", "Choral"];
 
-const categoryDescriptions: Record<Category, string> = {
-  All:     "Complete catalogue",
-  Piano:   "Solo piano works",
-  Chamber: "Chamber & instrumental",
-  Voice:   "Songs for voice",
-  Choral:  "Choral & orchestral",
-};
-
 export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryProps) {
+  const { lang, t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<Category>("All");
 
   useEffect(() => {
@@ -109,18 +104,18 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <h2 className="text-xl sm:text-2xl font-display font-black tracking-tight">
-                    Lili Boulanger
+                    {t.lili.name}
                   </h2>
                   <p className="text-xs tracking-[0.3em] uppercase text-neutral-400 mt-1"
                      style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                    1893 – 1918 · {works.length} works · {editionCount} restored editions
+                    {t.lili.headerLine(works.length, editionCount)}
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={onClose}
                   className="flex h-8 w-8 items-center justify-center text-neutral-400 hover:text-black transition-colors shrink-0"
-                  aria-label="Close"
+                  aria-label={t.modal.close}
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -134,7 +129,7 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
               <aside className="hidden sm:flex flex-col w-48 shrink-0 border-r border-neutral-200 py-4">
                 <p className="px-4 text-[10px] tracking-[0.4em] uppercase text-neutral-400 mb-3"
                    style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                  By Instrumentation
+                  {t.lili.byInstrumentation}
                 </p>
                 <nav className="flex flex-col gap-0.5 px-2">
                   {(["All", ...populated] as Category[]).map(cat => {
@@ -151,11 +146,11 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
                         }`}
                       >
                         <span className="block text-sm font-serif font-bold leading-tight">
-                          {cat === "All" ? "All Works" : cat}
+                          {t.lili.categoryLabels[cat]}
                         </span>
                         <span className="block text-[10px] text-neutral-400 mt-0.5"
                               style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                          {count} {count === 1 ? "work" : "works"}
+                          {t.lili.workCount(count)}
                         </span>
                       </button>
                     );
@@ -177,7 +172,7 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
                           : "border-neutral-200 text-neutral-600 hover:border-neutral-400"
                       }`}
                     >
-                      {cat === "All" ? "All" : cat}
+                      {cat === "All" ? t.lili.all : t.lili.categoryLabels[cat]}
                     </button>
                   ))}
                 </div>
@@ -200,9 +195,9 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
                             <div className="sticky top-0 bg-neutral-50 border-b border-neutral-200 px-5 sm:px-6 py-2.5 z-10">
                               <p className="text-[10px] tracking-[0.35em] uppercase text-neutral-500 font-semibold"
                                  style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                                {cat}
+                                {t.lili.categoryLabels[cat]}
                                 <span className="ml-2 font-normal text-neutral-400">
-                                  · {categoryDescriptions[cat]}
+                                  · {t.lili.categoryDescriptions[cat]}
                                 </span>
                               </p>
                             </div>
@@ -232,14 +227,14 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
                                       {work.edition && (
                                         <span className="text-[9px] tracking-widest uppercase bg-black text-white px-1.5 py-0.5"
                                               style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                                          Edition
+                                          {t.lili.edition}
                                         </span>
                                       )}
                                     </div>
                                     <p className="text-xs sm:text-sm font-serif italic text-neutral-500 mt-0.5">
-                                      {work.instrumentation}
+                                      {tLiliInstrumentation(work.instrumentation, lang)}
                                       {work.text && (
-                                        <span className="not-italic text-neutral-400"> · {work.text}</span>
+                                        <span className="not-italic text-neutral-400"> · {tLiliText(work.text, lang)}</span>
                                       )}
                                     </p>
                                     {work.edition && (
@@ -272,7 +267,7 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
             {/* Footer */}
             <div className="flex-none border-t border-neutral-200 px-5 sm:px-8 py-3 text-center">
               <p className="text-xs font-serif italic text-neutral-400">
-                More editions are on the way.
+                {t.lili.footer}
               </p>
             </div>
           </motion.div>

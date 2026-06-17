@@ -2,8 +2,10 @@ import { motion } from "motion/react";
 import { Mail, Coffee } from "lucide-react";
 import { PerchedDeco } from "./PerchedDeco";
 import { CatStretching } from "./Deco";
+import { useLanguage } from "../i18n/LanguageContext";
 
 export function ContactSection() {
+  const { t } = useLanguage();
   return (
     <section className="relative bg-white px-4 py-12 sm:py-16 md:py-20">
       <div className="max-w-5xl mx-auto">
@@ -17,7 +19,7 @@ export function ContactSection() {
           className="mb-10 sm:mb-14 text-center"
         >
           <h2 className="text-3xl sm:text-5xl font-display font-black tracking-tight">
-            Contact
+            {t.contact.title}
           </h2>
           <div className="mx-auto mt-4 h-px w-12 bg-black" />
         </motion.div>
@@ -57,25 +59,16 @@ export function ContactSection() {
             <div className="p-5 sm:p-8 sm:pl-14 md:p-10 md:pl-20 font-serif text-sm sm:text-base leading-relaxed text-neutral-800">
               <p className="text-[10px] tracking-[0.35em] uppercase text-neutral-400 mb-6 sm:mb-8 text-center"
                  style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                A note from the composer
+                {t.contact.eyebrow}
               </p>
 
-              <p>Dear reader,</p>
+              <p>{t.contact.salutation}</p>
 
-              <p className="mt-5 sm:mt-8">
-                I am always glad to hear from performers, ensembles and
-                institutions looking for new work, whether that means an
-                original composition or the revival of overlooked repertoire.
-              </p>
+              <p className="mt-5 sm:mt-8">{t.contact.p1}</p>
 
-              <p className="mt-5 sm:mt-8">
-                I also take on engraving, orchestration and arrangement work,
-                and teach piano and composition.
-              </p>
+              <p className="mt-5 sm:mt-8">{t.contact.p2}</p>
 
-              <p className="mt-5 sm:mt-8">
-                If any of this sounds useful, write to me here:
-              </p>
+              <p className="mt-5 sm:mt-8">{t.contact.p3}</p>
 
               <div className="mt-5 sm:mt-8 mb-2 flex flex-wrap items-center gap-3">
                 <a
@@ -88,10 +81,7 @@ export function ContactSection() {
                 </a>
               </div>
 
-              <p className="mt-5 sm:mt-8">
-                And if you simply enjoy what I do and want to support it, you
-                can buy me a coffee:
-              </p>
+              <p className="mt-5 sm:mt-8">{t.contact.p4}</p>
 
               <div className="mt-5 sm:mt-8 mb-2">
                 <a
@@ -102,11 +92,11 @@ export function ContactSection() {
                   style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
                 >
                   <Coffee className="h-3.5 w-3.5" />
-                  Support on Ko-fi
+                  {t.contact.kofi}
                 </a>
               </div>
 
-              <p className="mt-10 sm:mt-16">Warmly,</p>
+              <p className="mt-10 sm:mt-16">{t.contact.closing}</p>
               <p className="mt-5 sm:mt-8 text-xl sm:text-2xl italic">Hachem H.</p>
             </div>
           </motion.div>

@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ProgressiveTextReveal } from "./components/ProgressiveTextReveal";
 import { BookSection } from "./components/BookSection";
-import { CompositionRack, compositions } from "./components/CompositionRack";
+import { CompositionRack } from "./components/CompositionRack";
 import { CompositionModal } from "./components/CompositionModal";
 import { CompositionsLibrary } from "./components/CompositionsLibrary";
 import { AboutSection } from "./components/AboutSection";
@@ -10,12 +10,20 @@ import { CommissionsSection } from "./components/CommissionsSection";
 import { ContactSection } from "./components/ContactSection";
 import { NavHeader } from "./components/NavHeader";
 import { StaffDivider } from "./components/StaffDivider";
-import type { Composition } from "./components/CompositionRack";
+import { getCompositions } from "./i18n/compositions";
+import { useLanguage } from "./i18n/LanguageContext";
 import backgroundSvg from "../assets/background.svg";
 
 export default function App() {
-  const [selectedComposition, setSelectedComposition] = useState<Composition | null>(null);
+  const { lang, t } = useLanguage();
+  // Compositions are rebuilt in the active language. We track the selected
+  // piece by id so the open modal follows language changes too.
+  const compositions = useMemo(() => getCompositions(lang), [lang]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
+
+  const selectedComposition =
+    compositions.find((c) => c.id === selectedId) ?? null;
 
   // Deep link: `hachem.cc/<id>` or `?piece=<id>` opens that composition's
   // modal on page load. Works even when the rack is hidden by
@@ -28,7 +36,8 @@ export default function App() {
     const id = (fromQuery ?? fromPath).toLowerCase();
     if (!id) return;
     const match = compositions.find((c) => c.id.toLowerCase() === id);
-    if (match) setSelectedComposition(match);
+    if (match) setSelectedId(match.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Keep the URL in sync: /<id> while a piece is open, / otherwise
@@ -67,7 +76,8 @@ export default function App() {
       {/* Featured works */}
       <div id="works" className="relative z-10 bg-white scroll-mt-12">
         <CompositionRack
-          onCompositionClick={setSelectedComposition}
+          compositions={compositions}
+          onCompositionClick={(c) => setSelectedId(c.id)}
           onViewAllClick={() => setIsLibraryOpen(true)}
         />
       </div>
@@ -100,7 +110,7 @@ export default function App() {
       {selectedComposition && (
         <CompositionModal
           composition={selectedComposition}
-          onClose={() => setSelectedComposition(null)}
+          onClose={() => setSelectedId(null)}
         />
       )}
 
@@ -109,7 +119,7 @@ export default function App() {
         isOpen={isLibraryOpen}
         onClose={() => setIsLibraryOpen(false)}
         compositions={compositions}
-        onCompositionClick={setSelectedComposition}
+        onCompositionClick={(c) => setSelectedId(c.id)}
       />
 
       {/* Footer */}
@@ -155,7 +165,7 @@ export default function App() {
         </div>
         <p className="font-serif text-sm text-neutral-300">
           © 2026 Hachem H. <span className="mx-1.5" aria-hidden>·</span>
-          <span className="italic"> 𝄂    fine.</span>
+          <span className="italic"> {t.footer.fine}</span>
         </p>
       </footer>
     </div>
