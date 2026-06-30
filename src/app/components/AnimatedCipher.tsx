@@ -1,29 +1,31 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Inlines /hachem-cipher.svg and animates it "writing itself" left to right:
- * staff lines sweep in first, then every glyph appears in reading order —
- * stroke paths (stems, barlines, ledger lines) draw via dashoffset, filled
- * shapes (noteheads, beams, flags, letters) ink in with an opacity fade.
+ * Inlines /hachem-cipher.svg and "plays" it in: a glowing playhead cursor
+ * sweeps left → right while a soft-edged mask trailing just behind it inks the
+ * notation in, in strict reading order (clef → key → notes → barline). The
+ * cursor fades at the final barline, leaving the finished cipher.
  *
- * Bug-proofing learned the hard way:
- * - Stagger is keyed to each element's bounding-box CENTER, and strokes and
- *   fills share the same delay curve, so a stem, its flag and its beam
- *   appear together instead of out of order.
- * - Fills animate opacity ONLY. Animating CSS transforms on SVG elements
- *   overrides their `transform` attributes and makes them jump.
- * - On finish, inline styles are set to the final state before the
- *   animation is cancelled, so there is no repaint flicker.
+ * A positional mask (rather than per-glyph staggering) keeps the reveal in true
+ * reading order — ordering individual paths by bounding box is fragile because
+ * beams, flags and stems share x-ranges.
  *
- * Falls back to a plain <img> on error; skips animation entirely when the
- * user prefers reduced motion.
+ * Falls back to a plain <img> on error; shows instantly under reduced motion.
  */
 export function AnimatedCipher({
   className = "",
   onDone,
+  invert = false,
 }: {
   className?: string;
   onDone?: () => void;
+  /**
+   * When true, every glyph is forced white and the whole cipher is composited
+   * with `mix-blend-mode: difference`. Painted over a photograph, the white
+   * notation then reads as a negative of whatever sits behind it — the cipher
+   * becomes a mask that inverts the image's colours.
+   */
+  invert?: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = useState(false);
@@ -63,161 +65,93 @@ export function AnimatedCipher({
           document.importNode(parsed, true)
         ) as unknown as SVGSVGElement;
 
+        // Invert mode: force every glyph white so the difference blend on the
+        // wrapper turns the photo behind into its own negative through the
+        // shape of the notation.
+        if (invert) {
+          const paintEls = Array.from(
+            svg.querySelectorAll<SVGGraphicsElement>(
+              "path, rect, ellipse, circle, text, line, polygon, polyline"
+            )
+          ).filter((el) => !el.closest("clipPath") && !el.closest("defs"));
+          paintEls.forEach((el) => {
+            const s = el.getAttribute("style") ?? "";
+            if (s.includes("fill:none")) {
+              el.style.stroke = "#ffffff";
+            } else {
+              el.style.fill = "#ffffff";
+              if (/stroke\s*:/.test(s) && !s.includes("stroke:none")) {
+                el.style.stroke = "#ffffff";
+              }
+            }
+          });
+        }
+
         if (reduceMotion) {
+          svg.classList.add("np-cipher-glow");
           doneRef.current?.();
           return;
         }
 
-        // Include <text> too: the tuplet "3", the 5/4 time signature and the
-        // letter names are text elements, not paths.
-        const els = Array.from(
-          svg.querySelectorAll<SVGGraphicsElement>(
-            "path, rect, ellipse, circle, text"
-          )
-        ).filter((el) => !el.closest("clipPath") && !el.closest("defs"));
+        // The score is "played": a thin playhead cursor sweeps left → right and
+        // the notation inks in just behind it, as if read off the page in time.
+        const DURATION = 1500;
+        const EASE = "cubic-bezier(0.4, 0, 0.2, 1)";
 
-        // Horizontal extent, for the left→right stagger
-        let minX = Infinity;
-        let maxX = -Infinity;
-        const boxes = els.map((el) => {
-          try {
-            const b = el.getBBox();
-            minX = Math.min(minX, b.x);
-            maxX = Math.max(maxX, b.x + b.width);
-            return b;
-          } catch {
-            return null;
-          }
-        });
-        const span = Math.max(maxX - minX, 1);
+        // 1) Soft reveal mask, trailing the cursor. The mask image is wider than
+        // the box; sliding it right-aligned → left-aligned uncovers the glyphs
+        // in reading order with a feathered edge.
+        const MASK =
+          "linear-gradient(to right, #000 0%, #000 50%, rgba(0,0,0,0) 56%, rgba(0,0,0,0) 100%)";
+        const setMask = (image: string) => {
+          svg.style.webkitMaskImage = image;
+          svg.style.maskImage = image;
+        };
+        setMask(MASK);
+        svg.style.webkitMaskRepeat = svg.style.maskRepeat = "no-repeat";
+        svg.style.webkitMaskSize = svg.style.maskSize = "240% 100%";
+        svg.style.webkitMaskPosition = svg.style.maskPosition = "100% 0%";
 
-        const BASE = 300;   // ms before the first glyph starts
-        const TOTAL = 1700; // ms across which glyph delays are spread
-        let lastEnd = 0;
+        const reveal = svg.animate(
+          [
+            { maskPosition: "100% 0%", WebkitMaskPosition: "100% 0%" },
+            { maskPosition: "0% 0%", WebkitMaskPosition: "0% 0%" },
+          ],
+          { duration: DURATION, easing: EASE, fill: "forwards" }
+        );
+        reveal.onfinish = () => {
+          setMask("none"); // resting state: no feather
+          reveal.cancel();
+          svg.classList.add("np-cipher-glow"); // begin the living glow
+        };
 
-        // Rank the late group (flags and other tall fills) left→right so
-        // they draw strictly one by one at the end.
-        const flagRank = new Map<number, number>();
-        els.forEach((el, i) => {
-          const b = boxes[i];
-          if (!b) return;
-          const style = el.getAttribute("style") ?? "";
-          if (style.includes("fill:none")) return;
-          if (el.tagName.toLowerCase() === "text") return;
-          const isBeam = b.width > b.height * 2 && b.width > 10;
-          if (!isBeam && b.height > b.width * 1.5) flagRank.set(i, b.x);
-        });
-        [...flagRank.entries()]
-          .sort((a, b) => a[1] - b[1])
-          .forEach(([i], rank) => flagRank.set(i, rank));
-
-        els.forEach((el, i) => {
-          const b = boxes[i];
-          if (!b) return;
-
-          const style = el.getAttribute("style") ?? "";
-          const isStroke = style.includes("fill:none");
-          const isStaffLine = isStroke && b.width > span * 0.7;
-
-          // Same delay curve for strokes AND fills, keyed to the element's
-          // center, so grouped notation (stem + flag + beam) stays together.
-          const center = b.x + b.width / 2;
-          const delay = BASE + ((center - minX) / span) * TOTAL;
-
-          if (isStaffLine) {
-            // Staff lines sweep in first, from the far left.
-            const len = (el as unknown as SVGPathElement).getTotalLength();
-            el.style.strokeDasharray = `${len}`;
-            el.style.strokeDashoffset = `${len}`;
-            const anim = el.animate(
-              [{ strokeDashoffset: len }, { strokeDashoffset: 0 }],
-              {
-                duration: 1300,
-                easing: "cubic-bezier(0.6, 0, 0.2, 1)",
-                fill: "forwards",
-              }
-            );
-            anim.onfinish = () => {
-              el.style.strokeDasharray = "";
-              el.style.strokeDashoffset = "";
-              anim.cancel();
-            };
-            lastEnd = Math.max(lastEnd, 1300);
-          } else if (isStroke) {
-            const len =
-              "getTotalLength" in el
-                ? (el as unknown as SVGPathElement).getTotalLength()
-                : Math.max(b.width, b.height);
-            const duration = Math.min(420, 140 + len * 4);
-            el.style.strokeDasharray = `${len}`;
-            el.style.strokeDashoffset = `${len}`;
-            const anim = el.animate(
-              [{ strokeDashoffset: len }, { strokeDashoffset: 0 }],
-              { delay, duration, easing: "ease-out", fill: "forwards" }
-            );
-            anim.onfinish = () => {
-              el.style.strokeDasharray = "";
-              el.style.strokeDashoffset = "";
-              anim.cancel();
-            };
-            lastEnd = Math.max(lastEnd, delay + duration);
-          } else {
-            // Filled glyphs and text. Wide fills (beams) wipe in left to
-            // right and tall fills (flags, accidentals, the brace) wipe in
-            // top to bottom along the stem, just after it, so they read as
-            // drawn. Everything else (noteheads, letters, numerals) fades.
-            // Only opacity and clip-path are animated, never transforms.
-            const isText = el.tagName.toLowerCase() === "text";
-            const isBeam = !isText && b.width > b.height * 2 && b.width > 10;
-            const isFlag = !isText && !isBeam && b.height > b.width * 1.5;
-
-            if (isBeam || isFlag) {
-              const hidden = isBeam
-                ? "inset(0 100% 0 0)" // reveal left → right
-                : "inset(0 0 100% 0)"; // reveal top → bottom
-              const shown = "inset(0 0 0 0)";
-              // Flags are the finishing touch: they wait for the whole
-              // system, then draw one by one, left to right.
-              const start = isFlag
-                ? BASE + TOTAL + 150 + (flagRank.get(i) ?? 0) * 240
-                : delay + 80; // beams just let their stems land first
-              const duration = isBeam ? 260 : 220;
-              el.style.clipPath = hidden;
-              const anim = el.animate(
-                [{ clipPath: hidden }, { clipPath: shown }],
-                {
-                  delay: start,
-                  duration,
-                  easing: "ease-out",
-                  fill: "forwards",
-                }
-              );
-              anim.onfinish = () => {
-                el.style.clipPath = "";
-                anim.cancel();
-              };
-              lastEnd = Math.max(lastEnd, start + duration);
-            } else {
-              const duration = 300;
-              el.style.opacity = "0";
-              const anim = el.animate([{ opacity: 0 }, { opacity: 1 }], {
-                delay,
-                duration,
-                easing: "ease-out",
-                fill: "forwards",
-              });
-              anim.onfinish = () => {
-                el.style.opacity = "";
-                anim.cancel();
-              };
-              lastEnd = Math.max(lastEnd, delay + duration);
-            }
-          }
-        });
+        // 2) The playhead — a glowing vertical cursor that runs the staff and
+        // fades as it reaches the final barline.
+        container.style.position = "relative";
+        const playhead = document.createElement("div");
+        playhead.setAttribute("aria-hidden", "true");
+        playhead.style.cssText =
+          "position:absolute;top:-5%;bottom:-5%;left:0;width:2px;background:#fff;" +
+          "box-shadow:0 0 14px 1px rgba(255,255,255,0.75);pointer-events:none;" +
+          "will-change:left,opacity;";
+        container.appendChild(playhead);
+        const cursor = playhead.animate(
+          [
+            { left: "0%", opacity: 0 },
+            { left: "3%", opacity: 1, offset: 0.05 },
+            { left: "96%", opacity: 1, offset: 0.86 },
+            { left: "100%", opacity: 0 },
+          ],
+          { duration: DURATION, easing: EASE, fill: "forwards" }
+        );
+        cursor.onfinish = () => {
+          playhead.remove();
+          cursor.cancel();
+        };
 
         window.setTimeout(() => {
           if (!cancelled) doneRef.current?.();
-        }, Math.min(lastEnd, 3800));
+        }, DURATION);
       })
       .catch(() => {
         if (!cancelled) {
@@ -230,7 +164,7 @@ export function AnimatedCipher({
       cancelled = true;
       if (container) container.innerHTML = "";
     };
-  }, []);
+  }, [invert]);
 
   if (failed) {
     return (
@@ -239,9 +173,21 @@ export function AnimatedCipher({
         alt="Hachem H."
         className={className}
         draggable={false}
+        style={
+          invert
+            ? { filter: "invert(1)", mixBlendMode: "difference" }
+            : undefined
+        }
       />
     );
   }
 
-  return <div ref={containerRef} className={className} aria-label="Hachem H." />;
+  return (
+    <div
+      ref={containerRef}
+      className={className}
+      aria-label="Hachem H."
+      style={invert ? { mixBlendMode: "difference" } : undefined}
+    />
+  );
 }

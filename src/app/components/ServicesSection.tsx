@@ -1,37 +1,47 @@
 import { motion, useReducedMotion } from "motion/react";
 import { commissionsOpen } from "./CommissionsSection";
+import { SectionHeading } from "./SectionHeading";
+import { DropCap } from "./DropCap";
 import { useLanguage } from "../i18n/LanguageContext";
 
+/** A drawn path: a plain stroke, or a solid (filled) shape like a black key. */
+type IconPath = string | { d: string; fill?: boolean };
+
 /** Stroke-drawn icons that sketch themselves in on scroll. */
-function DrawnIcon({ paths, viewBox = "0 0 48 48" }: { paths: string[]; viewBox?: string }) {
+function DrawnIcon({ paths, viewBox = "0 0 48 48" }: { paths: IconPath[]; viewBox?: string }) {
   const reduceMotion = useReducedMotion();
   return (
     <motion.svg
       viewBox={viewBox}
       fill="none"
-      className="w-10 h-10 text-neutral-800"
+      className="w-8 h-8 text-[#cbc2b0]"
       initial={reduceMotion ? undefined : "hidden"}
       whileInView="visible"
       viewport={{ once: true, margin: "-40px" }}
     >
-      {paths.map((d, i) => (
-        <motion.path
-          key={i}
-          d={d}
-          stroke="currentColor"
-          strokeWidth="1.3"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          variants={{
-            hidden: { pathLength: 0, opacity: 0 },
-            visible: {
-              pathLength: 1,
-              opacity: 1,
-              transition: { duration: 0.7, delay: 0.15 + i * 0.18, ease: "easeInOut" },
-            },
-          }}
-        />
-      ))}
+      {paths.map((p, i) => {
+        const d = typeof p === "string" ? p : p.d;
+        const filled = typeof p !== "string" && p.fill;
+        return (
+          <motion.path
+            key={i}
+            d={d}
+            stroke={filled ? "none" : "currentColor"}
+            fill={filled ? "currentColor" : "none"}
+            strokeWidth="1.3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            variants={{
+              hidden: { pathLength: 0, opacity: 0 },
+              visible: {
+                pathLength: 1,
+                opacity: 1,
+                transition: { duration: 0.7, delay: 0.15 + i * 0.18, ease: "easeInOut" },
+              },
+            }}
+          />
+        );
+      })}
     </motion.svg>
   );
 }
@@ -74,13 +84,20 @@ const serviceIcons: React.ReactNode[] = [
   />,
   <DrawnIcon
     paths={[
-      // Piano keys
-      "M6 16 L42 16 L42 38 L6 38 Z",
-      "M15 16 L15 38 M24 16 L24 38 M33 16 L33 38",
-      "M12 16 L12 28 L18 28 L18 16",
-      "M30 16 L30 28 L36 28 L36 16",
-      // Floating note
-      "M24 10 L24 4 Q28 5 30 3",
+      // Keybed
+      "M6 16 L42 16 L42 39 L6 39 Z",
+      // White-key dividers (seven keys)
+      "M11.1 16 L11.1 39 M16.3 16 L16.3 39 M21.4 16 L21.4 39 M26.6 16 L26.6 39 M31.7 16 L31.7 39 M36.9 16 L36.9 39",
+      // Solid black keys — group of two, then group of three
+      { d: "M9.6 16 L12.6 16 L12.6 28 L9.6 28 Z", fill: true },
+      { d: "M14.8 16 L17.8 16 L17.8 28 L14.8 28 Z", fill: true },
+      { d: "M25.1 16 L28.1 16 L28.1 28 L25.1 28 Z", fill: true },
+      { d: "M30.2 16 L33.2 16 L33.2 28 L30.2 28 Z", fill: true },
+      { d: "M35.4 16 L38.4 16 L38.4 28 L35.4 28 Z", fill: true },
+      // A small eighth note above the keyboard
+      "M28 13 A2 2 0 1 1 24 13 A2 2 0 1 1 28 13",
+      "M28 13 L28 5",
+      "M28 5 Q31 6 31 9",
     ]}
   />,
 ];
@@ -94,62 +111,58 @@ export function ServicesSection() {
   }));
 
   return (
-    <section className="relative bg-white px-4 py-12 sm:py-16 md:py-20">
+    <section className="relative bg-[#1a1816] px-4 py-20 sm:py-28">
       <div className="max-w-5xl mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="mb-10 sm:mb-14 text-center"
-        >
-          <h2 className="text-3xl sm:text-5xl font-display font-black tracking-tight">
-            {t.services.title}
-          </h2>
-          <div className="mx-auto mt-4 h-px w-12 bg-black" />
-          <p
-            className="mt-4 text-xs tracking-[0.4em] uppercase text-neutral-500"
-            style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
-          >
-            {t.services.subtitle}
-          </p>
-        </motion.div>
+        <SectionHeading
+          index="04"
+          dept={t.services.dept}
+          title={t.services.headline}
+          deck={t.services.deck}
+          byline={t.services.byline}
+        />
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-neutral-200 border border-neutral-200">
+        {/* Article lede */}
+        <div className="np-body np-justify mx-auto mb-14 max-w-3xl text-[14px] leading-[1.62] text-[#cbc2b0]">
+          <p><DropCap text={t.services.lede} /></p>
+        </div>
+
+        {/* Notices — ruled columns, no boxes */}
+        <div className="grid sm:grid-cols-2 sm:gap-x-12 border-t-2 border-[var(--np-rule-strong)]">
           {services.map((s, i) => (
-            <motion.div
+            <motion.article
               key={s.title}
-              initial={{ opacity: 0, y: 14 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: i * 0.08 }}
+              transition={{ duration: 0.4, delay: i * 0.06 }}
               viewport={{ once: true, margin: "-40px" }}
-              className="group bg-white p-8 sm:p-10 transition-colors duration-300 hover:bg-neutral-50"
+              className="border-b border-[var(--np-rule)] py-7 sm:py-8 sm:[&:nth-last-child(-n+1)]:border-b-0 sm:[&:nth-last-child(2)]:border-b-0"
             >
-              <div className="mb-5 transition-transform duration-300 group-hover:-translate-y-0.5">
-                {s.icon}
-              </div>
-              <h3 className="font-serif font-bold text-lg sm:text-xl flex items-center gap-2.5">
-                {s.title}
+              <div className="flex items-baseline gap-3">
+                <span className="np-kicker np-tabular text-[#8a8071]">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="np-head flex-1 text-2xl font-bold leading-tight text-[#e6e0d5]">
+                  {s.title}
+                </h3>
                 {s.badge && (
                   <span
-                    className={`text-[9px] tracking-[0.25em] uppercase border px-1.5 py-0.5 translate-y-px ${
+                    className={`np-kicker shrink-0 border px-1.5 py-0.5 text-[9px] ${
                       commissionsOpen
-                        ? "border-neutral-900 text-neutral-900"
-                        : "border-neutral-300 text-neutral-400"
+                        ? "border-[#cbc2b0] text-[#cbc2b0]"
+                        : "border-[#443f39] text-[#5e564f]"
                     }`}
-                    style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
                   >
                     {s.badge}
                   </span>
                 )}
-              </h3>
-              <div className="mt-3 h-px w-8 bg-neutral-200 transition-all duration-300 group-hover:w-12 group-hover:bg-neutral-400" />
-              <p className="mt-4 font-serif text-sm sm:text-base leading-relaxed text-neutral-600">
-                {s.body}
-              </p>
-            </motion.div>
+              </div>
+              <div className="mt-3 flex items-start gap-4">
+                <div className="mt-1 shrink-0">{s.icon}</div>
+                <p className="np-body np-justify text-[15px] leading-[1.65] text-[#bcb3a3]">
+                  {s.body}
+                </p>
+              </div>
+            </motion.article>
           ))}
         </div>
 
@@ -161,7 +174,7 @@ export function ServicesSection() {
           viewport={{ once: true }}
           className="mt-10 text-center"
         >
-          <p className="font-serif italic text-neutral-500 text-sm sm:text-base">
+          <p className="font-serif italic text-[#7b7267] text-sm sm:text-base">
             {t.services.ctaPre}
             <a
               href="#contact"
@@ -169,13 +182,17 @@ export function ServicesSection() {
                 e.preventDefault();
                 document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="underline decoration-neutral-300 underline-offset-4 transition-colors hover:text-black hover:decoration-black"
+              className="underline decoration-[#443f39] underline-offset-4 transition-colors hover:text-[#eee8dd] hover:decoration-[#eee8dd]"
             >
               {t.services.ctaLink}
             </a>
             {t.services.ctaPost}
           </p>
         </motion.div>
+
+        <div className="np-head mt-12 text-center text-xl tracking-[0.6em] text-[#5e564f]" aria-hidden>
+          * * *
+        </div>
       </div>
     </section>
   );

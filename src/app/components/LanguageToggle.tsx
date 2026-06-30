@@ -29,7 +29,7 @@ export function LanguageToggle({ size = "sm", className = "" }: LanguageTogglePr
         const active = lang === opt.code;
         return (
           <span key={opt.code} className="flex items-center gap-1.5">
-            {i > 0 && <span className="text-neutral-300" aria-hidden>·</span>}
+            {i > 0 && <span className="text-[#443f39]" aria-hidden>·</span>}
             <button
               type="button"
               onClick={() => setLang(opt.code)}
@@ -37,8 +37,8 @@ export function LanguageToggle({ size = "sm", className = "" }: LanguageTogglePr
               lang={opt.code}
               className={`${text} tracking-[0.2em] uppercase transition-colors duration-150 ${
                 active
-                  ? "text-black font-bold"
-                  : "text-neutral-400 hover:text-black"
+                  ? "text-[#eee8dd] font-bold"
+                  : "text-[#5e564f] hover:text-[#eee8dd]"
               }`}
             >
               {opt.label}

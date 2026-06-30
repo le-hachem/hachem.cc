@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useScroll, useSpring } from "motion/react";
 import { X, Menu } from "lucide-react";
 import { useLanguage } from "../i18n/LanguageContext";
 import { LanguageToggle } from "./LanguageToggle";
+import { MASTHEAD } from "./SectionHeading";
 
 function scrollTo(href: string) {
   const target = document.querySelector(href);
@@ -12,12 +13,12 @@ function scrollTo(href: string) {
 export function NavHeader() {
   const { t } = useLanguage();
   const navLinks = [
-    { label: t.nav.about,       href: "#about" },
-    { label: t.nav.works,       href: "#works" },
-    { label: t.nav.projects,    href: "#projects" },
-    { label: t.nav.services,    href: "#services" },
-    { label: t.nav.commissions, href: "#commissions" },
-    { label: t.nav.contact,     href: "#contact" },
+    { no: "01", label: t.nav.about,       href: "#about" },
+    { no: "02", label: t.nav.works,       href: "#works" },
+    { no: "03", label: t.nav.projects,    href: "#projects" },
+    { no: "04", label: t.nav.services,    href: "#services" },
+    { no: "05", label: t.nav.commissions, href: "#commissions" },
+    { no: "06", label: t.nav.contact,     href: "#contact" },
   ];
 
   const [scrolled, setScrolled]   = useState(false);
@@ -51,34 +52,37 @@ export function NavHeader() {
         transition={{ duration: 0.6, delay: 0.3 }}
         className={`fixed top-0 left-0 right-0 z-[900] transition-all duration-300 ${
           scrolled || menuOpen
-            ? "bg-white/95 backdrop-blur-sm border-b border-neutral-200"
+            ? "bg-[#121110]/95 backdrop-blur-sm border-y border-[rgba(230,224,213,0.16)]"
             : "bg-transparent"
         }`}
       >
         <div className="max-w-7xl mx-auto px-5 sm:px-10 h-12 flex items-center justify-between">
-          {/* Logo */}
+          {/* Running head / nameplate */}
           <a
             href="#"
-            className="font-display font-black text-sm tracking-tight select-none"
+            className="select-none text-[#e6e0d5]"
             onClick={e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); setMenuOpen(false); }}
           >
-            H.H.
+            <span className="np-head font-black text-sm tracking-tight lg:hidden">H.H.</span>
+            <span className="np-smallcaps np-head hidden lg:inline text-base tracking-[0.04em]">
+              {MASTHEAD}
+            </span>
           </a>
 
-          {/* Desktop links — hidden below md */}
-          <nav className="hidden md:flex items-center gap-8">
+          {/* Desktop section index — hidden below md */}
+          <nav className="hidden md:flex items-baseline gap-7">
             {navLinks.map(link => (
               <a
                 key={link.href}
                 href={link.href}
-                className="text-[10px] tracking-[0.3em] uppercase text-neutral-500 hover:text-black transition-colors duration-150"
-                style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
+                className="np-kicker group flex items-baseline gap-1.5 text-[#7b7267] transition-colors duration-150 hover:text-[#e6e0d5]"
                 onClick={e => { e.preventDefault(); scrollTo(link.href); }}
               >
-                {link.label}
+                <span className="np-tabular text-[9px] text-[#5e564f] group-hover:text-[#8a8071]">{link.no}</span>
+                <span>{link.label}</span>
               </a>
             ))}
-            <span className="h-3 w-px bg-neutral-200" aria-hidden />
+            <span className="h-3 w-px bg-[#2f2c28]" aria-hidden />
             <LanguageToggle />
           </nav>
 
@@ -86,7 +90,7 @@ export function NavHeader() {
           <div className="flex items-center gap-4 md:hidden">
             <LanguageToggle />
             <button
-              className="flex items-center justify-center w-8 h-8 text-neutral-600 hover:text-black transition-colors"
+              className="flex items-center justify-center w-8 h-8 text-[#a1998a] hover:text-[#8a8071] transition-colors"
               aria-label={menuOpen ? t.nav.closeMenu : t.nav.openMenu}
               onClick={() => setMenuOpen(v => !v)}
             >
@@ -98,7 +102,7 @@ export function NavHeader() {
         {/* Playhead */}
         <motion.div
           aria-hidden
-          className="absolute bottom-0 left-0 right-0 h-[2px] bg-neutral-900 origin-left"
+          className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#8a8071] origin-left"
           style={{ scaleX: playhead }}
         />
       </motion.header>
@@ -112,13 +116,13 @@ export function NavHeader() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="fixed inset-0 z-[850] bg-white flex flex-col md:hidden"
+            className="fixed inset-0 z-[850] bg-[#161413] flex flex-col md:hidden"
           >
             {/* Spacer for header */}
-            <div className="h-12 border-b border-neutral-200 shrink-0" />
+            <div className="h-12 border-b border-[#2f2c28] shrink-0" />
 
-            {/* Links */}
-            <nav className="flex-1 flex flex-col justify-center items-center gap-7 px-8">
+            {/* Index */}
+            <nav className="flex-1 flex flex-col justify-center items-center gap-6 px-8">
               {navLinks.map((link, i) => (
                 <motion.a
                   key={link.href}
@@ -126,35 +130,36 @@ export function NavHeader() {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.25, delay: i * 0.06 }}
-                  className="text-4xl sm:text-5xl font-display font-black tracking-tight text-black hover:text-neutral-500 transition-colors"
+                  className="np-head flex items-baseline gap-3 text-4xl sm:text-5xl font-black tracking-tight text-[#eee8dd] transition-colors hover:text-[#9a927f]"
                   onClick={e => {
                     e.preventDefault();
                     setMenuOpen(false);
                     setTimeout(() => scrollTo(link.href), 200);
                   }}
                 >
+                  <span className="np-kicker np-tabular text-xs text-[#5e564f]">{link.no}</span>
                   {link.label}
                 </motion.a>
               ))}
             </nav>
 
             {/* Bottom social links */}
-            <div className="shrink-0 border-t border-neutral-100 px-8 py-6 flex justify-center gap-8">
+            <div className="shrink-0 border-t border-[#201e1c] px-8 py-6 flex justify-center gap-8">
               <a
                 href="https://www.youtube.com/@hachem.mp3"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[10px] tracking-widest uppercase text-neutral-400 hover:text-black transition-colors"
+                className="text-[10px] tracking-widest uppercase text-[#5e564f] hover:text-[#8a8071] transition-colors"
                 style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
               >
                 YouTube
               </a>
-              <span className="text-neutral-200">·</span>
+              <span className="text-[#2f2c28]">·</span>
               <a
                 href="https://www.instagram.com/hachem.mp3/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[10px] tracking-widest uppercase text-neutral-400 hover:text-black transition-colors"
+                className="text-[10px] tracking-widest uppercase text-[#5e564f] hover:text-[#8a8071] transition-colors"
                 style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
               >
                 Instagram

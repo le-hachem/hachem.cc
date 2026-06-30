@@ -1,5 +1,7 @@
 import { motion } from "motion/react";
 import { Mail, Hourglass } from "lucide-react";
+import { SectionHeading } from "./SectionHeading";
+import { DropCap } from "./DropCap";
 import { useLanguage } from "../i18n/LanguageContext";
 
 /** Single source of truth for commission availability (set in .env). */
@@ -9,15 +11,15 @@ export const commissionsOpen =
 function StatusSeal() {
   const { t } = useLanguage();
   return (
-    <div className="inline-flex items-center gap-3 border border-neutral-900 px-5 py-2.5">
+    <div className="inline-flex items-center gap-3 border border-[#eee8dd] px-5 py-2.5">
       {commissionsOpen ? (
         <>
           <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-neutral-900 opacity-60 animate-ping" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-neutral-900" />
+            <span className="absolute inline-flex h-full w-full rounded-full bg-[#eee8dd] opacity-60 animate-ping" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-[#eee8dd]" />
           </span>
           <span
-            className="text-xs tracking-[0.3em] uppercase text-neutral-900"
+            className="text-xs tracking-[0.3em] uppercase text-[#eee8dd]"
             style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
           >
             {t.commissions.sealOpen}
@@ -25,9 +27,9 @@ function StatusSeal() {
         </>
       ) : (
         <>
-          <Hourglass className="h-3 w-3 text-neutral-500" />
+          <Hourglass className="h-3 w-3 text-[#7b7267]" />
           <span
-            className="text-xs tracking-[0.3em] uppercase text-neutral-500"
+            className="text-xs tracking-[0.3em] uppercase text-[#7b7267]"
             style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
           >
             {t.commissions.sealClosed}
@@ -42,23 +44,24 @@ export function CommissionsSection() {
   const { t } = useLanguage();
   const steps = t.commissions.steps;
   return (
-    <section className="relative bg-neutral-50 px-4 py-12 sm:py-16 md:py-20">
+    <section className="relative bg-[#151414] px-4 py-20 sm:py-28">
       <div className="max-w-5xl mx-auto">
-        {/* Header */}
+        <SectionHeading
+          index="05"
+          dept={t.commissions.dept}
+          title={t.commissions.headline}
+          deck={t.commissions.deck}
+          byline={t.commissions.byline}
+          className="!mb-6 sm:!mb-8"
+        />
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.45, delay: 0.05 }}
           viewport={{ once: true }}
-          className="mb-8 sm:mb-12 text-center"
+          className="mb-12 sm:mb-16 text-center"
         >
-          <h2 className="text-3xl sm:text-5xl font-display font-black tracking-tight">
-            {t.commissions.title}
-          </h2>
-          <div className="mx-auto mt-4 h-px w-12 bg-black" />
-          <div className="mt-6">
-            <StatusSeal />
-          </div>
+          <StatusSeal />
         </motion.div>
 
         {/* State-dependent lede */}
@@ -67,40 +70,36 @@ export function CommissionsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
           viewport={{ once: true }}
-          className="max-w-2xl mx-auto text-center font-serif text-base sm:text-lg leading-relaxed text-neutral-700"
+          className="np-body np-justify mx-auto max-w-3xl text-[14px] leading-[1.62] text-[#cbc2b0]"
         >
           {commissionsOpen ? (
-            <p>{t.commissions.ledeOpen}</p>
+            <p><DropCap text={t.commissions.ledeOpen} /></p>
           ) : (
-            <p>{t.commissions.ledeClosed}</p>
+            <p><DropCap text={t.commissions.ledeClosed} /></p>
           )}
         </motion.div>
 
-        {/* Process */}
-        <div className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-neutral-200 border border-neutral-200">
+        {/* Process — numbered notices */}
+        <div className="mt-12 sm:mt-16 grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-x-10 border-t-2 border-[var(--np-rule-strong)]">
           {steps.map((s, i) => (
-            <motion.div
+            <motion.article
               key={s.title}
-              initial={{ opacity: 0, y: 14 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: i * 0.08 }}
+              transition={{ duration: 0.4, delay: i * 0.06 }}
               viewport={{ once: true, margin: "-40px" }}
-              className="bg-white p-6 sm:p-8"
+              className="border-b border-[var(--np-rule)] py-6 sm:py-7"
             >
-              <p
-                className="text-[10px] tracking-[0.35em] uppercase text-neutral-400"
-                style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
-              >
+              <p className="np-head np-tabular text-3xl font-black leading-none text-[#5e564f]">
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 className="mt-3 font-serif font-bold text-base sm:text-lg">
+              <h3 className="np-head mt-3 text-xl font-bold text-[#e6e0d5]">
                 {s.title}
               </h3>
-              <div className="mt-3 h-px w-8 bg-neutral-200" />
-              <p className="mt-4 font-serif text-sm leading-relaxed text-neutral-600">
+              <p className="np-body np-justify mt-3 text-[15px] leading-[1.6] text-[#bcb3a3]">
                 {s.body}
               </p>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
 
@@ -115,7 +114,7 @@ export function CommissionsSection() {
           {commissionsOpen ? (
             <a
               href="mailto:contact@hachem.cc?subject=Commission%20inquiry"
-              className="inline-flex items-center gap-2 border border-black bg-black text-white px-5 py-2.5 text-xs tracking-widest uppercase transition-colors hover:bg-neutral-800 active:bg-neutral-700"
+              className="inline-flex items-center gap-2 border border-[#eee8dd] bg-[#eee8dd] text-[#161413] px-5 py-2.5 text-xs tracking-widest uppercase transition-colors hover:bg-[#dfd6c7] active:bg-[#c2b9ab]"
               style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
             >
               <Mail className="h-3.5 w-3.5" />
@@ -124,7 +123,7 @@ export function CommissionsSection() {
           ) : (
             <a
               href="mailto:contact@hachem.cc?subject=Future%20commission%20inquiry"
-              className="inline-flex items-center gap-2 border border-neutral-400 bg-white text-neutral-600 px-5 py-2.5 text-xs tracking-widest uppercase transition-colors hover:border-black hover:text-black"
+              className="inline-flex items-center gap-2 border border-[#5e564f] bg-[#161413] text-[#a1998a] px-5 py-2.5 text-xs tracking-widest uppercase transition-colors hover:border-[#eee8dd] hover:text-[#eee8dd]"
               style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
             >
               <Mail className="h-3.5 w-3.5" />

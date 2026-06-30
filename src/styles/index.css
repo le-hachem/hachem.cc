@@ -13,15 +13,15 @@
     cursor: pointer;
   }
 
-  /* Ink-on-paper text selection */
+  /* Gilt-on-stone text selection */
   ::selection {
-    background: #171717;
-    color: #ffffff;
+    background: #8a8071;
+    color: #161413;
   }
 
-  /* Visible keyboard focus, consistent with the b/w identity */
+  /* Visible keyboard focus, gilt accent on dark stone */
   :focus-visible {
-    outline: 1.5px solid #171717;
+    outline: 1.5px solid #8a8071;
     outline-offset: 3px;
   }
 
@@ -31,3 +31,180 @@
     }
   }
 }
+
+/* ───────────────────────── BROADSHEET / PRINT SYSTEM ─────────────────────────
+   A dark "printed on black" newspaper: cream ink rules, Didone headlines, an
+   academic body serif set in justified columns, drop caps and small caps. */
+:root {
+  --np-ink: #e6e0d5;                       /* cream headline ink */
+  --np-rule: rgba(230, 224, 213, 0.42);    /* thin hairline rule */
+  --np-rule-strong: rgba(230, 224, 213, 0.85); /* heavy masthead rule */
+}
+
+/* Type roles */
+.np-head { font-family: 'Playfair Display', Georgia, 'Times New Roman', serif; }
+.np-body { font-family: 'Old Standard TT', Georgia, 'Times New Roman', serif; }
+.np-kicker {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.34em;
+  font-size: 0.66rem;
+  line-height: 1.2;
+}
+.np-smallcaps {
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+}
+
+/* Newspaper rules */
+.np-rule        { border: 0; border-top: 1px solid var(--np-rule); }
+.np-rule-strong { border: 0; border-top: 2px solid var(--np-rule-strong); }
+/* Stacked thick+thin "section" rule */
+.np-rule-double {
+  border: 0;
+  border-top: 3px solid var(--np-rule-strong);
+  box-shadow: 0 3px 0 -2px var(--np-rule);   /* the thin line under the thick one */
+}
+
+/* Justified academic columns */
+.np-justify {
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+.np-columns { column-gap: 2.75rem; }
+.np-columns > * { break-inside: avoid-column; }
+@media (min-width: 768px) {
+  .np-columns {
+    column-count: 2;
+    column-rule: 1px solid var(--np-rule);
+  }
+  .np-colspan-all { column-span: all; }
+}
+@media (min-width: 1024px) {
+  .np-columns-lg3 { column-count: 3; }
+}
+
+/* Drop cap on the first paragraph of a block */
+.np-dropcap::first-letter {
+  float: left;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 800;
+  font-size: 4.1em;
+  line-height: 0.74;
+  margin: 0.04em 0.1em 0 0;
+  color: var(--np-ink);
+}
+
+/* All photographs print as halftone-grey newsprint */
+.np-halftone {
+  filter: grayscale(1) contrast(1.18) brightness(0.94);
+}
+
+/* A real dot-screen over a figure: lay this on the (overflow-hidden) frame. */
+.np-screen { position: relative; }
+.np-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.62) 0.6px, transparent 0.95px);
+  background-size: 3px 3px;
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+}
+
+/* Old-style (text) figures for body copy; tabular for aligned tables. */
+.np-body { font-feature-settings: "onum" 1, "pnum" 1, "liga" 1; }
+.np-oldstyle { font-feature-settings: "onum" 1, "pnum" 1; }
+.np-tabular { font-variant-numeric: tabular-nums; }
+
+/* Justified copy hangs its punctuation into the margin where supported. */
+.np-justify { hanging-punctuation: first allow-end last; }
+
+/* Pull-quote: a column-spanning display quote with rules above and below. */
+.np-pullquote {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 1.25;
+  text-align: center;
+  text-wrap: balance;
+  color: var(--np-ink);
+  margin: 1.6rem 0;
+  padding: 1.1rem 0.5rem;
+  border-top: 2px solid var(--np-rule-strong);
+  border-bottom: 1px solid var(--np-rule);
+}
+@media (min-width: 640px) { .np-pullquote { font-size: 2rem; } }
+
+/* End-of-article mark. */
+.np-endmark::after {
+  content: "\00a0\25AA";
+  color: var(--np-ink);
+}
+
+/* Cipher glow — a slow, living luminance that breathes once the notation is
+   drawn (a cool white core with a warm brass halo). */
+@keyframes np-cipher-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.22))
+            drop-shadow(0 0 13px rgba(214, 194, 150, 0.12));
+  }
+  50% {
+    filter: drop-shadow(0 0 11px rgba(255, 255, 255, 0.5))
+            drop-shadow(0 0 28px rgba(214, 194, 150, 0.3));
+  }
+}
+.np-cipher-glow {
+  animation: np-cipher-glow 4.5s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .np-cipher-glow {
+    animation: none;
+    filter: drop-shadow(0 0 7px rgba(255, 255, 255, 0.3));
+  }
+}
+
+/* Drop cap as a real element (so it can ink in on scroll). */
+.np-dropcap-letter {
+  float: left;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 800;
+  font-size: 4.1em;
+  line-height: 0.74;
+  margin: 0.04em 0.1em 0 0;
+  color: var(--np-ink);
+}
+
+/* Photographs "develop" — the halftone resolves toward a sharper print on
+   hover. */
+.np-halftone { transition: filter 0.6s ease; }
+.np-screen::after { transition: opacity 0.6s ease; }
+.np-screen:hover .np-halftone {
+  filter: grayscale(0.3) contrast(1.05) brightness(1.03);
+}
+.np-screen:hover::after { opacity: 0.12; }
+
+/* Living film grain — a stepped position jitter so the texture shimmers like a
+   projection rather than sitting frozen. */
+@keyframes np-grain-shift {
+  0%   { background-position: 0 0; }
+  20%  { background-position: -9px 7px; }
+  40%  { background-position: 7px -11px; }
+  60%  { background-position: -7px -5px; }
+  80%  { background-position: 9px 5px; }
+  100% { background-position: 0 0; }
+}
+.np-grain-anim { animation: np-grain-shift 0.7s steps(1) infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .np-grain-anim { animation: none; }
+}
+
+/* Listings/index table: a hairline-ruled row that lights up on hover. */
+.np-row { border-bottom: 1px solid var(--np-rule); transition: background-color 0.18s ease; }
+.np-row:first-child { border-top: 1px solid var(--np-rule); }
+.np-row:hover { background-color: rgba(230, 224, 213, 0.05); }
+

@@ -50,7 +50,7 @@ export function PerchedDeco({
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay }}
       viewport={{ once: true, margin: "-40px" }}
-      className={`pointer-events-none text-neutral-700 ${className}`}
+      className={`pointer-events-none text-[#c2b9ab] ${className}`}
     >
       <motion.div
         className="w-full h-full"

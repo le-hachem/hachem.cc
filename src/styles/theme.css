@@ -1,44 +1,50 @@
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * Warm "cathedral-dark" palette — drawn from the organ photograph but kept
+ * near-monochrome: shadowed stone (near-black warm browns), candle/cream
+ * highlight from the nave window, and a single muted aged-brass accent used
+ * sparingly. No saturated gold or teal — the warmth carries it.
+ */
 :root {
   --font-size: 16px;
-  --background: #ffffff;
-  --foreground: oklch(0.145 0 0);
-  --card: #ffffff;
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #030213;
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.95 0.0058 264.53);
-  --secondary-foreground: #030213;
-  --muted: #ececf0;
-  --muted-foreground: #717182;
-  --accent: #e9ebef;
-  --accent-foreground: #030213;
-  --destructive: #d4183d;
-  --destructive-foreground: #ffffff;
-  --border: rgba(0, 0, 0, 0.1);
-  --input: transparent;
-  --input-background: #f3f3f5;
-  --switch-background: #cbced4;
+  --background: #121110;        /* shadowed stone */
+  --foreground: #e6e0d5;        /* warm candle-cream */
+  --card: #191716;
+  --card-foreground: #e6e0d5;
+  --popover: #191716;
+  --popover-foreground: #e6e0d5;
+  --primary: #8a8071;           /* muted aged-brass accent */
+  --primary-foreground: #161413;
+  --secondary: #262321;
+  --secondary-foreground: #e6e0d5;
+  --muted: #201e1c;
+  --muted-foreground: #938e86;
+  --accent: #5e564f;            /* warm stone accent */
+  --accent-foreground: #eee8dd;
+  --destructive: #90695f;
+  --destructive-foreground: #eee8dd;
+  --border: rgba(201, 162, 75, 0.18);
+  --input: #262321;
+  --input-background: #191716;
+  --switch-background: #262321;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  --ring: #8a8071;
+  --chart-1: #8a8071;
+  --chart-2: #5e564f;
+  --chart-3: #947e6e;
+  --chart-4: #7b7267;
+  --chart-5: #b6a987;
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #030213;
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: #161413;
+  --sidebar-foreground: #e6e0d5;
+  --sidebar-primary: #8a8071;
+  --sidebar-primary-foreground: #161413;
+  --sidebar-accent: #262321;
+  --sidebar-accent-foreground: #e6e0d5;
+  --sidebar-border: rgba(201, 162, 75, 0.18);
+  --sidebar-ring: #8a8071;
 }
 
 .dark {

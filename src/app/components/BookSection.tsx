@@ -1,15 +1,9 @@
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useReducedMotion,
-} from "motion/react";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { Library } from "lucide-react";
 import { LiliBoulangerLibrary } from "./LiliBoulangerLibrary";
-import { PerchedDeco } from "./PerchedDeco";
-import { BirdOnBranch, Butterfly } from "./Deco";
+import { SectionHeading } from "./SectionHeading";
+import { DropCap } from "./DropCap";
 import { useLanguage } from "../i18n/LanguageContext";
 
 /** Bain News Service, 1918; Library of Congress (public domain) via Wikimedia Commons */
@@ -19,144 +13,74 @@ const LILI_BOULANGER_PORTRAIT =
 export function BookSection() {
   const { t } = useLanguage();
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
-  // The first paragraph opens with an ornamental drop cap, so split off its
-  // first character and render the remainder as flowing text.
-  const dropCap = t.book.p1.charAt(0);
-  const p1Rest = t.book.p1.slice(1);
-
-  // Parallax: the portrait drifts slower than the letter as the section scrolls
-  const sectionRef = useRef<HTMLElement>(null);
-  const reduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-  const portraitY = useTransform(scrollYProgress, [0, 1], [26, -26]);
 
   return (
-    <section ref={sectionRef} className="relative bg-neutral-50 px-4 pb-12 pt-12 sm:pb-16 sm:pt-16">
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.65 }}
-        viewport={{ once: true }}
-        className="max-w-6xl mx-auto"
-      >
-        {/* Section header */}
-        <div className="mb-8 sm:mb-12 text-center">
-          <h2 className="text-3xl sm:text-5xl font-display font-black tracking-tight">
-            {t.book.titleTop}<br />
-            <span className="text-xl sm:text-3xl font-normal italic">{t.book.titleSub}</span>
-          </h2>
-          <div className="mx-auto mt-4 h-px w-12 bg-black" />
-        </div>
+    <section className="relative bg-[#151414] px-4 py-20 sm:py-28">
+      <div className="max-w-6xl mx-auto">
+        <SectionHeading
+          index="03"
+          dept={t.book.dept}
+          title={t.book.headline}
+          deck={t.book.deck}
+          byline={t.book.byline}
+        />
 
-        {/* Letter + Portrait */}
-        <div className="relative isolate mb-16 md:min-h-[36rem]">
-          {/* Letter card */}
-          <motion.div
-            whileHover={{ y: -2 }}
-            transition={{ type: "spring", stiffness: 320, damping: 28 }}
-            className="relative z-20 w-full cursor-default border border-neutral-200 bg-white shadow-sm hover:shadow-md transition-shadow md:max-w-xl lg:max-w-2xl"
-          >
-            {/* A bird perched on the letter's top edge */}
-            <PerchedDeco
-              className="absolute -top-[30px] right-8 w-12 h-8"
-              idle="bob"
-              delay={0.6}
+        <div className="grid gap-10 md:grid-cols-[2fr_1fr] md:gap-14 items-start">
+          {/* The article, set in justified columns */}
+          <article>
+            <div className="np-body np-columns np-justify text-[14px] leading-[1.62] text-[#cbc2b0] [&>p]:mb-3.5">
+              <p><DropCap text={t.book.p1} /></p>
+              <p>
+                {t.book.p2}
+              </p>
+              <blockquote className="np-pullquote np-colspan-all">
+                {t.book.p2.split(/(?<=[.!?])\s/)[0]}
+              </blockquote>
+              <p>
+                {t.book.p3}
+              </p>
+              <p className="np-endmark">
+                {t.book.p4}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setIsLibraryOpen(true)}
+              className="np-kicker group mt-7 inline-flex cursor-pointer items-center gap-2 border border-[#5e564f] px-5 py-2.5 text-[#cbc2b0] transition-colors hover:border-[#e6e0d5] hover:text-[#e6e0d5]"
             >
-              <BirdOnBranch className="w-full h-full" />
-            </PerchedDeco>
-            <div className="relative z-10 p-6 sm:p-10 md:p-12 font-serif"
-                 style={{
-                   backgroundImage:
-                     "repeating-linear-gradient(transparent, transparent 31px, rgba(0,0,0,0.04) 31px, rgba(0,0,0,0.04) 32px)",
-                   backgroundPosition: "0 20px",
-                 }}>
-              {/* Red margin line */}
-              <div
-                className="absolute top-0 bottom-0 w-px bg-red-200/70 hidden sm:block"
-                style={{ left: "56px" }}
+              <Library className="h-3.5 w-3.5 shrink-0" />
+              {t.book.viewCatalogue}
+            </button>
+          </article>
+
+          {/* Inset figure */}
+          <figure className="md:pt-1">
+            <div className="np-screen aspect-[3/4] overflow-hidden border border-[#201e1c] bg-[#161413]">
+              <ImageWithFallback
+                src={LILI_BOULANGER_PORTRAIT}
+                alt="Lili Boulanger, portrait photograph (Bain News Service, 1918, Library of Congress)"
+                className="np-halftone h-full w-full object-cover object-top"
               />
-
-              {/* Ornamental initial cap */}
-              <div className="float-left text-5xl sm:text-7xl font-serif font-black leading-none mr-3 sm:mr-5 mt-1 border border-neutral-200 px-3 py-1">
-                {dropCap}
-              </div>
-
-              <div className="text-base md:text-lg leading-relaxed text-justify space-y-5 text-neutral-800">
-                <p>{p1Rest}</p>
-
-                <p>{t.book.p2}</p>
-
-                <p>{t.book.p3}</p>
-
-                <div className="clear-both pt-2 flex justify-start">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsLibraryOpen(true);
-                    }}
-                    className="inline-flex cursor-pointer items-center gap-2 border border-black bg-white px-4 py-2 font-sans text-xs tracking-widest uppercase transition-colors hover:bg-neutral-50 active:bg-neutral-100"
-                  >
-                    <Library className="h-3.5 w-3.5 shrink-0" />
-                    {t.book.viewCatalogue}
-                  </button>
-                </div>
-              </div>
-
-              {/* Signature */}
-              <div className="mt-10 text-right clear-both">
-                <div className="inline-block border-t border-neutral-300 pt-3">
-                  <p className="text-xl font-serif italic text-neutral-600">H. H.</p>
-                </div>
-              </div>
             </div>
-          </motion.div>
-
-          {/* Portrait */}
-          <motion.div
-            style={reduceMotion ? undefined : { y: portraitY }}
-            className="relative z-0 mx-auto mt-10 w-full max-w-[14rem] sm:max-w-xs cursor-default border border-neutral-200 bg-white shadow-sm hover:shadow-md transition-shadow md:absolute md:right-6 md:top-24 md:mx-0 md:mt-0 md:w-[min(100%,260px)] lg:right-10 lg:top-28"
-          >
-            {/* A butterfly resting on the portrait frame */}
-            <PerchedDeco
-              className="absolute -top-3 -left-3 w-7 h-5"
-              idle="flutter"
-              delay={0.8}
-            >
-              <Butterfly className="w-full h-full" />
-            </PerchedDeco>
-            <div className="p-3">
-              <div className="aspect-[3/4] overflow-hidden border border-neutral-100 bg-neutral-50">
-                <ImageWithFallback
-                  src={LILI_BOULANGER_PORTRAIT}
-                  alt="Lili Boulanger, portrait photograph (Bain News Service, 1918, Library of Congress)"
-                  className="h-full w-full object-cover object-top"
-                />
-              </div>
-
-              <div className="mt-3 text-center border-t border-neutral-100 pt-3">
-                <h3 className="text-base font-serif font-bold uppercase tracking-wide">Lili Boulanger</h3>
-                <p className="text-xs font-serif italic text-neutral-500 mt-0.5">1893–1918</p>
-                <p className="text-xs font-sans mt-1.5 text-neutral-400 tracking-wide">
-                  {t.book.portraitCaption}
-                </p>
-              </div>
-            </div>
-          </motion.div>
+            <figcaption className="mt-3 border-t border-[#201e1c] pt-3 text-center">
+              <p className="np-kicker mb-1.5 text-[9px] text-[#8a8071]">Fig.&nbsp;2</p>
+              <h3 className="np-head text-base font-bold uppercase tracking-wide text-[#e6e0d5]">
+                Lili Boulanger
+              </h3>
+              <p className="mt-0.5 font-serif text-xs italic text-[#7b7267]">1893–1918</p>
+              <p className="np-kicker mt-2 text-[10px] text-[#5e564f]">
+                {t.book.portraitCaption}
+              </p>
+            </figcaption>
+          </figure>
         </div>
 
-        {/* Divider */}
-        <div className="flex items-center justify-center gap-4">
-          <div className="h-px w-16 bg-neutral-300" />
-          <span className="text-neutral-300 text-lg font-serif">✦</span>
-          <div className="h-px w-16 bg-neutral-300" />
+        <div className="np-head mt-14 text-center text-xl tracking-[0.6em] text-[#5e564f]" aria-hidden>
+          * * *
         </div>
-      </motion.div>
+      </div>
 
-      {/* Library Modal */}
       <LiliBoulangerLibrary isOpen={isLibraryOpen} onClose={() => setIsLibraryOpen(false)} />
     </section>
   );

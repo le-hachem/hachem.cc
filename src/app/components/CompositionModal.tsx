@@ -42,7 +42,7 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
         <motion.div
           role="dialog"
           aria-modal="true"
-          className="relative z-10 w-full sm:max-w-3xl max-h-[92vh] sm:max-h-[88vh] bg-white flex flex-col shadow-2xl sm:border sm:border-neutral-200"
+          className="relative z-10 w-full sm:max-w-3xl max-h-[92vh] sm:max-h-[88vh] bg-[#161413] flex flex-col shadow-2xl sm:border sm:border-[#2f2c28]"
           initial={{ y: 40, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 20, opacity: 0 }}
@@ -50,11 +50,11 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
           onClick={e => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex-none border-b border-neutral-200 px-5 sm:px-8 py-5">
+          <div className="flex-none border-b border-[#2f2c28] px-5 sm:px-8 py-5">
             <div className="flex items-start gap-4 justify-between">
               <div className="flex items-start gap-3 min-w-0 flex-1">
                 {composition.coverUrl ? (
-                  <div className="shrink-0 w-14 h-14 sm:w-16 sm:h-16 border border-neutral-100 overflow-hidden bg-neutral-50">
+                  <div className="shrink-0 w-14 h-14 sm:w-16 sm:h-16 border border-[#201e1c] overflow-hidden bg-[#161413]">
                     <img
                       src={composition.coverUrl}
                       alt={`${composition.title} cover art`}
@@ -62,18 +62,18 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
                     />
                   </div>
                 ) : (
-                  <div className="shrink-0 w-14 h-14 sm:w-16 sm:h-16 border border-neutral-100 bg-neutral-50 flex items-center justify-center">
-                    <Music className="w-6 h-6 text-neutral-300" />
+                  <div className="shrink-0 w-14 h-14 sm:w-16 sm:h-16 border border-[#201e1c] bg-[#161413] flex items-center justify-center">
+                    <Music className="w-6 h-6 text-[#443f39]" />
                   </div>
                 )}
                 <div className="min-w-0">
                   <h2 className="text-lg sm:text-2xl font-display font-black tracking-tight leading-tight">
                     {composition.title}
                   </h2>
-                  <p className="text-sm font-serif italic text-neutral-500 mt-0.5">
+                  <p className="text-sm font-serif italic text-[#7b7267] mt-0.5">
                     {composition.subtitle}
                   </p>
-                  <div className="flex items-center gap-4 mt-2 text-xs text-neutral-400"
+                  <div className="flex items-center gap-4 mt-2 text-xs text-[#5e564f]"
                        style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
                     <span className="flex items-center gap-1">
                       <Calendar className="w-3 h-3" /> {composition.year}
@@ -90,7 +90,7 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
               <button
                 type="button"
                 onClick={onClose}
-                className="shrink-0 flex h-8 w-8 items-center justify-center text-neutral-400 hover:text-black transition-colors"
+                className="shrink-0 flex h-8 w-8 items-center justify-center text-[#5e564f] hover:text-[#eee8dd] transition-colors"
                 aria-label={t.modal.close}
               >
                 <X className="h-5 w-5" />
@@ -116,14 +116,14 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
               {/* Accolades */}
               {composition.accolades && composition.accolades.length > 0 && (
                 <div>
-                  <p className="text-[10px] tracking-[0.4em] uppercase text-neutral-400 mb-3"
+                  <p className="text-[10px] tracking-[0.4em] uppercase text-[#5e564f] mb-3"
                      style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
                     {t.modal.recognition}
                   </p>
                   <div className="space-y-2">
                     {composition.accolades.map((line, i) => (
-                      <div key={i} className="flex items-start gap-3 border border-neutral-200 px-4 py-3 bg-neutral-50">
-                        <Award className="w-4 h-4 mt-0.5 shrink-0 text-neutral-400" />
+                      <div key={i} className="flex items-start gap-3 border border-[#2f2c28] px-4 py-3 bg-[#161413]">
+                        <Award className="w-4 h-4 mt-0.5 shrink-0 text-[#5e564f]" />
                         <span className="text-sm font-serif">{line}</span>
                       </div>
                     ))}
@@ -133,12 +133,12 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
 
               {/* Description */}
               <div>
-                <p className="text-[10px] tracking-[0.4em] uppercase text-neutral-400 mb-3"
+                <p className="text-[10px] tracking-[0.4em] uppercase text-[#5e564f] mb-3"
                    style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
                   {t.modal.about}
                 </p>
-                <div className="border-l-2 border-neutral-200 pl-4">
-                  <p className="text-sm sm:text-base font-serif leading-relaxed text-neutral-800">
+                <div className="border-l-2 border-[#2f2c28] pl-4">
+                  <p className="text-sm sm:text-base font-serif leading-relaxed text-[#dfd6c7]">
                     {composition.description}
                   </p>
                 </div>
@@ -146,18 +146,18 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
 
               {/* Inspired by */}
               <div>
-                <p className="text-[10px] tracking-[0.4em] uppercase text-neutral-400 mb-3"
+                <p className="text-[10px] tracking-[0.4em] uppercase text-[#5e564f] mb-3"
                    style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
                   {t.modal.influences}
                 </p>
-                <p className="text-sm font-serif italic text-neutral-600 border border-neutral-200 px-4 py-3 bg-neutral-50">
+                <p className="text-sm font-serif italic text-[#a1998a] border border-[#2f2c28] px-4 py-3 bg-[#161413]">
                   "{composition.inspired}"
                 </p>
               </div>
 
               {/* Instrumentation */}
               <div>
-                <p className="text-[10px] tracking-[0.4em] uppercase text-neutral-400 mb-3"
+                <p className="text-[10px] tracking-[0.4em] uppercase text-[#5e564f] mb-3"
                    style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
                   {t.modal.instrumentation}
                 </p>
@@ -165,7 +165,7 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
                   {composition.instrumentation.map((inst, i) => (
                     <span
                       key={i}
-                      className="text-xs font-serif border border-neutral-200 bg-neutral-50 px-2 py-1 text-neutral-700"
+                      className="text-xs font-serif border border-[#2f2c28] bg-[#161413] px-2 py-1 text-[#c2b9ab]"
                     >
                       {tInstrument(inst, lang)}
                     </span>
@@ -177,8 +177,8 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
           </div>
 
           {/* Footer */}
-          <div className="flex-none border-t border-neutral-200 px-5 sm:px-8 py-3 text-center">
-            <p className="text-xs font-serif italic text-neutral-400">
+          <div className="flex-none border-t border-[#2f2c28] px-5 sm:px-8 py-3 text-center">
+            <p className="text-xs font-serif italic text-[#5e564f]">
               {t.modal.clickOutside}
             </p>
           </div>

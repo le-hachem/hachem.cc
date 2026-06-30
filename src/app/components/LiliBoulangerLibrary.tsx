@@ -92,7 +92,7 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
           <motion.div
             role="dialog"
             aria-modal="true"
-            className="relative z-10 w-full sm:max-w-4xl max-h-[92vh] sm:max-h-[88vh] bg-white flex flex-col shadow-2xl sm:border sm:border-neutral-200"
+            className="relative z-10 w-full sm:max-w-4xl max-h-[92vh] sm:max-h-[88vh] bg-[#161413] flex flex-col shadow-2xl sm:border sm:border-[#2f2c28]"
             initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 20, opacity: 0 }}
@@ -100,13 +100,13 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
             onClick={e => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex-none border-b border-neutral-200 px-5 sm:px-8 py-5">
+            <div className="flex-none border-b border-[#2f2c28] px-5 sm:px-8 py-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <h2 className="text-xl sm:text-2xl font-display font-black tracking-tight">
                     {t.lili.name}
                   </h2>
-                  <p className="text-xs tracking-[0.3em] uppercase text-neutral-400 mt-1"
+                  <p className="text-xs tracking-[0.3em] uppercase text-[#5e564f] mt-1"
                      style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
                     {t.lili.headerLine(works.length, editionCount)}
                   </p>
@@ -114,7 +114,7 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex h-8 w-8 items-center justify-center text-neutral-400 hover:text-black transition-colors shrink-0"
+                  className="flex h-8 w-8 items-center justify-center text-[#5e564f] hover:text-[#eee8dd] transition-colors shrink-0"
                   aria-label={t.modal.close}
                 >
                   <X className="h-5 w-5" />
@@ -126,8 +126,8 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
             <div className="flex flex-1 min-h-0">
 
               {/* Sidebar — desktop only */}
-              <aside className="hidden sm:flex flex-col w-48 shrink-0 border-r border-neutral-200 py-4">
-                <p className="px-4 text-[10px] tracking-[0.4em] uppercase text-neutral-400 mb-3"
+              <aside className="hidden sm:flex flex-col w-48 shrink-0 border-r border-[#2f2c28] py-4">
+                <p className="px-4 text-[10px] tracking-[0.4em] uppercase text-[#5e564f] mb-3"
                    style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
                   {t.lili.byInstrumentation}
                 </p>
@@ -141,14 +141,14 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
                         onClick={() => setActiveCategory(cat)}
                         className={`w-full text-left px-3 py-2.5 transition-colors duration-150 border-l-2 ${
                           active
-                            ? "border-black bg-neutral-50 text-black"
-                            : "border-transparent text-neutral-500 hover:text-black hover:bg-neutral-50"
+                            ? "border-[#eee8dd] bg-[#161413] text-[#eee8dd]"
+                            : "border-transparent text-[#7b7267] hover:text-[#eee8dd] hover:bg-[#161413]"
                         }`}
                       >
                         <span className="block text-sm font-serif font-bold leading-tight">
                           {t.lili.categoryLabels[cat]}
                         </span>
-                        <span className="block text-[10px] text-neutral-400 mt-0.5"
+                        <span className="block text-[10px] text-[#5e564f] mt-0.5"
                               style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
                           {t.lili.workCount(count)}
                         </span>
@@ -161,15 +161,15 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
               {/* Main content */}
               <div className="flex-1 min-w-0 flex flex-col min-h-0">
                 {/* Mobile tabs */}
-                <div className="sm:hidden flex gap-1.5 px-5 py-3 border-b border-neutral-100 overflow-x-auto">
+                <div className="sm:hidden flex gap-1.5 px-5 py-3 border-b border-[#201e1c] overflow-x-auto">
                   {(["All", ...populated] as Category[]).map(cat => (
                     <button
                       key={cat}
                       onClick={() => setActiveCategory(cat)}
                       className={`shrink-0 px-3 py-1 text-xs font-serif border transition-colors ${
                         activeCategory === cat
-                          ? "border-black bg-black text-white"
-                          : "border-neutral-200 text-neutral-600 hover:border-neutral-400"
+                          ? "border-[#eee8dd] bg-[#eee8dd] text-[#161413]"
+                          : "border-[#2f2c28] text-[#a1998a] hover:border-[#5e564f]"
                       }`}
                     >
                       {cat === "All" ? t.lili.all : t.lili.categoryLabels[cat]}
@@ -192,11 +192,11 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
                         return (
                           <div key={cat}>
                             {/* Category header */}
-                            <div className="sticky top-0 bg-neutral-50 border-b border-neutral-200 px-5 sm:px-6 py-2.5 z-10">
-                              <p className="text-[10px] tracking-[0.35em] uppercase text-neutral-500 font-semibold"
+                            <div className="sticky top-0 bg-[#161413] border-b border-[#2f2c28] px-5 sm:px-6 py-2.5 z-10">
+                              <p className="text-[10px] tracking-[0.35em] uppercase text-[#7b7267] font-semibold"
                                  style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
                                 {t.lili.categoryLabels[cat]}
-                                <span className="ml-2 font-normal text-neutral-400">
+                                <span className="ml-2 font-normal text-[#5e564f]">
                                   · {t.lili.categoryDescriptions[cat]}
                                 </span>
                               </p>
@@ -209,11 +209,11 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 0.2, delay: i * 0.025 }}
-                                className="border-b border-neutral-100 px-5 sm:px-6 py-4 hover:bg-neutral-50 transition-colors"
+                                className="border-b border-[#201e1c] px-5 sm:px-6 py-4 hover:bg-[#161413] transition-colors"
                               >
                                 <div className="flex items-start gap-4">
                                   {/* Year */}
-                                  <span className="shrink-0 text-[10px] tracking-wider text-neutral-400 pt-0.5 w-12"
+                                  <span className="shrink-0 text-[10px] tracking-wider text-[#5e564f] pt-0.5 w-12"
                                         style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
                                     {work.year}
                                   </span>
@@ -221,31 +221,31 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
                                   {/* Content */}
                                   <div className="flex-1 min-w-0">
                                     <div className="flex items-baseline gap-2 flex-wrap">
-                                      <h3 className="font-serif font-bold text-base text-neutral-900">
+                                      <h3 className="font-serif font-bold text-base text-[#eee8dd]">
                                         {work.title}
                                       </h3>
                                       {work.edition && (
-                                        <span className="text-[9px] tracking-widest uppercase bg-black text-white px-1.5 py-0.5"
+                                        <span className="text-[9px] tracking-widest uppercase bg-[#eee8dd] text-[#161413] px-1.5 py-0.5"
                                               style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
                                           {t.lili.edition}
                                         </span>
                                       )}
                                     </div>
-                                    <p className="text-xs sm:text-sm font-serif italic text-neutral-500 mt-0.5">
+                                    <p className="text-xs sm:text-sm font-serif italic text-[#7b7267] mt-0.5">
                                       {tLiliInstrumentation(work.instrumentation, lang)}
                                       {work.text && (
-                                        <span className="not-italic text-neutral-400"> · {tLiliText(work.text, lang)}</span>
+                                        <span className="not-italic text-[#5e564f]"> · {tLiliText(work.text, lang)}</span>
                                       )}
                                     </p>
                                     {work.edition && (
                                       <div className="flex gap-4 mt-2">
                                         <a href={work.edition.pdf} target="_blank" rel="noopener noreferrer"
-                                           className="inline-flex items-center gap-1 text-[10px] tracking-widest uppercase text-neutral-500 hover:text-black transition-colors"
+                                           className="inline-flex items-center gap-1 text-[10px] tracking-widest uppercase text-[#7b7267] hover:text-[#eee8dd] transition-colors"
                                            style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
                                           PDF <ExternalLink className="h-2.5 w-2.5" />
                                         </a>
                                         <a href={work.edition.imslp} target="_blank" rel="noopener noreferrer"
-                                           className="inline-flex items-center gap-1 text-[10px] tracking-widest uppercase text-neutral-500 hover:text-black transition-colors"
+                                           className="inline-flex items-center gap-1 text-[10px] tracking-widest uppercase text-[#7b7267] hover:text-[#eee8dd] transition-colors"
                                            style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
                                           IMSLP <ExternalLink className="h-2.5 w-2.5" />
                                         </a>
@@ -265,8 +265,8 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
             </div>
 
             {/* Footer */}
-            <div className="flex-none border-t border-neutral-200 px-5 sm:px-8 py-3 text-center">
-              <p className="text-xs font-serif italic text-neutral-400">
+            <div className="flex-none border-t border-[#2f2c28] px-5 sm:px-8 py-3 text-center">
+              <p className="text-xs font-serif italic text-[#5e564f]">
                 {t.lili.footer}
               </p>
             </div>
