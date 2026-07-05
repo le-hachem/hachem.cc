@@ -15,7 +15,7 @@ export function StaffDivider({ className = "" }: { className?: string }) {
       <motion.svg
         viewBox="0 -2 480 62"
         fill="none"
-        className="w-full max-w-md text-[#443f39]"
+        className="w-full max-w-md text-[var(--c-443f39)]"
         initial={reduceMotion ? undefined : "hidden"}
         whileInView="visible"
         viewport={{ once: true, margin: "-60px" }}

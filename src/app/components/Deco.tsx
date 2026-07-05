@@ -455,7 +455,7 @@ export function CardDecoration({ index }: { index: number }) {
   ];
   const pos = positions[index % positions.length];
   return (
-    <div className="pointer-events-none text-[#a1998a]">
+    <div className="pointer-events-none text-[var(--c-a1998a)]">
       <DecoComponent className={pos} />
     </div>
   );

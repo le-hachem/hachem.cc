@@ -254,15 +254,15 @@ export function AudioPlayer({
   const progress = duration > 0 ? currentTime / duration : 0;
 
   return (
-    <div className="relative border-2 sm:border-4 border-[#eee8dd] bg-[#161413] shadow-[4px_4px_0_0_rgb(24_24_24)] sm:shadow-[6px_6px_0_0_rgb(24_24_24)] p-3 sm:p-5">
+    <div className="relative border-2 sm:border-4 border-[var(--c-eee8dd)] bg-[var(--c-161413)] shadow-[4px_4px_0_0_rgb(24_24_24)] sm:shadow-[6px_6px_0_0_rgb(24_24_24)] p-3 sm:p-5">
       {/* Decorative corners */}
-      <div className="absolute top-1 left-1 w-4 h-4 sm:w-6 sm:h-6 border-l-2 border-t-2 border-[#eee8dd] pointer-events-none" />
-      <div className="absolute top-1 right-1 w-4 h-4 sm:w-6 sm:h-6 border-r-2 border-t-2 border-[#eee8dd] pointer-events-none" />
-      <div className="absolute bottom-1 left-1 w-4 h-4 sm:w-6 sm:h-6 border-l-2 border-b-2 border-[#eee8dd] pointer-events-none" />
-      <div className="absolute bottom-1 right-1 w-4 h-4 sm:w-6 sm:h-6 border-r-2 border-b-2 border-[#eee8dd] pointer-events-none" />
+      <div className="absolute top-1 left-1 w-4 h-4 sm:w-6 sm:h-6 border-l-2 border-t-2 border-[var(--c-eee8dd)] pointer-events-none" />
+      <div className="absolute top-1 right-1 w-4 h-4 sm:w-6 sm:h-6 border-r-2 border-t-2 border-[var(--c-eee8dd)] pointer-events-none" />
+      <div className="absolute bottom-1 left-1 w-4 h-4 sm:w-6 sm:h-6 border-l-2 border-b-2 border-[var(--c-eee8dd)] pointer-events-none" />
+      <div className="absolute bottom-1 right-1 w-4 h-4 sm:w-6 sm:h-6 border-r-2 border-b-2 border-[var(--c-eee8dd)] pointer-events-none" />
 
       {(title || subtitle) && (
-        <div className="mb-3 sm:mb-4 border-b-2 border-dashed border-[#eee8dd] pb-2">
+        <div className="mb-3 sm:mb-4 border-b-2 border-dashed border-[var(--c-eee8dd)] pb-2">
           {title && (
             <p className="text-xs sm:text-sm font-serif uppercase tracking-[0.2em] opacity-70">
               Now Streaming
@@ -287,7 +287,7 @@ export function AudioPlayer({
           type="button"
           onClick={togglePlay}
           aria-label={isPlaying ? t.audio.pause : t.audio.play}
-          className="flex h-12 w-12 sm:h-14 sm:w-14 flex-shrink-0 items-center justify-center border-2 sm:border-4 border-[#eee8dd] bg-[#eee8dd] text-[#161413] transition-colors hover:bg-[#dfd6c7] active:scale-95"
+          className="flex h-12 w-12 sm:h-14 sm:w-14 flex-shrink-0 items-center justify-center border-2 sm:border-4 border-[var(--c-eee8dd)] bg-[var(--c-eee8dd)] text-[var(--c-161413)] transition-colors hover:bg-[var(--c-dfd6c7)] active:scale-95"
         >
           {isLoading ? (
             <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 animate-spin" />
@@ -316,7 +316,7 @@ export function AudioPlayer({
             );
           }}
           onMouseLeave={() => setHoverRatio(null)}
-          className="relative flex h-14 sm:h-20 flex-1 cursor-pointer items-center gap-[2px] overflow-hidden select-none focus:outline-none focus:ring-2 focus:ring-[#eee8dd]"
+          className="relative flex h-14 sm:h-20 flex-1 cursor-pointer items-center gap-[2px] overflow-hidden select-none focus:outline-none focus:ring-2 focus:ring-[var(--c-eee8dd)]"
         >
           {bars.map((v, i) => {
             const barCenter = (i + 0.5) / bars.length;
@@ -332,7 +332,7 @@ export function AudioPlayer({
               <span
                 key={i}
                 className={`w-full flex-1 ${
-                  played ? "bg-[#eee8dd]" : "bg-[#5e564f]"
+                  played ? "bg-[var(--c-eee8dd)]" : "bg-[var(--c-5e564f)]"
                 }`}
                 style={{
                   height: `${height * 100}%`,
@@ -353,7 +353,7 @@ export function AudioPlayer({
           )}
           {/* Playhead */}
           <div
-            className="pointer-events-none absolute top-0 bottom-0 w-[2px] bg-[#eee8dd]"
+            className="pointer-events-none absolute top-0 bottom-0 w-[2px] bg-[var(--c-eee8dd)]"
             style={{ left: `${progress * 100}%` }}
           />
         </div>
@@ -363,7 +363,7 @@ export function AudioPlayer({
           type="button"
           onClick={toggleMute}
           aria-label={isMuted ? t.audio.unmute : t.audio.mute}
-          className="hidden sm:flex h-10 w-10 flex-shrink-0 items-center justify-center border-2 border-[#eee8dd] bg-[#161413] transition-colors hover:bg-[#2f2c28]"
+          className="hidden sm:flex h-10 w-10 flex-shrink-0 items-center justify-center border-2 border-[var(--c-eee8dd)] bg-[var(--c-161413)] transition-colors hover:bg-[var(--c-2f2c28)]"
         >
           {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
         </button>

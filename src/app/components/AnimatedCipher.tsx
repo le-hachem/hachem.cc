@@ -56,7 +56,7 @@ export function AnimatedCipher({
         parsed.removeAttribute("width");
         parsed.removeAttribute("height");
         parsed.setAttribute("role", "img");
-        parsed.setAttribute("aria-label", "Hachem H.");
+        parsed.setAttribute("aria-label", "Hachem");
         parsed.style.width = "100%";
         parsed.style.height = "auto";
         parsed.style.display = "block";
@@ -170,7 +170,7 @@ export function AnimatedCipher({
     return (
       <img
         src="/hachem-cipher.svg"
-        alt="Hachem H."
+        alt="Hachem"
         className={className}
         draggable={false}
         style={
@@ -186,7 +186,7 @@ export function AnimatedCipher({
     <div
       ref={containerRef}
       className={className}
-      aria-label="Hachem H."
+      aria-label="Hachem"
       style={invert ? { mixBlendMode: "difference" } : undefined}
     />
   );

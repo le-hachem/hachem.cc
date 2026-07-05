@@ -29,7 +29,7 @@ export function CompositionRack({ compositions, onCompositionClick, onViewAllCli
   );
 
   return (
-    <section className="relative bg-[#1a1816] px-4 py-20 sm:py-28">
+    <section className="relative bg-[var(--c-1a1816)] px-4 py-20 sm:py-28">
       <div className="max-w-5xl mx-auto">
         <SectionHeading
           index="02"
@@ -40,13 +40,13 @@ export function CompositionRack({ compositions, onCompositionClick, onViewAllCli
         />
 
         {isHidden ? (
-          <p className="np-body italic text-center text-[#7b7267] py-10">
+          <p className="np-body italic text-center text-[var(--c-7b7267)] py-10">
             {t.rack.maintenanceLine1} {t.rack.maintenanceLine2}
           </p>
         ) : (
           <>
             {/* Lead review */}
-            <div className="np-body np-justify mx-auto mb-12 max-w-3xl text-[14px] leading-[1.62] text-[#cbc2b0]">
+            <div className="np-body np-justify mx-auto mb-12 max-w-3xl text-[14px] leading-[1.62] text-[var(--c-cbc2b0)]">
               <p><DropCap text={t.rack.review} /></p>
             </div>
 
@@ -64,40 +64,40 @@ export function CompositionRack({ compositions, onCompositionClick, onViewAllCli
                     onClick={() => onCompositionClick(c)}
                     className="group grid w-full grid-cols-[2.25rem_1fr] sm:grid-cols-[2.5rem_1fr_7rem_5rem] items-baseline gap-x-4 gap-y-1 py-5 text-left"
                   >
-                    <span className="np-kicker np-tabular pt-1 text-[#8a8071]">
+                    <span className="np-kicker np-tabular pt-1 text-[var(--c-8a8071)]">
                       {String(i + 1).padStart(2, "0")}
                     </span>
 
                     <div>
-                      <h3 className="np-head text-2xl sm:text-3xl font-bold leading-tight text-[#e6e0d5] decoration-1 underline-offset-[6px] group-hover:underline">
+                      <h3 className="np-head text-2xl sm:text-3xl font-bold leading-tight text-[var(--c-e6e0d5)] decoration-1 underline-offset-[6px] group-hover:underline">
                         {c.title}
                         {c.accolades && c.accolades.length > 0 && (
                           <Award
                             aria-label={t.rack.awarded}
-                            className="ml-2 inline-block h-4 w-4 -translate-y-px text-[#9a927f]"
+                            className="ml-2 inline-block h-4 w-4 -translate-y-px text-[var(--c-9a927f)]"
                           />
                         )}
                         {c.audioUrl && (
                           <Headphones
                             aria-label={t.rack.listen}
-                            className="ml-1.5 inline-block h-4 w-4 -translate-y-px text-[#9a927f]"
+                            className="ml-1.5 inline-block h-4 w-4 -translate-y-px text-[var(--c-9a927f)]"
                           />
                         )}
                       </h3>
-                      <p className="np-body mt-0.5 italic text-[#9a927f]">{c.subtitle}</p>
-                      <p className="np-kicker mt-2 text-[10px] text-[#7b7267]">
+                      <p className="np-body mt-0.5 italic text-[var(--c-9a927f)]">{c.subtitle}</p>
+                      <p className="np-kicker mt-2 text-[10px] text-[var(--c-7b7267)]">
                         {c.instrumentation.map((x) => tInstrument(x, lang)).join("  ·  ")}
                       </p>
                       {/* meta, stacked on small screens */}
-                      <p className="np-tabular mt-2 font-serif text-sm text-[#8a8071] sm:hidden">
+                      <p className="np-tabular mt-2 font-serif text-sm text-[var(--c-8a8071)] sm:hidden">
                         {c.year} · {c.duration}
                       </p>
                     </div>
 
-                    <span className="np-tabular hidden pt-1 text-right font-serif text-[#a1998a] sm:block">
+                    <span className="np-tabular hidden pt-1 text-right font-serif text-[var(--c-a1998a)] sm:block">
                       {c.year}
                     </span>
-                    <span className="np-tabular hidden pt-1 text-right font-serif text-[#a1998a] sm:block">
+                    <span className="np-tabular hidden pt-1 text-right font-serif text-[var(--c-a1998a)] sm:block">
                       {c.duration}
                     </span>
                   </button>
@@ -108,14 +108,14 @@ export function CompositionRack({ compositions, onCompositionClick, onViewAllCli
             <div className="mt-9 flex justify-center">
               <button
                 onClick={onViewAllClick}
-                className="np-kicker group inline-flex items-center gap-2 border border-[#5e564f] px-5 py-2.5 text-[#cbc2b0] transition-colors hover:border-[#e6e0d5] hover:text-[#e6e0d5]"
+                className="np-kicker group inline-flex items-center gap-2 border border-[var(--c-5e564f)] px-5 py-2.5 text-[var(--c-cbc2b0)] transition-colors hover:border-[var(--c-e6e0d5)] hover:text-[var(--c-e6e0d5)]"
               >
                 {t.rack.allCompositions}
                 <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
               </button>
             </div>
 
-            <div className="np-head mt-12 text-center text-xl tracking-[0.6em] text-[#5e564f]" aria-hidden>
+            <div className="np-head mt-12 text-center text-xl tracking-[0.6em] text-[var(--c-5e564f)]" aria-hidden>
               * * *
             </div>
           </>

@@ -173,9 +173,11 @@
   float: left;
   font-family: 'Playfair Display', Georgia, serif;
   font-weight: 800;
-  font-size: 4.1em;
-  line-height: 0.74;
-  margin: 0.04em 0.1em 0 0;
+  font-size: 3.5em;
+  /* line-height 1 keeps the whole glyph (including descenders like J and Q)
+     inside the float box, so its tail never overlaps the lines below. */
+  line-height: 1;
+  margin: -0.06em 0.12em 0 0;
   color: var(--np-ink);
 }
 
@@ -207,4 +209,68 @@
 .np-row { border-bottom: 1px solid var(--np-rule); transition: background-color 0.18s ease; }
 .np-row:first-child { border-top: 1px solid var(--np-rule); }
 .np-row:hover { background-color: rgba(230, 224, 213, 0.05); }
+
+
+/* ===================== EDITION THEME (night default / .daylight) ===================== */
+:root {
+  --c-121110: #121110;
+  --c-151414: #151414;
+  --c-161413: #161413;
+  --c-1a1816: #1a1816;
+  --c-201e1c: #201e1c;
+  --c-2f2c28: #2f2c28;
+  --c-3a352f: #3a352f;
+  --c-443f39: #443f39;
+  --c-5e564f: #5e564f;
+  --c-7b7267: #7b7267;
+  --c-8a8071: #8a8071;
+  --c-9a927f: #9a927f;
+  --c-a1998a: #a1998a;
+  --c-a59b89: #a59b89;
+  --c-b5ab98: #b5ab98;
+  --c-bcb3a3: #bcb3a3;
+  --c-c2b9ab: #c2b9ab;
+  --c-cbc2b0: #cbc2b0;
+  --c-dfd6c7: #dfd6c7;
+  --c-e6e0d5: #e6e0d5;
+  --c-eee8dd: #eee8dd;
+  --c-f0ead8: #f0ead8;
+  --seam: rgba(230,224,213,0.13);
+  --seam-strong: rgba(230,224,213,0.16);
+  --guide: rgba(230,224,213,0.05);
+}
+
+.daylight {
+  --c-121110: #e9e8e6;
+  --c-151414: #e5e4e4;
+  --c-161413: #e6e4e2;
+  --c-1a1816: #e4e1df;
+  --c-201e1c: #dedbd9;
+  --c-2f2c28: #d3cfcb;
+  --c-3a352f: #ccc7c1;
+  --c-443f39: #c3beb7;
+  --c-5e564f: #afa69f;
+  --c-7b7267: #988f84;
+  --c-8a8071: #8f8576;
+  --c-9a927f: #827a67;
+  --c-a1998a: #787061;
+  --c-a59b89: #796f5d;
+  --c-b5ab98: #6c614d;
+  --c-bcb3a3: #615847;
+  --c-c2b9ab: #5a5041;
+  --c-cbc2b0: #564c38;
+  --c-dfd6c7: #413725;
+  --c-e6e0d5: #342c1f;
+  --c-eee8dd: #2d2517;
+  --c-f0ead8: #332b14;
+  --seam: rgba(20,17,12,0.14);
+  --seam-strong: rgba(20,17,12,0.18);
+  --guide: rgba(20,17,12,0.06);
+  /* print-rule + base tokens flip to ink-on-paper */
+  --np-ink: #211c14;
+  --np-rule: rgba(30,25,18,0.40);
+  --np-rule-strong: rgba(30,25,18,0.72);
+  --background: #e9e8e6;
+  --foreground: #211c14;
+}
 

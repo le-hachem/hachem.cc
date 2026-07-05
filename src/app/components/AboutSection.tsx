@@ -43,7 +43,7 @@ export function AboutSection() {
   });
 
   return (
-    <section className="relative bg-[#151414] px-4 py-20 sm:py-28">
+    <section className="relative bg-[var(--c-151414)] px-4 py-20 sm:py-28">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -65,19 +65,19 @@ export function AboutSection() {
             {/* Left — portrait figure + timeline (the agate column) */}
             <div className="relative">
               <figure className="mb-8">
-                <p className="np-kicker text-[9px] text-[#8a8071] mb-2">Fig.&nbsp;1</p>
+                <p className="np-kicker text-[9px] text-[var(--c-8a8071)] mb-2">Fig.&nbsp;1</p>
                 <ProfilePortrait className="w-full max-w-[220px]" />
               </figure>
               <div className="np-rule mb-5" />
-              <p className="np-kicker text-[#8a8071] mb-6">
+              <p className="np-kicker text-[var(--c-8a8071)] mb-6">
                 {t.about.timeline}
               </p>
               <ol ref={timelineRef} className="relative space-y-0">
                 {/* Rail track + ink fill driven by scroll */}
-                <div className="absolute left-0 top-0 bottom-0 w-px bg-[#2f2c28]" aria-hidden />
+                <div className="absolute left-0 top-0 bottom-0 w-px bg-[var(--c-2f2c28)]" aria-hidden />
                 <motion.div
                   aria-hidden
-                  className="absolute left-0 top-0 bottom-0 w-px bg-[#eee8dd] origin-top"
+                  className="absolute left-0 top-0 bottom-0 w-px bg-[var(--c-eee8dd)] origin-top"
                   style={{ scaleY: reduceMotion ? 1 : railScale }}
                 />
                 {milestoneAges.map((age, i) => (
@@ -89,12 +89,12 @@ export function AboutSection() {
                     viewport={{ once: true }}
                     className="relative pl-6 pb-8 last:pb-0"
                   >
-                    <span className="absolute -left-[4.5px] top-[5px] w-2 h-2 rounded-full bg-[#eee8dd] border-2 border-[#161413] ring-1 ring-[#eee8dd]" />
-                    <p className="text-[11px] tracking-widest uppercase text-[#5e564f] mb-1"
+                    <span className="absolute -left-[4.5px] top-[5px] w-2 h-2 rounded-full bg-[var(--c-eee8dd)] border-2 border-[var(--c-161413)] ring-1 ring-[var(--c-eee8dd)]" />
+                    <p className="text-[11px] tracking-widest uppercase text-[var(--c-5e564f)] mb-1"
                        style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
                       {t.about.ageLabel(age)}
                     </p>
-                    <p className="text-sm font-serif text-[#c2b9ab] leading-relaxed">
+                    <p className="text-sm font-serif text-[var(--c-c2b9ab)] leading-relaxed">
                       {t.about.milestones[i]}
                     </p>
                   </motion.li>
@@ -103,8 +103,8 @@ export function AboutSection() {
             </div>
 
             {/* Right — the lead article, set in tight justified columns */}
-            <div className="np-body text-[13.5px] leading-[1.55] text-[#cbc2b0]">
-              <p className="np-kicker text-[#8a8071] mb-5">By&nbsp;Hachem&nbsp;H.</p>
+            <div className="np-body text-[13.5px] leading-[1.55] text-[var(--c-cbc2b0)]">
+              <p className="np-kicker text-[var(--c-8a8071)] mb-5">By&nbsp;Hachem</p>
 
               <div className="np-columns np-columns-lg3 np-justify [&>p]:mb-3.5">
                 <p><DropCap text={t.about.bio1} /></p>
@@ -123,14 +123,14 @@ export function AboutSection() {
               </div>
 
               {/* Social links */}
-              <div className="mt-8 flex items-center gap-5 border-t border-[#2f2c28] pt-5">
+              <div className="mt-8 flex items-center gap-5 border-t border-[var(--c-2f2c28)] pt-5">
                 {socials.map(({ label, href, icon: Icon }) => (
                   <a
                     key={label}
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-[#5e564f] hover:text-[#eee8dd] transition-colors duration-150"
+                    className="flex items-center gap-2 text-[var(--c-5e564f)] hover:text-[var(--c-eee8dd)] transition-colors duration-150"
                   >
                     <Icon className="w-4 h-4" />
                     <span className="text-xs tracking-widest uppercase"
@@ -148,7 +148,7 @@ export function AboutSection() {
                     .querySelector("#works")
                     ?.scrollIntoView({ behavior: "smooth", block: "start" })
                 }
-                className="np-kicker mt-6 block text-[#8a8071] transition-colors hover:text-[#e6e0d5]"
+                className="np-kicker mt-6 block text-[var(--c-8a8071)] transition-colors hover:text-[var(--c-e6e0d5)]"
               >
                 No.&nbsp;02 · {t.rack.dept} →
               </button>
@@ -162,17 +162,17 @@ export function AboutSection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
             viewport={{ once: true }}
-            className="mt-10 sm:mt-16 border-t border-[#201e1c] pt-8 sm:pt-10"
+            className="mt-10 sm:mt-16 border-t border-[var(--c-201e1c)] pt-8 sm:pt-10"
           >
-            <p className="text-[10px] tracking-[0.4em] uppercase text-[#5e564f] mb-6 text-center"
+            <p className="text-[10px] tracking-[0.4em] uppercase text-[var(--c-5e564f)] mb-6 text-center"
                style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
               {t.about.recognition}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-10">
               {t.about.accolades.map((a, i) => (
                 <div key={i} className="text-center">
-                  <p className="font-serif font-bold text-sm text-[#dfd6c7]">{a.title}</p>
-                  <p className="text-xs text-[#5e564f] mt-0.5"
+                  <p className="font-serif font-bold text-sm text-[var(--c-dfd6c7)]">{a.title}</p>
+                  <p className="text-xs text-[var(--c-5e564f)] mt-0.5"
                      style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
                     {a.body}
                   </p>

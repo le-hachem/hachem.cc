@@ -6,8 +6,16 @@ import {
   useReducedMotion,
 } from "motion/react";
 import { AnimatedCipher } from "./AnimatedCipher";
-import { MASTHEAD } from "./SectionHeading";
+import { playCipher } from "./EasterEggs";
 import { useLanguage } from "../i18n/LanguageContext";
+
+/** Roman numeral for the running volume number. */
+function roman(n: number): string {
+  const map: [string, number][] = [["X", 10], ["IX", 9], ["V", 5], ["IV", 4], ["I", 1]];
+  let out = "";
+  for (const [sym, val] of map) while (n >= val) { out += sym; n -= val; }
+  return out || "I";
+}
 
 export function ProgressiveTextReveal() {
   const { t, lang } = useLanguage();
@@ -15,16 +23,41 @@ export function ProgressiveTextReveal() {
   // Live dateline, set in the reader's language — the way a paper carries the
   // day's date across the top of the front page.
   const dateline = new Date()
-    .toLocaleDateString(lang === "fr" ? "fr-FR" : "en-GB", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    })
+    .toLocaleDateString(
+      lang === "fr" ? "fr-FR" : lang === "de" ? "de-DE" : "en-GB",
+      { weekday: "long", day: "numeric", month: "long", year: "numeric" }
+    )
     .replace(/^\w/, (c) => c.toUpperCase());
   const [cipherDone, setCipherDone]   = useState(false);
   const [showSubtitle, setShowSubtitle] = useState(false);
   const [showScroll, setShowScroll]   = useState(false);
+  const [showNotes, setShowNotes]     = useState(false);
+  const notesTimer = useRef<number | null>(null);
+
+  // The edition number climbs each time you visit — a fresh printing every
+  // time you come back — and you can also advance it by clicking the folio.
+  const [edition, setEdition] = useState(1);
+  useEffect(() => {
+    try {
+      const n = (parseInt(localStorage.getItem("hh-edition") || "0", 10) || 0) + 1;
+      localStorage.setItem("hh-edition", String(n));
+      setEdition(n);
+    } catch {
+      /* localStorage unavailable */
+    }
+  }, []);
+  const bumpEdition = () =>
+    setEdition((e) => {
+      const n = e + 1;
+      try {
+        localStorage.setItem("hh-edition", String(n));
+      } catch {
+        /* ignore */
+      }
+      return n;
+    });
+  const vol = Math.floor((edition - 1) / 12) + 1;
+  const no = ((edition - 1) % 12) + 1;
 
   // Parallax: the hero recedes and fades as it scrolls away
   const heroRef = useRef<HTMLDivElement>(null);
@@ -49,7 +82,7 @@ export function ProgressiveTextReveal() {
   }, []);
 
   return (
-    <div ref={heroRef} className="relative h-screen overflow-hidden bg-[#121110]">
+    <div ref={heroRef} className="relative h-screen overflow-hidden bg-[var(--c-121110)]">
       {/*
        * Isolated stage. `isolation: isolate` keeps the cipher's difference
        * blend contained here, so it inverts the photograph behind it (and
@@ -81,7 +114,7 @@ export function ProgressiveTextReveal() {
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "radial-gradient(125% 95% at 50% 40%, rgba(18,17,16,0) 42%, rgba(18,17,16,0.32) 80%, rgba(18,17,16,0.82) 100%), linear-gradient(to bottom, rgba(18,17,16,0.25) 0%, rgba(18,17,16,0) 30%, rgba(18,17,16,0) 52%, rgba(18,17,16,0.7) 80%, #121110 96%)",
+              "radial-gradient(125% 95% at 50% 40%, rgba(18,17,16,0) 42%, rgba(18,17,16,0.32) 80%, rgba(18,17,16,0.82) 100%), linear-gradient(to bottom, rgba(18,17,16,0.25) 0%, rgba(18,17,16,0) 30%, rgba(18,17,16,0) 52%, rgba(18,17,16,0.7) 80%, var(--c-121110) 96%)",
           }}
         />
 
@@ -104,33 +137,78 @@ export function ProgressiveTextReveal() {
             className="w-[95vw] sm:w-[88vw] md:w-[80vw] max-w-5xl"
             style={{ textShadow: "0 1px 18px rgba(0,0,0,0.85)" }}
           >
-            {/* Heavy masthead rule */}
-            <div className="np-rule-strong" />
+            {/* Heavy masthead rule — fixed cream (sits over the dark photo). */}
+            <div style={{ borderTop: "2px solid rgba(230,224,213,0.85)" }} />
 
-            {/* Nameplate — the engraved cipher */}
-            <div className="flex justify-center py-3 sm:py-4">
+            {/* Nameplate — the engraved cipher. Click to hear the motif;
+                right-click to read its notes. */}
+            <div
+              className="relative flex cursor-pointer justify-center py-3 sm:py-4"
+              onClick={playCipher}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                setShowNotes(true);
+                if (notesTimer.current) window.clearTimeout(notesTimer.current);
+                notesTimer.current = window.setTimeout(
+                  () => setShowNotes(false),
+                  2800
+                );
+              }}
+              role="button"
+              tabIndex={0}
+              aria-label="Play the cipher"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  playCipher();
+                }
+              }}
+            >
               <AnimatedCipher
                 invert
                 className="w-full select-none"
                 onDone={() => setCipherDone(true)}
               />
+              <motion.span
+                aria-hidden
+                initial={false}
+                animate={{ opacity: showNotes ? 1 : 0, y: showNotes ? 0 : 4 }}
+                transition={{ duration: 0.25 }}
+                className="np-kicker pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-sm bg-[#0c0a08]/85 px-3 py-1 text-[10px] text-[#e6e0d5]"
+              >
+                H · A · C · H · E · B♮ · G · D
+              </motion.span>
             </div>
 
             {/* Folio line: edition · running head · dateline */}
-            <div className="np-rule" />
+            <div style={{ borderTop: "1px solid rgba(230,224,213,0.42)" }} />
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: showSubtitle || cipherDone ? 1 : 0 }}
               transition={{ duration: 0.7 }}
-              className="np-kicker grid grid-cols-3 items-center gap-3 py-2 text-[#cbc2b0]"
+              className="np-kicker flex flex-col items-center gap-1 py-2 text-center text-[#cbc2b0] sm:grid sm:grid-cols-3 sm:items-center sm:gap-3"
             >
-              <span className="justify-self-start whitespace-nowrap">Vol.&nbsp;I · No.&nbsp;1</span>
-              <span className="np-smallcaps hidden justify-self-center whitespace-nowrap text-center tracking-[0.14em] text-[#e6e0d5] sm:block">
-                {MASTHEAD}
+              <span
+                role="button"
+                tabIndex={0}
+                onClick={bumpEdition}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    bumpEdition();
+                  }
+                }}
+                title="Next edition"
+                className="hidden cursor-pointer justify-self-start whitespace-nowrap transition-colors hover:text-[#e6e0d5] sm:inline"
+              >
+                Vol.&nbsp;{roman(vol)} · No.&nbsp;{no}
               </span>
-              <span className="justify-self-end whitespace-nowrap text-right">{dateline}</span>
+              <span className="np-smallcaps hidden justify-self-center whitespace-nowrap tracking-[0.14em] text-[#e6e0d5] sm:block">
+                {t.masthead}
+              </span>
+              <span className="justify-self-end sm:whitespace-nowrap sm:text-right">{dateline}</span>
             </motion.div>
-            <div className="np-rule-strong" />
+            <div style={{ borderTop: "2px solid rgba(230,224,213,0.85)" }} />
 
             {/* Motto / standfirst */}
             <motion.p

@@ -14,7 +14,7 @@ function DrawnIcon({ paths, viewBox = "0 0 48 48" }: { paths: IconPath[]; viewBo
     <motion.svg
       viewBox={viewBox}
       fill="none"
-      className="w-8 h-8 text-[#cbc2b0]"
+      className="w-8 h-8 text-[var(--c-cbc2b0)]"
       initial={reduceMotion ? undefined : "hidden"}
       whileInView="visible"
       viewport={{ once: true, margin: "-40px" }}
@@ -111,7 +111,7 @@ export function ServicesSection() {
   }));
 
   return (
-    <section className="relative bg-[#1a1816] px-4 py-20 sm:py-28">
+    <section className="relative bg-[var(--c-1a1816)] px-4 py-20 sm:py-28">
       <div className="max-w-5xl mx-auto">
         <SectionHeading
           index="04"
@@ -122,7 +122,7 @@ export function ServicesSection() {
         />
 
         {/* Article lede */}
-        <div className="np-body np-justify mx-auto mb-14 max-w-3xl text-[14px] leading-[1.62] text-[#cbc2b0]">
+        <div className="np-body np-justify mx-auto mb-14 max-w-3xl text-[14px] leading-[1.62] text-[var(--c-cbc2b0)]">
           <p><DropCap text={t.services.lede} /></p>
         </div>
 
@@ -138,18 +138,18 @@ export function ServicesSection() {
               className="border-b border-[var(--np-rule)] py-7 sm:py-8 sm:[&:nth-last-child(-n+1)]:border-b-0 sm:[&:nth-last-child(2)]:border-b-0"
             >
               <div className="flex items-baseline gap-3">
-                <span className="np-kicker np-tabular text-[#8a8071]">
+                <span className="np-kicker np-tabular text-[var(--c-8a8071)]">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="np-head flex-1 text-2xl font-bold leading-tight text-[#e6e0d5]">
+                <h3 className="np-head flex-1 text-2xl font-bold leading-tight text-[var(--c-e6e0d5)]">
                   {s.title}
                 </h3>
                 {s.badge && (
                   <span
                     className={`np-kicker shrink-0 border px-1.5 py-0.5 text-[9px] ${
                       commissionsOpen
-                        ? "border-[#cbc2b0] text-[#cbc2b0]"
-                        : "border-[#443f39] text-[#5e564f]"
+                        ? "border-[var(--c-cbc2b0)] text-[var(--c-cbc2b0)]"
+                        : "border-[var(--c-443f39)] text-[var(--c-5e564f)]"
                     }`}
                   >
                     {s.badge}
@@ -158,7 +158,7 @@ export function ServicesSection() {
               </div>
               <div className="mt-3 flex items-start gap-4">
                 <div className="mt-1 shrink-0">{s.icon}</div>
-                <p className="np-body np-justify text-[15px] leading-[1.65] text-[#bcb3a3]">
+                <p className="np-body np-justify text-[15px] leading-[1.65] text-[var(--c-bcb3a3)]">
                   {s.body}
                 </p>
               </div>
@@ -174,7 +174,7 @@ export function ServicesSection() {
           viewport={{ once: true }}
           className="mt-10 text-center"
         >
-          <p className="font-serif italic text-[#7b7267] text-sm sm:text-base">
+          <p className="font-serif italic text-[var(--c-7b7267)] text-sm sm:text-base">
             {t.services.ctaPre}
             <a
               href="#contact"
@@ -182,7 +182,7 @@ export function ServicesSection() {
                 e.preventDefault();
                 document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="underline decoration-[#443f39] underline-offset-4 transition-colors hover:text-[#eee8dd] hover:decoration-[#eee8dd]"
+              className="underline decoration-[var(--c-443f39)] underline-offset-4 transition-colors hover:text-[var(--c-eee8dd)] hover:decoration-[var(--c-eee8dd)]"
             >
               {t.services.ctaLink}
             </a>
@@ -190,7 +190,7 @@ export function ServicesSection() {
           </p>
         </motion.div>
 
-        <div className="np-head mt-12 text-center text-xl tracking-[0.6em] text-[#5e564f]" aria-hidden>
+        <div className="np-head mt-12 text-center text-xl tracking-[0.6em] text-[var(--c-5e564f)]" aria-hidden>
           * * *
         </div>
       </div>

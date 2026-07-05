@@ -61,7 +61,7 @@ export function AmbientNotes() {
   return (
     <div
       aria-hidden
-      className="absolute inset-0 overflow-hidden pointer-events-none text-[#eee8dd]"
+      className="absolute inset-0 overflow-hidden pointer-events-none text-[var(--c-eee8dd)]"
     >
       {NOTES.map((n, i) => (
         <motion.div

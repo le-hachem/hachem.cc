@@ -16,6 +16,7 @@ export type CompositionCategory =
 /* ------------------------------------------------------------------ */
 
 const en = {
+  masthead: "Hachem — Composer's Record",
   language: {
     label: "Language",
     en: "English",
@@ -208,8 +209,8 @@ const en = {
 
   library: {
     title: "Catalogue of Works",
-    /** e.g. "Hachem H. · 7 compositions" */
-    countLine: (n: number) => `Hachem H. · ${n} compositions`,
+    /** e.g. "Hachem · 7 compositions" */
+    countLine: (n: number) => `Hachem · ${n} compositions`,
     byInstrumentation: "By Instrumentation",
     allWorks: "All Works",
     all: "All",
@@ -272,9 +273,9 @@ const en = {
   },
 
   seo: {
-    title: "Hachem H. · Composer · Pianist · Conductor",
+    title: "Hachem · Composer · Pianist · Conductor",
     description:
-      "Composer and pianist in Paris, studying at the Sorbonne. New works from solo pieces to cantatas, free editions of Lili Boulanger's manuscripts on IMSLP, plus commissions, engraving and teaching.",
+      "Composer, pianist and conductor in Paris, studying at the Sorbonne — new works from solo to orchestra, free Lili Boulanger editions on IMSLP, and commissions.",
   },
 };
 
@@ -286,6 +287,7 @@ export type Dict = typeof en;
 /* ------------------------------------------------------------------ */
 
 const fr: Dict = {
+  masthead: "Hachem — Journal du compositeur",
   language: {
     label: "Langue",
     en: "English",
@@ -477,7 +479,7 @@ const fr: Dict = {
 
   library: {
     title: "Catalogue des œuvres",
-    countLine: (n: number) => `Hachem H. · ${n} compositions`,
+    countLine: (n: number) => `Hachem · ${n} compositions`,
     byInstrumentation: "Par instrumentation",
     allWorks: "Toutes les œuvres",
     all: "Toutes",
@@ -541,9 +543,9 @@ const fr: Dict = {
   },
 
   seo: {
-    title: "Hachem H. · Compositeur · Pianiste · Chef d'orchestre",
+    title: "Hachem · Compositeur · Pianiste · Chef d'orchestre",
     description:
-      "Compositeur et pianiste à Paris, étudiant à la Sorbonne. Œuvres nouvelles, de la pièce soliste à la cantate, éditions gratuites des manuscrits de Lili Boulanger sur IMSLP, ainsi que commandes, gravure et enseignement.",
+      "Compositeur, pianiste et chef d'orchestre à Paris, étudiant à la Sorbonne — œuvres nouvelles du solo à l'orchestre, éditions gratuites de Lili Boulanger sur IMSLP, et commandes.",
   },
 };
 
@@ -552,6 +554,7 @@ const fr: Dict = {
 /* ------------------------------------------------------------------ */
 
 const de: Dict = {
+  masthead: "Hachem — Das Komponistenblatt",
   language: {
     label: "Sprache",
     en: "English",
@@ -743,7 +746,7 @@ const de: Dict = {
 
   library: {
     title: "Werkverzeichnis",
-    countLine: (n: number) => `Hachem H. · ${n} Kompositionen`,
+    countLine: (n: number) => `Hachem · ${n} Kompositionen`,
     byInstrumentation: "Nach Besetzung",
     allWorks: "Alle Werke",
     all: "Alle",
@@ -807,9 +810,9 @@ const de: Dict = {
   },
 
   seo: {
-    title: "Hachem H. · Komponist · Pianist · Dirigent",
+    title: "Hachem · Komponist · Pianist · Dirigent",
     description:
-      "Komponist und Pianist in Paris, Student an der Sorbonne. Neue Werke von Solostücken bis zu Kantaten, kostenlose Editionen der Manuskripte Lili Boulangers auf IMSLP sowie Auftragskompositionen, Notensatz und Unterricht.",
+      "Komponist, Pianist und Dirigent in Paris, Student an der Sorbonne — neue Werke vom Solo bis zum Orchester, kostenlose Lili-Boulanger-Editionen auf IMSLP, und Auftragswerke.",
   },
 };
 

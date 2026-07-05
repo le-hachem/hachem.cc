@@ -11,7 +11,7 @@ import { ContactSection } from "./components/ContactSection";
 import { NavHeader } from "./components/NavHeader";
 import { FrontPage } from "./components/FrontPage";
 import { CandleCursor } from "./components/CandleCursor";
-import { MASTHEAD } from "./components/SectionHeading";
+import { EasterEggs } from "./components/EasterEggs";
 import { getCompositions } from "./i18n/compositions";
 import { useLanguage } from "./i18n/LanguageContext";
 import backgroundSvg from "../assets/background.svg";
@@ -23,6 +23,25 @@ export default function App() {
   const compositions = useMemo(() => getCompositions(lang), [lang]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
+
+  // Night (default, dark) or Day (light "newsprint") edition, remembered.
+  const [edition, setEdition] = useState<"night" | "day">(() => {
+    try {
+      return localStorage.getItem("hh-edition-theme") === "day" ? "day" : "night";
+    } catch {
+      return "night";
+    }
+  });
+  useEffect(() => {
+    document.documentElement.classList.toggle("daylight", edition === "day");
+    try {
+      localStorage.setItem("hh-edition-theme", edition);
+    } catch {
+      /* ignore */
+    }
+  }, [edition]);
+  const toggleEdition = () =>
+    setEdition((e) => (e === "day" ? "night" : "day"));
 
   const selectedComposition =
     compositions.find((c) => c.id === selectedId) ?? null;
@@ -52,16 +71,20 @@ export default function App() {
   }, [selectedComposition]);
 
   return (
-    <div className="relative min-h-screen bg-[#121110]">
+    <div className="relative min-h-screen overflow-x-hidden bg-[var(--c-121110)]">
       {/* Sticky nav */}
-      <NavHeader />
+      <NavHeader edition={edition} onToggleEdition={toggleEdition} />
 
       {/* Background SVG — scrolls with content */}
       <div
         aria-hidden
         className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.07] z-0"
       >
-        <img src={backgroundSvg} alt="" className="h-full w-full object-cover invert" />
+        <img
+          src={backgroundSvg}
+          alt=""
+          className={`h-full w-full object-cover ${edition === "night" ? "invert" : ""}`}
+        />
       </div>
 
       {/* Hero */}
@@ -75,12 +98,12 @@ export default function App() {
       </div>
 
       {/* About */}
-      <div id="about" className="relative z-10 border-t border-[rgba(230,224,213,0.13)] bg-[#151414] scroll-mt-12">
+      <div id="about" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-151414)] scroll-mt-12">
         <AboutSection />
       </div>
 
       {/* Featured works */}
-      <div id="works" className="relative z-10 border-t border-[rgba(230,224,213,0.13)] bg-[#1a1816] scroll-mt-12">
+      <div id="works" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-1a1816)] scroll-mt-12">
         <CompositionRack
           compositions={compositions}
           onCompositionClick={(c) => setSelectedId(c.id)}
@@ -89,22 +112,22 @@ export default function App() {
       </div>
 
       {/* Lili Boulanger Restoration Project */}
-      <div id="projects" className="relative z-10 border-t border-[rgba(230,224,213,0.13)] bg-[#151414] scroll-mt-12">
+      <div id="projects" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-151414)] scroll-mt-12">
         <BookSection />
       </div>
 
       {/* Services */}
-      <div id="services" className="relative z-10 border-t border-[rgba(230,224,213,0.13)] bg-[#1a1816] scroll-mt-12">
+      <div id="services" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-1a1816)] scroll-mt-12">
         <ServicesSection />
       </div>
 
       {/* Commissions */}
-      <div id="commissions" className="relative z-10 border-t border-[rgba(230,224,213,0.13)] bg-[#151414] scroll-mt-12">
+      <div id="commissions" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-151414)] scroll-mt-12">
         <CommissionsSection />
       </div>
 
       {/* Contact */}
-      <div id="contact" className="relative z-10 border-t border-[rgba(230,224,213,0.13)] bg-[#1a1816] scroll-mt-12">
+      <div id="contact" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-1a1816)] scroll-mt-12">
         <ContactSection />
       </div>
 
@@ -125,11 +148,11 @@ export default function App() {
       />
 
       {/* Colophon */}
-      <footer className="relative z-10 bg-[#121110] px-4 pt-12 pb-16">
+      <footer className="relative z-10 bg-[var(--c-121110)] px-4 pt-12 pb-16">
         <div className="max-w-5xl mx-auto text-center">
           <div className="np-rule-strong" />
-          <p className="np-smallcaps np-head mt-5 text-xl sm:text-2xl tracking-[0.05em] text-[#e6e0d5]">
-            {MASTHEAD}
+          <p className="np-smallcaps np-head mt-5 text-xl sm:text-2xl tracking-[0.05em] text-[var(--c-e6e0d5)]">
+            {t.masthead}
           </p>
 
           <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
@@ -140,12 +163,12 @@ export default function App() {
               { label: "Email",     href: "mailto:contact@hachem.cc" },
             ].map((l, i) => (
               <span key={l.label} className="flex items-center gap-x-6">
-                {i > 0 && <span className="text-[#2f2c28]" aria-hidden>·</span>}
+                {i > 0 && <span className="text-[var(--c-2f2c28)]" aria-hidden>·</span>}
                 <a
                   href={l.href}
                   target={l.href.startsWith("http") ? "_blank" : undefined}
                   rel={l.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  className="np-kicker text-[#8a8071] hover:text-[#e6e0d5] transition-colors"
+                  className="np-kicker text-[var(--c-8a8071)] hover:text-[var(--c-e6e0d5)] transition-colors"
                 >
                   {l.label}
                 </a>
@@ -154,10 +177,8 @@ export default function App() {
           </div>
 
           <div className="np-rule mt-6 mb-5" />
-          <p className="np-body italic text-sm text-[#7b7267]">
-            Set in Fraunces, Playfair Display &amp; Old Standard&nbsp;TT.
-            <span className="mx-1.5" aria-hidden>·</span>
-            © 2026 Hachem H. <span className="mx-1.5" aria-hidden>·</span>
+          <p className="np-body italic text-sm text-[var(--c-7b7267)]">
+            © 2026 Hachem <span className="mx-1.5" aria-hidden>·</span>
             {t.footer.fine}
           </p>
         </div>
@@ -165,12 +186,12 @@ export default function App() {
 
       {/* Broadsheet column guides — faint vertical rules ruled down the whole
           page, as if everything were set on the same columned sheet. */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 z-[55] flex justify-center px-4">
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-[55] hidden justify-center px-4 sm:flex">
         <div
           className="h-full w-full max-w-6xl"
           style={{
             backgroundImage:
-              "repeating-linear-gradient(to right, transparent 0, transparent calc(100% / 12 - 1px), rgba(230,224,213,0.05) calc(100% / 12 - 1px), rgba(230,224,213,0.05) calc(100% / 12))",
+              "repeating-linear-gradient(to right, transparent 0, transparent calc(100% / 12 - 1px), var(--guide) calc(100% / 12 - 1px), var(--guide) calc(100% / 12))",
           }}
         />
       </div>
@@ -190,8 +211,11 @@ export default function App() {
         }}
       />
 
-      {/* Candlelight that follows the pointer */}
-      <CandleCursor />
+      {/* Candlelight that follows the pointer — night edition only */}
+      {edition === "night" && <CandleCursor />}
+
+      {/* Quiet delights for the curious */}
+      <EasterEggs />
     </div>
   );
 }

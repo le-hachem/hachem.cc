@@ -20,14 +20,14 @@ export function ProfilePortrait({ className = "" }: { className?: string }) {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55 }}
       viewport={{ once: true, margin: "-40px" }}
-      className={`border border-[#2f2c28] bg-[#161413] shadow-sm hover:shadow-md transition-shadow ${className}`}
+      className={`border border-[var(--c-2f2c28)] bg-[var(--c-161413)] shadow-sm hover:shadow-md transition-shadow ${className}`}
     >
       <div className="p-2.5">
-        <div className="np-screen relative aspect-square overflow-hidden border border-[#201e1c] bg-[#161413]">
+        <div className="np-screen relative aspect-square overflow-hidden border border-[var(--c-201e1c)] bg-[var(--c-161413)]">
           {!errored ? (
             <img
               src={AVATAR_URL}
-              alt="Hachem H., portrait"
+              alt="Hachem, portrait"
               loading="lazy"
               draggable={false}
               onLoad={() => setLoaded(true)}
@@ -39,14 +39,14 @@ export function ProfilePortrait({ className = "" }: { className?: string }) {
           ) : (
             /* Monogram fallback if the avatar can't be fetched */
             <div className="h-full w-full flex items-center justify-center">
-              <span className="font-display font-black text-4xl text-[#443f39] select-none">
-                H.H.
+              <span className="font-display font-black text-4xl text-[var(--c-443f39)] select-none">
+                H
               </span>
             </div>
           )}
         </div>
 
-        <div className="mt-2.5 text-center border-t border-[#201e1c] pt-2.5">
+        <div className="mt-2.5 text-center border-t border-[var(--c-201e1c)] pt-2.5">
           <p className="text-xs font-serif font-bold uppercase tracking-wide">
             Moi
           </p>

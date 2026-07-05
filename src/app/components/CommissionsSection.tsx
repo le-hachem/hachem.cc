@@ -11,15 +11,15 @@ export const commissionsOpen =
 function StatusSeal() {
   const { t } = useLanguage();
   return (
-    <div className="inline-flex items-center gap-3 border border-[#eee8dd] px-5 py-2.5">
+    <div className="inline-flex items-center gap-3 border border-[var(--c-eee8dd)] px-5 py-2.5">
       {commissionsOpen ? (
         <>
           <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-[#eee8dd] opacity-60 animate-ping" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-[#eee8dd]" />
+            <span className="absolute inline-flex h-full w-full rounded-full bg-[var(--c-eee8dd)] opacity-60 animate-ping" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--c-eee8dd)]" />
           </span>
           <span
-            className="text-xs tracking-[0.3em] uppercase text-[#eee8dd]"
+            className="text-xs tracking-[0.3em] uppercase text-[var(--c-eee8dd)]"
             style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
           >
             {t.commissions.sealOpen}
@@ -27,9 +27,9 @@ function StatusSeal() {
         </>
       ) : (
         <>
-          <Hourglass className="h-3 w-3 text-[#7b7267]" />
+          <Hourglass className="h-3 w-3 text-[var(--c-7b7267)]" />
           <span
-            className="text-xs tracking-[0.3em] uppercase text-[#7b7267]"
+            className="text-xs tracking-[0.3em] uppercase text-[var(--c-7b7267)]"
             style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
           >
             {t.commissions.sealClosed}
@@ -44,7 +44,7 @@ export function CommissionsSection() {
   const { t } = useLanguage();
   const steps = t.commissions.steps;
   return (
-    <section className="relative bg-[#151414] px-4 py-20 sm:py-28">
+    <section className="relative bg-[var(--c-151414)] px-4 py-20 sm:py-28">
       <div className="max-w-5xl mx-auto">
         <SectionHeading
           index="05"
@@ -70,7 +70,7 @@ export function CommissionsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
           viewport={{ once: true }}
-          className="np-body np-justify mx-auto max-w-3xl text-[14px] leading-[1.62] text-[#cbc2b0]"
+          className="np-body np-justify mx-auto max-w-3xl text-[14px] leading-[1.62] text-[var(--c-cbc2b0)]"
         >
           {commissionsOpen ? (
             <p><DropCap text={t.commissions.ledeOpen} /></p>
@@ -90,13 +90,13 @@ export function CommissionsSection() {
               viewport={{ once: true, margin: "-40px" }}
               className="border-b border-[var(--np-rule)] py-6 sm:py-7"
             >
-              <p className="np-head np-tabular text-3xl font-black leading-none text-[#5e564f]">
+              <p className="np-head np-tabular text-3xl font-black leading-none text-[var(--c-5e564f)]">
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <h3 className="np-head mt-3 text-xl font-bold text-[#e6e0d5]">
+              <h3 className="np-head mt-3 text-xl font-bold text-[var(--c-e6e0d5)]">
                 {s.title}
               </h3>
-              <p className="np-body np-justify mt-3 text-[15px] leading-[1.6] text-[#bcb3a3]">
+              <p className="np-body np-justify mt-3 text-[15px] leading-[1.6] text-[var(--c-bcb3a3)]">
                 {s.body}
               </p>
             </motion.article>
@@ -114,7 +114,7 @@ export function CommissionsSection() {
           {commissionsOpen ? (
             <a
               href="mailto:contact@hachem.cc?subject=Commission%20inquiry"
-              className="inline-flex items-center gap-2 border border-[#eee8dd] bg-[#eee8dd] text-[#161413] px-5 py-2.5 text-xs tracking-widest uppercase transition-colors hover:bg-[#dfd6c7] active:bg-[#c2b9ab]"
+              className="inline-flex items-center gap-2 border border-[var(--c-eee8dd)] bg-[var(--c-eee8dd)] text-[var(--c-161413)] px-5 py-2.5 text-xs tracking-widest uppercase transition-colors hover:bg-[var(--c-dfd6c7)] active:bg-[var(--c-c2b9ab)]"
               style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
             >
               <Mail className="h-3.5 w-3.5" />
@@ -123,7 +123,7 @@ export function CommissionsSection() {
           ) : (
             <a
               href="mailto:contact@hachem.cc?subject=Future%20commission%20inquiry"
-              className="inline-flex items-center gap-2 border border-[#5e564f] bg-[#161413] text-[#a1998a] px-5 py-2.5 text-xs tracking-widest uppercase transition-colors hover:border-[#eee8dd] hover:text-[#eee8dd]"
+              className="inline-flex items-center gap-2 border border-[var(--c-5e564f)] bg-[var(--c-161413)] text-[var(--c-a1998a)] px-5 py-2.5 text-xs tracking-widest uppercase transition-colors hover:border-[var(--c-eee8dd)] hover:text-[var(--c-eee8dd)]"
               style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
             >
               <Mail className="h-3.5 w-3.5" />

@@ -3,12 +3,12 @@ import { DropCap } from "./DropCap";
 import { useLanguage } from "../i18n/LanguageContext";
 
 const LINK =
-  "underline decoration-[#5e564f] underline-offset-2 text-[#e6e0d5] transition-colors hover:decoration-[#e6e0d5]";
+  "underline decoration-[var(--c-5e564f)] underline-offset-2 text-[var(--c-e6e0d5)] transition-colors hover:decoration-[var(--c-e6e0d5)]";
 
 export function ContactSection() {
   const { t } = useLanguage();
   return (
-    <section className="relative bg-[#1a1816] px-4 py-20 sm:py-28">
+    <section className="relative bg-[var(--c-1a1816)] px-4 py-20 sm:py-28">
       <div className="max-w-5xl mx-auto">
         <SectionHeading
           index="06"
@@ -19,7 +19,7 @@ export function ContactSection() {
         />
 
         <article className="mx-auto max-w-3xl">
-          <div className="np-body np-columns np-justify text-[14px] leading-[1.62] text-[#cbc2b0] [&>p]:mb-3.5">
+          <div className="np-body np-columns np-justify text-[14px] leading-[1.62] text-[var(--c-cbc2b0)] [&>p]:mb-3.5">
             <p><DropCap text={t.contact.p1} /></p>
             <p>
               {t.contact.p2}
@@ -43,7 +43,7 @@ export function ContactSection() {
             </p>
           </div>
 
-          <p className="np-head mt-7 text-2xl italic text-[#cbc2b0]">— Hachem H.</p>
+          <p className="np-head mt-7 text-2xl italic text-[var(--c-cbc2b0)]">— Hachem</p>
         </article>
       </div>
     </section>
