@@ -274,3 +274,41 @@
   --foreground: #211c14;
 }
 
+
+/* ============ HERO EDITION (photo + overlays swap with the theme) ============ */
+:root {
+  --hero-img: url("/hero-cathedral.jpg");
+  --hero-veil: 18, 17, 16;   /* vignette / bottom-fade base (dark stock)   */
+  --hero-plate: 8, 7, 6;     /* readability band base                       */
+  --hero-rule: 230, 224, 213;/* heavy masthead rule ink                     */
+  --hero-textshadow: 0 1px 18px rgba(0, 0, 0, 0.85);
+  --hero-credit: "Photograph — Pierre Miyamoto / Pexels";
+}
+.daylight {
+  --hero-img: url("/hero-daylight.jpg");
+  --hero-veil: 233, 231, 227;
+  --hero-plate: 233, 231, 227;
+  --hero-rule: 40, 38, 36;
+  /* No glow in daylight — dark ink on the light scrim needs none, and a white
+     halo just washes the text out. */
+  --hero-textshadow: none;
+  --hero-credit: "Photograph — Matthias Kohler / Pexels";
+}
+.hero-credit::after { content: var(--hero-credit); }
+
+/* ============ EDITION CHANGE (theme toggle) — the ink-bar sweep ============
+   A printing bar wipes across; the edition swaps behind it (hidden), then it
+   wipes off to reveal the new edition. Echoes the site's press motif. */
+.ink-sweep {
+  background: linear-gradient(90deg, #14110c 0%, #1b1710 78%, #322b1f 100%);
+  animation: ink-sweep 0.72s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+  will-change: transform;
+}
+@keyframes ink-sweep {
+  0%       { transform: translateX(-101%); }
+  46%, 54% { transform: translateX(0); }
+  100%     { transform: translateX(101%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ink-sweep { display: none; }
+}

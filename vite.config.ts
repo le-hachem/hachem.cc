@@ -25,6 +25,16 @@ export default defineConfig({
         if (fs.existsSync(index)) {
           fs.copyFileSync(index, path.join(spaFallbackOutDir, '404.html'))
         }
+        // Guarantee GitHub Pages serves dotfiles: disable Jekyll and make sure
+        // /.well-known is published even if the public-dir copy skips hidden
+        // folders (so the Discord domain-verification file is reachable).
+        fs.writeFileSync(path.join(spaFallbackOutDir, '.nojekyll'), '')
+        const wkSrc = path.resolve(__dirname, 'public/.well-known')
+        if (fs.existsSync(wkSrc)) {
+          fs.cpSync(wkSrc, path.join(spaFallbackOutDir, '.well-known'), {
+            recursive: true,
+          })
+        }
       },
     },
   ],

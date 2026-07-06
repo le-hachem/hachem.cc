@@ -97,13 +97,12 @@ export function ProgressiveTextReveal() {
             : { y: heroY, opacity: heroOpacity, scale: heroScale }),
         }}
       >
-        {/* Cathedral organ photograph */}
-        <img
-          src="/hero-cathedral.jpg"
-          alt=""
+        {/* The organ photograph — night edition (cathedral) / day edition
+            (bright), swapped via the --hero-img CSS variable. */}
+        <div
           aria-hidden
-          draggable={false}
-          className="absolute inset-0 h-full w-full select-none object-cover object-center"
+          className="absolute inset-0 select-none bg-cover bg-center"
+          style={{ backgroundImage: "var(--hero-img)" }}
         />
 
         {/* Vignette + a long bottom dissolve that resolves to the bio
@@ -114,7 +113,7 @@ export function ProgressiveTextReveal() {
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "radial-gradient(125% 95% at 50% 40%, rgba(18,17,16,0) 42%, rgba(18,17,16,0.32) 80%, rgba(18,17,16,0.82) 100%), linear-gradient(to bottom, rgba(18,17,16,0.25) 0%, rgba(18,17,16,0) 30%, rgba(18,17,16,0) 52%, rgba(18,17,16,0.7) 80%, var(--c-121110) 96%)",
+              "radial-gradient(125% 95% at 50% 40%, rgba(var(--hero-veil),0) 42%, rgba(var(--hero-veil),0.32) 80%, rgba(var(--hero-veil),0.82) 100%), linear-gradient(to bottom, rgba(var(--hero-veil),0.3) 0%, rgba(var(--hero-veil),0) 28%, rgba(var(--hero-veil),0) 52%, rgba(var(--hero-veil),0.7) 80%, var(--c-121110) 96%)",
           }}
         />
 
@@ -127,7 +126,7 @@ export function ProgressiveTextReveal() {
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "linear-gradient(to bottom, transparent 6%, rgba(8,7,6,0.62) 26%, rgba(8,7,6,0.66) 50%, rgba(8,7,6,0.62) 74%, transparent 94%)",
+              "linear-gradient(to bottom, transparent 6%, rgba(var(--hero-plate),0.62) 26%, rgba(var(--hero-plate),0.66) 50%, rgba(var(--hero-plate),0.62) 74%, transparent 94%)",
           }}
         />
 
@@ -135,10 +134,10 @@ export function ProgressiveTextReveal() {
         <div className="absolute inset-0 flex items-center justify-center">
           <div
             className="w-[95vw] sm:w-[88vw] md:w-[80vw] max-w-5xl"
-            style={{ textShadow: "0 1px 18px rgba(0,0,0,0.85)" }}
+            style={{ textShadow: "var(--hero-textshadow)" }}
           >
             {/* Heavy masthead rule — fixed cream (sits over the dark photo). */}
-            <div style={{ borderTop: "2px solid rgba(230,224,213,0.85)" }} />
+            <div style={{ borderTop: "2px solid rgba(var(--hero-rule),0.85)" }} />
 
             {/* Nameplate — the engraved cipher. Click to hear the motif;
                 right-click to read its notes. */}
@@ -174,19 +173,19 @@ export function ProgressiveTextReveal() {
                 initial={false}
                 animate={{ opacity: showNotes ? 1 : 0, y: showNotes ? 0 : 4 }}
                 transition={{ duration: 0.25 }}
-                className="np-kicker pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-sm bg-[#0c0a08]/85 px-3 py-1 text-[10px] text-[#e6e0d5]"
+                className="np-kicker pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-sm bg-[var(--c-121110)]/90 px-3 py-1 text-[10px] text-[var(--c-e6e0d5)]"
               >
                 H · A · C · H · E · B♮ · G · D
               </motion.span>
             </div>
 
             {/* Folio line: edition · running head · dateline */}
-            <div style={{ borderTop: "1px solid rgba(230,224,213,0.42)" }} />
+            <div style={{ borderTop: "1px solid rgba(var(--hero-rule),0.42)" }} />
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: showSubtitle || cipherDone ? 1 : 0 }}
               transition={{ duration: 0.7 }}
-              className="np-kicker flex flex-col items-center gap-1 py-2 text-center text-[#cbc2b0] sm:grid sm:grid-cols-3 sm:items-center sm:gap-3"
+              className="np-kicker flex flex-col items-center gap-1 py-2 text-center text-[var(--c-cbc2b0)] sm:grid sm:grid-cols-3 sm:items-center sm:gap-3"
             >
               <span
                 role="button"
@@ -199,16 +198,16 @@ export function ProgressiveTextReveal() {
                   }
                 }}
                 title="Next edition"
-                className="hidden cursor-pointer justify-self-start whitespace-nowrap transition-colors hover:text-[#e6e0d5] sm:inline"
+                className="hidden cursor-pointer justify-self-start whitespace-nowrap transition-colors hover:text-[var(--c-e6e0d5)] sm:inline"
               >
                 Vol.&nbsp;{roman(vol)} · No.&nbsp;{no}
               </span>
-              <span className="np-smallcaps hidden justify-self-center whitespace-nowrap tracking-[0.14em] text-[#e6e0d5] sm:block">
+              <span className="np-smallcaps hidden justify-self-center whitespace-nowrap tracking-[0.14em] text-[var(--c-e6e0d5)] sm:block">
                 {t.masthead}
               </span>
               <span className="justify-self-end sm:whitespace-nowrap sm:text-right">{dateline}</span>
             </motion.div>
-            <div style={{ borderTop: "2px solid rgba(230,224,213,0.85)" }} />
+            <div style={{ borderTop: "2px solid rgba(var(--hero-rule),0.85)" }} />
 
             {/* Motto / standfirst */}
             <motion.p
@@ -218,7 +217,7 @@ export function ProgressiveTextReveal() {
                 y: showSubtitle || cipherDone ? 0 : 6,
               }}
               transition={{ duration: 0.7 }}
-              className="np-kicker mt-4 text-center text-[#dad1bf]"
+              className="np-kicker mt-4 text-center text-[var(--c-dfd6c7)]"
             >
               {t.hero.subtitle}
             </motion.p>
@@ -235,10 +234,10 @@ export function ProgressiveTextReveal() {
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5"
       >
         <span
-          className="text-[9px] tracking-[0.35em] uppercase text-[#b2ab9c]"
+          className="text-[9px] tracking-[0.35em] uppercase text-[var(--c-a1998a)]"
           style={{
             fontFamily: "ui-sans-serif, system-ui, sans-serif",
-            textShadow: "0 1px 10px rgba(0,0,0,0.85)",
+            textShadow: "var(--hero-textshadow)",
           }}
         >
           {t.hero.scroll}
@@ -247,7 +246,7 @@ export function ProgressiveTextReveal() {
           animate={{ y: [0, 5, 0] }}
           transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
         >
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-[#b2ab9c]">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-[var(--c-a1998a)]">
             <path d="M1 3.5L6 8.5L11 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </motion.div>

@@ -78,10 +78,35 @@ export function NavHeader({
         className={`fixed top-0 left-0 right-0 z-[900] transition-all duration-300 ${
           scrolled || menuOpen
             ? "bg-[var(--c-121110)]/95 backdrop-blur-sm border-y border-[var(--seam-strong)]"
-            : "bg-transparent"
+            : ""
         }`}
+        style={
+          scrolled || menuOpen
+            ? undefined
+            : {
+                // Theme-aware scrim so the masthead reads over the hero photo.
+                // Night: an immersive dark fade over the cathedral. Day: the
+                // bright organ photo + halftone dots bleed through a thin veil,
+                // so the top bar becomes a near-solid sheet of paper instead.
+                background:
+                  edition === "day"
+                    ? "linear-gradient(to bottom, rgba(var(--hero-veil),0.97) 0%, rgba(var(--hero-veil),0.94) 55%, rgba(var(--hero-veil),0.72) 100%)"
+                    : "linear-gradient(to bottom, rgba(var(--hero-veil),0.85) 0%, rgba(var(--hero-veil),0.62) 45%, rgba(var(--hero-veil),0.32) 72%, transparent 100%)",
+                borderBottom:
+                  edition === "day"
+                    ? "1px solid var(--seam-strong)"
+                    : undefined,
+              }
+        }
       >
-        <div className="max-w-7xl mx-auto px-5 sm:px-10 h-12 flex items-center justify-between">
+        <div
+          className="max-w-7xl mx-auto px-5 sm:px-10 h-12 flex items-center justify-between"
+          style={
+            scrolled || menuOpen
+              ? undefined
+              : { textShadow: "var(--hero-textshadow)" }
+          }
+        >
           {/* Running head / nameplate */}
           <a
             href="#"
@@ -100,10 +125,14 @@ export function NavHeader({
               <a
                 key={link.href}
                 href={link.href}
-                className="np-kicker group flex items-baseline gap-1.5 text-[var(--c-7b7267)] transition-colors duration-150 hover:text-[var(--c-e6e0d5)]"
+                className={`np-kicker group flex items-baseline gap-1.5 transition-colors duration-150 hover:text-[var(--c-e6e0d5)] ${
+                  edition === "day" ? "text-[var(--c-bcb3a3)]" : "text-[var(--c-7b7267)]"
+                }`}
                 onClick={e => { e.preventDefault(); scrollTo(link.href); }}
               >
-                <span className="np-tabular text-[9px] text-[var(--c-5e564f)] group-hover:text-[var(--c-8a8071)]">{link.no}</span>
+                <span className={`np-tabular text-[9px] group-hover:text-[var(--c-8a8071)] ${
+                  edition === "day" ? "text-[var(--c-9a927f)]" : "text-[var(--c-5e564f)]"
+                }`}>{link.no}</span>
                 <span>{link.label}</span>
               </a>
             ))}

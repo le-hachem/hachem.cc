@@ -33,15 +33,36 @@ export default function App() {
     }
   });
   useEffect(() => {
-    document.documentElement.classList.toggle("daylight", edition === "day");
+    const day = edition === "day";
+    document.documentElement.classList.toggle("daylight", day);
+    // Flip the favicon to match the edition.
+    document
+      .getElementById("favicon-svg")
+      ?.setAttribute("href", day ? "/favicon-day.svg" : "/favicon.svg");
     try {
       localStorage.setItem("hh-edition-theme", edition);
     } catch {
       /* ignore */
     }
   }, [edition]);
-  const toggleEdition = () =>
-    setEdition((e) => (e === "day" ? "night" : "day"));
+  // Theme change: an ink bar wipes across, the edition swaps while it covers
+  // the page, then it wipes off revealing the new edition (.ink-sweep in CSS).
+  const [sweepKey, setSweepKey] = useState(0);
+  const [sweeping, setSweeping] = useState(false);
+  const toggleEdition = () => {
+    const next = edition === "day" ? "night" : "day";
+    const reduce =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setEdition(next);
+      return;
+    }
+    setSweepKey((k) => k + 1);
+    setSweeping(true);
+    window.setTimeout(() => setEdition(next), 340); // swap while covered
+    window.setTimeout(() => setSweeping(false), 720); // panel gone
+  };
 
   const selectedComposition =
     compositions.find((c) => c.id === selectedId) ?? null;
@@ -216,6 +237,15 @@ export default function App() {
 
       {/* Quiet delights for the curious */}
       <EasterEggs />
+
+      {/* Edition change — an ink bar wipes across while the theme swaps behind it */}
+      {sweeping && (
+        <div
+          key={sweepKey}
+          aria-hidden
+          className="ink-sweep pointer-events-none fixed inset-0 z-[2000]"
+        />
+      )}
     </div>
   );
 }

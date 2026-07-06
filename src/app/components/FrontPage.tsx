@@ -46,7 +46,7 @@ export function FrontPage() {
           <Dot />
           <span className="np-body text-[13px] italic text-[var(--c-a59b89)]">{f.cutline}</span>
           <Dot />
-          <span>Photograph: Matthias Kohler / Pexels</span>
+          <span className="hero-credit" />
         </p>
 
         {/* Stop-press / edition strip */}
