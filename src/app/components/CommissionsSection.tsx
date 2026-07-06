@@ -3,6 +3,7 @@ import { Mail, Hourglass } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { DropCap } from "./DropCap";
 import { useLanguage } from "../i18n/LanguageContext";
+import { hideDispatches } from "../i18n/dispatches";
 
 /** Single source of truth for commission availability (set in .env). */
 export const commissionsOpen =
@@ -44,10 +45,10 @@ export function CommissionsSection() {
   const { t } = useLanguage();
   const steps = t.commissions.steps;
   return (
-    <section className="relative bg-[var(--c-151414)] px-4 py-20 sm:py-28">
+    <section className={`relative px-4 py-20 sm:py-28 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
       <div className="max-w-5xl mx-auto">
         <SectionHeading
-          index="05"
+          index={hideDispatches ? "06" : "07"}
           dept={t.commissions.dept}
           title={t.commissions.headline}
           deck={t.commissions.deck}

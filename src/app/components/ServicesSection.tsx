@@ -3,6 +3,7 @@ import { commissionsOpen } from "./CommissionsSection";
 import { SectionHeading } from "./SectionHeading";
 import { DropCap } from "./DropCap";
 import { useLanguage } from "../i18n/LanguageContext";
+import { hideDispatches } from "../i18n/dispatches";
 
 /** A drawn path: a plain stroke, or a solid (filled) shape like a black key. */
 type IconPath = string | { d: string; fill?: boolean };
@@ -111,10 +112,10 @@ export function ServicesSection() {
   }));
 
   return (
-    <section className="relative bg-[var(--c-1a1816)] px-4 py-20 sm:py-28">
+    <section className={`relative px-4 py-20 sm:py-28 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
       <div className="max-w-5xl mx-auto">
         <SectionHeading
-          index="04"
+          index={hideDispatches ? "05" : "06"}
           dept={t.services.dept}
           title={t.services.headline}
           deck={t.services.deck}

@@ -124,7 +124,7 @@ const source: CompositionSource[] = [
       ],
     },
     audioUrl: "/music/Mephistopheles/audio.mp3",
-    coverUrl: "/music/Mephistopheles/cover.png",
+    coverUrl: "/music/Mephistopheles/cover.jpg",
     peaksUrl: "/music/Mephistopheles/peaks.json",
   },
 

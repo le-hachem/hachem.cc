@@ -1,6 +1,7 @@
 import { SectionHeading } from "./SectionHeading";
 import { DropCap } from "./DropCap";
 import { useLanguage } from "../i18n/LanguageContext";
+import { hideDispatches } from "../i18n/dispatches";
 
 const LINK =
   "underline decoration-[var(--c-5e564f)] underline-offset-2 text-[var(--c-e6e0d5)] transition-colors hover:decoration-[var(--c-e6e0d5)]";
@@ -8,10 +9,10 @@ const LINK =
 export function ContactSection() {
   const { t } = useLanguage();
   return (
-    <section className="relative bg-[var(--c-1a1816)] px-4 py-20 sm:py-28">
+    <section className={`relative px-4 py-20 sm:py-28 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
       <div className="max-w-5xl mx-auto">
         <SectionHeading
-          index="06"
+          index={hideDispatches ? "07" : "08"}
           dept={t.contact.dept}
           title={t.contact.headline}
           deck={t.contact.deck}

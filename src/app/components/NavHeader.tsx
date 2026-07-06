@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useScroll, useSpring } from "motion/react";
 import { X, Menu, Sun, Moon } from "lucide-react";
 import { useLanguage } from "../i18n/LanguageContext";
 import { LanguageToggle } from "./LanguageToggle";
+import { hideDispatches } from "../i18n/dispatches";
 
 function scrollTo(href: string) {
   const target = document.querySelector(href);
@@ -37,14 +38,18 @@ export function NavHeader({
   onToggleEdition: () => void;
 }) {
   const { t } = useLanguage();
+  // Built from the live section list so the numbering stays sequential whether
+  // or not the Dispatches section is published.
   const navLinks = [
-    { no: "01", label: t.nav.about,       href: "#about" },
-    { no: "02", label: t.nav.works,       href: "#works" },
-    { no: "03", label: t.nav.projects,    href: "#projects" },
-    { no: "04", label: t.nav.services,    href: "#services" },
-    { no: "05", label: t.nav.commissions, href: "#commissions" },
-    { no: "06", label: t.nav.contact,     href: "#contact" },
-  ];
+    { label: t.nav.about,       href: "#about" },
+    { label: t.nav.works,       href: "#works" },
+    { label: t.nav.agenda,      href: "#agenda" },
+    ...(hideDispatches ? [] : [{ label: t.nav.dispatches, href: "#dispatches" }]),
+    { label: t.nav.projects,    href: "#projects" },
+    { label: t.nav.services,    href: "#services" },
+    { label: t.nav.commissions, href: "#commissions" },
+    { label: t.nav.contact,     href: "#contact" },
+  ].map((link, i) => ({ ...link, no: String(i + 1).padStart(2, "0") }));
 
   const [scrolled, setScrolled]   = useState(false);
   const [menuOpen, setMenuOpen]   = useState(false);
@@ -100,27 +105,16 @@ export function NavHeader({
         }
       >
         <div
-          className="max-w-7xl mx-auto px-5 sm:px-10 h-12 flex items-center justify-between"
+          className="max-w-7xl mx-auto px-5 sm:px-10 h-12 flex items-center justify-center"
           style={
             scrolled || menuOpen
               ? undefined
               : { textShadow: "var(--hero-textshadow)" }
           }
         >
-          {/* Running head / nameplate */}
-          <a
-            href="#"
-            className="select-none text-[var(--c-e6e0d5)]"
-            onClick={e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); setMenuOpen(false); }}
-          >
-            <span className="np-head font-black text-sm tracking-tight lg:hidden">H</span>
-            <span className="np-smallcaps np-head hidden lg:inline text-base tracking-[0.04em]">
-              {t.masthead}
-            </span>
-          </a>
-
-          {/* Desktop section index — hidden below md */}
-          <nav className="hidden md:flex items-baseline gap-7">
+          {/* Desktop section index — the whole group (links + language + theme)
+              centered as one; collapses to the hamburger below xl. */}
+          <nav className="hidden xl:flex items-baseline gap-6">
             {navLinks.map(link => (
               <a
                 key={link.href}
@@ -141,8 +135,8 @@ export function NavHeader({
             <EditionToggle edition={edition} onToggle={onToggleEdition} />
           </nav>
 
-          {/* Mobile: edition + language toggle + hamburger — visible below md */}
-          <div className="flex items-center gap-3 md:hidden">
+          {/* Compact controls: edition + language toggle + hamburger — below xl */}
+          <div className="flex items-center gap-3 xl:hidden">
             <EditionToggle edition={edition} onToggle={onToggleEdition} />
             <LanguageToggle />
             <button
@@ -172,13 +166,13 @@ export function NavHeader({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="fixed inset-0 z-[850] bg-[var(--c-161413)] flex flex-col md:hidden"
+            className="fixed inset-0 z-[850] bg-[var(--c-161413)] flex flex-col xl:hidden"
           >
             {/* Spacer for header */}
             <div className="h-12 border-b border-[var(--c-2f2c28)] shrink-0" />
 
             {/* Index */}
-            <nav className="flex-1 flex flex-col justify-center items-center gap-6 px-8">
+            <nav className="flex-1 flex flex-col justify-center items-center gap-5 px-8 py-6 overflow-y-auto">
               {navLinks.map((link, i) => (
                 <motion.a
                   key={link.href}
@@ -186,7 +180,7 @@ export function NavHeader({
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.25, delay: i * 0.06 }}
-                  className="np-head flex items-baseline gap-3 text-4xl sm:text-5xl font-black tracking-tight text-[var(--c-eee8dd)] transition-colors hover:text-[var(--c-9a927f)]"
+                  className="np-head flex items-baseline gap-3 text-3xl sm:text-4xl font-black tracking-tight text-[var(--c-eee8dd)] transition-colors hover:text-[var(--c-9a927f)]"
                   onClick={e => {
                     e.preventDefault();
                     setMenuOpen(false);

@@ -27,6 +27,8 @@ const en = {
   nav: {
     about: "About",
     works: "Works",
+    agenda: "Concerts",
+    dispatches: "Dispatches",
     projects: "Projects",
     services: "Services",
     commissions: "Commissions",
@@ -148,6 +150,35 @@ const en = {
     ],
     ctaOpen: "Inquire about a commission",
     ctaClosed: "Ask about future availability",
+  },
+
+  agenda: {
+    dept: "Concert Diary",
+    headline: "Where the Music Is Heard",
+    deck: "Premieres and performances — dates past and those still to come.",
+    byline: "Concert Diary",
+    title: "Concerts",
+    upcoming: "Upcoming",
+    past: "Past",
+    tickets: "Tickets",
+    none: "No dates are announced just now. Look again soon — or write to be told first.",
+    roles: { composer: "Composer", pianist: "Pianist", conductor: "Conductor" },
+  },
+
+  notFound: {
+    kicker: "Error 404 — Off the Record",
+    headline: "This edition could not be found.",
+    deck: "The page you asked for isn't in our records — perhaps it was never printed, or the link has since been reset.",
+    back: "Return to the front page",
+  },
+
+  dispatches: {
+    dept: "Dispatches",
+    headline: "Notices from the Desk",
+    deck: "Bulletins on premieres, prizes and new editions — the news as it comes in.",
+    byline: "Newsroom",
+    readMore: "Read more",
+    none: "No bulletins just yet.",
   },
 
   contact: {
@@ -273,9 +304,9 @@ const en = {
   },
 
   seo: {
-    title: "Hachem · Composer · Pianist · Conductor",
+    title: "Hachem — Composer's Record",
     description:
-      "Composer, pianist and conductor in Paris, studying at the Sorbonne — new works from solo to orchestra, free Lili Boulanger editions on IMSLP, and commissions.",
+      "Composer, pianist, and conductor in Paris, studying at the Sorbonne, creating new works from solo piano to orchestra, publishing free Lili Boulanger editions on IMSLP, and accepting commissions.",
   },
 };
 
@@ -298,6 +329,8 @@ const fr: Dict = {
   nav: {
     about: "Biographie",
     works: "Œuvres",
+    agenda: "Concerts",
+    dispatches: "Dépêches",
     projects: "Projets",
     services: "Services",
     commissions: "Commandes",
@@ -418,6 +451,35 @@ const fr: Dict = {
     ],
     ctaOpen: "Demander une commande",
     ctaClosed: "Renseignez-vous sur mes disponibilités",
+  },
+
+  agenda: {
+    dept: "Carnet de concerts",
+    headline: "Là où la musique se joue",
+    deck: "Créations et concerts — les dates passées et celles à venir.",
+    byline: "Carnet de concerts",
+    title: "Concerts",
+    upcoming: "À venir",
+    past: "Passés",
+    tickets: "Billetterie",
+    none: "Aucune date annoncée pour l'instant. Revenez bientôt — ou écrivez pour être prévenu en premier.",
+    roles: { composer: "Compositeur", pianist: "Pianiste", conductor: "Chef d'orchestre" },
+  },
+
+  notFound: {
+    kicker: "Erreur 404 — Hors des archives",
+    headline: "Cette édition est introuvable.",
+    deck: "La page demandée ne figure pas dans nos archives — peut-être n'a-t-elle jamais été imprimée, ou le lien a-t-il changé depuis.",
+    back: "Retour à la une",
+  },
+
+  dispatches: {
+    dept: "Dépêches",
+    headline: "Nouvelles du bureau",
+    deck: "Bulletins sur les créations, les prix et les nouvelles éditions — l'actualité au fil de l'eau.",
+    byline: "La rédaction",
+    readMore: "Lire la suite",
+    none: "Aucun bulletin pour l'instant.",
   },
 
   contact: {
@@ -543,9 +605,9 @@ const fr: Dict = {
   },
 
   seo: {
-    title: "Hachem · Compositeur · Pianiste · Chef d'orchestre",
+    title: "Hachem — Journal du compositeur",
     description:
-      "Compositeur, pianiste et chef d'orchestre à Paris, étudiant à la Sorbonne — œuvres nouvelles du solo à l'orchestre, éditions gratuites de Lili Boulanger sur IMSLP, et commandes.",
+      "Compositeur, pianiste et chef d'orchestre à Paris, étudiant à la Sorbonne, créant des œuvres nouvelles du piano solo à l'orchestre, publiant des éditions gratuites de Lili Boulanger sur IMSLP, et acceptant des commandes.",
   },
 };
 
@@ -565,6 +627,8 @@ const de: Dict = {
   nav: {
     about: "Biografie",
     works: "Werke",
+    agenda: "Konzerte",
+    dispatches: "Depeschen",
     projects: "Projekte",
     services: "Leistungen",
     commissions: "Aufträge",
@@ -685,6 +749,35 @@ const de: Dict = {
     ],
     ctaOpen: "Einen Auftrag anfragen",
     ctaClosed: "Nach künftiger Verfügbarkeit fragen",
+  },
+
+  agenda: {
+    dept: "Konzertkalender",
+    headline: "Wo die Musik erklingt",
+    deck: "Uraufführungen und Konzerte — vergangene Termine und kommende.",
+    byline: "Konzertkalender",
+    title: "Konzerte",
+    upcoming: "Demnächst",
+    past: "Vergangen",
+    tickets: "Karten",
+    none: "Zurzeit sind keine Termine angekündigt. Schauen Sie bald wieder vorbei — oder schreiben Sie, um als Erster informiert zu werden.",
+    roles: { composer: "Komponist", pianist: "Pianist", conductor: "Dirigent" },
+  },
+
+  notFound: {
+    kicker: "Fehler 404 — Nicht in den Akten",
+    headline: "Diese Ausgabe wurde nicht gefunden.",
+    deck: "Die angeforderte Seite ist nicht in unseren Aufzeichnungen — vielleicht wurde sie nie gedruckt, oder der Link wurde inzwischen geändert.",
+    back: "Zurück zur Titelseite",
+  },
+
+  dispatches: {
+    dept: "Depeschen",
+    headline: "Nachrichten aus der Redaktion",
+    deck: "Meldungen zu Uraufführungen, Preisen und neuen Ausgaben — Neuigkeiten, sobald sie eintreffen.",
+    byline: "Redaktion",
+    readMore: "Weiterlesen",
+    none: "Noch keine Meldungen.",
   },
 
   contact: {
@@ -810,9 +903,9 @@ const de: Dict = {
   },
 
   seo: {
-    title: "Hachem · Komponist · Pianist · Dirigent",
+    title: "Hachem — Das Komponistenblatt",
     description:
-      "Komponist, Pianist und Dirigent in Paris, Student an der Sorbonne — neue Werke vom Solo bis zum Orchester, kostenlose Lili-Boulanger-Editionen auf IMSLP, und Auftragswerke.",
+      "Komponist, Pianist und Dirigent in Paris, Student an der Sorbonne, schafft neue Werke vom Klavier solo bis zum Orchester, veröffentlicht kostenlose Lili-Boulanger-Editionen auf IMSLP und nimmt Auftragswerke an.",
   },
 };
 

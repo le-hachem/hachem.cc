@@ -4,6 +4,9 @@ import { BookSection } from "./components/BookSection";
 import { CompositionRack } from "./components/CompositionRack";
 import { CompositionModal } from "./components/CompositionModal";
 import { CompositionsLibrary } from "./components/CompositionsLibrary";
+import { ConcertsSection } from "./components/ConcertsSection";
+import { DispatchesSection } from "./components/DispatchesSection";
+import { NotFound } from "./components/NotFound";
 import { AboutSection } from "./components/AboutSection";
 import { ServicesSection } from "./components/ServicesSection";
 import { CommissionsSection } from "./components/CommissionsSection";
@@ -13,6 +16,7 @@ import { FrontPage } from "./components/FrontPage";
 import { CandleCursor } from "./components/CandleCursor";
 import { EasterEggs } from "./components/EasterEggs";
 import { getCompositions } from "./i18n/compositions";
+import { hideDispatches } from "./i18n/dispatches";
 import { useLanguage } from "./i18n/LanguageContext";
 import backgroundSvg from "../assets/background.svg";
 
@@ -23,6 +27,8 @@ export default function App() {
   const compositions = useMemo(() => getCompositions(lang), [lang]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
+  // A path that resolves to no piece (and isn't the root) shows the 404 view.
+  const [notFound, setNotFound] = useState(false);
 
   // Night (default, dark) or Day (light "newsprint") edition, remembered.
   const [edition, setEdition] = useState<"night" | "day">(() => {
@@ -79,17 +85,30 @@ export default function App() {
     if (!id) return;
     const match = compositions.find((c) => c.id.toLowerCase() === id);
     if (match) setSelectedId(match.id);
+    else setNotFound(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Keep the URL in sync: /<id> while a piece is open, / otherwise
+  // Keep the URL in sync: /<id> while a piece is open, / otherwise. Left alone
+  // on a 404 so the bad address stays visible until the reader heads home.
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || notFound) return;
     const target = selectedComposition ? `/${selectedComposition.id}` : "/";
     if (window.location.pathname !== target) {
       window.history.replaceState(null, "", target);
     }
-  }, [selectedComposition]);
+  }, [selectedComposition, notFound]);
+
+  if (notFound) {
+    return (
+      <NotFound
+        onHome={() => {
+          window.history.replaceState(null, "", "/");
+          setNotFound(false);
+        }}
+      />
+    );
+  }
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[var(--c-121110)]">
@@ -132,23 +151,35 @@ export default function App() {
         />
       </div>
 
+      {/* Concert diary / Agenda */}
+      <div id="agenda" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-151414)] scroll-mt-12">
+        <ConcertsSection />
+      </div>
+
+      {/* Dispatches — the news column (optional, via VITE_HIDE_DISPATCHES) */}
+      {!hideDispatches && (
+        <div id="dispatches" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-1a1816)] scroll-mt-12">
+          <DispatchesSection />
+        </div>
+      )}
+
       {/* Lili Boulanger Restoration Project */}
-      <div id="projects" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-151414)] scroll-mt-12">
+      <div id="projects" className={`relative z-10 border-t border-[var(--seam)] scroll-mt-12 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
         <BookSection />
       </div>
 
       {/* Services */}
-      <div id="services" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-1a1816)] scroll-mt-12">
+      <div id="services" className={`relative z-10 border-t border-[var(--seam)] scroll-mt-12 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
         <ServicesSection />
       </div>
 
       {/* Commissions */}
-      <div id="commissions" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-151414)] scroll-mt-12">
+      <div id="commissions" className={`relative z-10 border-t border-[var(--seam)] scroll-mt-12 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
         <CommissionsSection />
       </div>
 
       {/* Contact */}
-      <div id="contact" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-1a1816)] scroll-mt-12">
+      <div id="contact" className={`relative z-10 border-t border-[var(--seam)] scroll-mt-12 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
         <ContactSection />
       </div>
 

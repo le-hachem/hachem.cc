@@ -1,0 +1,179 @@
+import type { ReactNode } from "react";
+import { motion } from "motion/react";
+import { Ticket, ArrowUpRight } from "lucide-react";
+import { SectionHeading } from "./SectionHeading";
+import { useLanguage } from "../i18n/LanguageContext";
+import { getConcerts, showPastConcerts, type Concert } from "../i18n/concerts";
+
+const localeFor = (lang: string) =>
+  lang === "fr" ? "fr-FR" : lang === "de" ? "de-DE" : "en-GB";
+
+/** A single diary entry, laid out as a ruled broadsheet listing row. */
+function ConcertRow({
+  c,
+  lang,
+  upcoming,
+  delay,
+}: {
+  c: Concert;
+  lang: string;
+  upcoming: boolean;
+  delay: number;
+}) {
+  const { t } = useLanguage();
+  const d = new Date(c.date + "T12:00:00");
+  const locale = localeFor(lang);
+  const day = d.toLocaleDateString(locale, { day: "numeric" });
+  const monthShort = d
+    .toLocaleDateString(locale, { month: "short" })
+    .replace(".", "");
+  const monthLong = d.toLocaleDateString(locale, { month: "long" });
+  const year = d.getFullYear();
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 12 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay }}
+      viewport={{ once: true, margin: "-40px" }}
+      className="np-row grid grid-cols-[4.5rem_1fr] items-baseline gap-x-5 gap-y-1.5 py-5 sm:grid-cols-[7rem_1fr_auto] sm:gap-x-7"
+    >
+      {/* Date */}
+      <time
+        dateTime={c.date}
+        className="np-tabular leading-none text-[var(--c-cbc2b0)]"
+      >
+        {c.monthOnly ? (
+          <span className="np-head block text-lg font-bold text-[var(--c-e6e0d5)]">
+            {monthLong}
+            <span className="block text-[var(--c-8a8071)]">{year}</span>
+          </span>
+        ) : (
+          <span className="flex items-baseline gap-1.5">
+            <span className="np-head text-3xl font-black text-[var(--c-e6e0d5)]">
+              {day}
+            </span>
+            <span className="flex flex-col text-[11px] uppercase tracking-wide text-[var(--c-8a8071)]">
+              <span>{monthShort}</span>
+              <span>{year}</span>
+            </span>
+          </span>
+        )}
+      </time>
+
+      {/* Programme + place */}
+      <div className="min-w-0">
+        <h3 className="np-head text-xl font-bold leading-snug text-[var(--c-e6e0d5)]">
+          {c.program}
+        </h3>
+        <p className="np-kicker mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[var(--c-9a927f)]">
+          {c.venue && (
+            <>
+              <span className="np-smallcaps text-[var(--c-b5ab98)]">
+                {c.venue}
+              </span>
+              <span className="text-[var(--c-3a352f)]" aria-hidden>
+                ·
+              </span>
+            </>
+          )}
+          <span>{c.city}</span>
+          <span className="text-[var(--c-3a352f)]" aria-hidden>
+            ·
+          </span>
+          <span>{t.agenda.roles[c.role]}</span>
+        </p>
+        {c.note && (
+          <p className="np-kicker mt-2 inline-block border border-[var(--np-rule)] px-2 py-0.5 text-[10px] text-[var(--c-cbc2b0)]">
+            {c.note}
+          </p>
+        )}
+      </div>
+
+      {/* Tickets — only meaningful for a date still to come */}
+      <div className="col-start-2 sm:col-start-3 sm:self-center sm:text-right">
+        {upcoming && c.ticketUrl && (
+          <a
+            href={c.ticketUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="np-kicker inline-flex items-center gap-1.5 border border-[var(--c-5e564f)] px-3 py-2 text-[var(--c-cbc2b0)] transition-colors hover:border-[var(--c-e6e0d5)] hover:text-[var(--c-e6e0d5)]"
+          >
+            <Ticket className="h-3.5 w-3.5" />
+            {t.agenda.tickets}
+            <ArrowUpRight className="h-3 w-3" />
+          </a>
+        )}
+      </div>
+    </motion.article>
+  );
+}
+
+/** A ruled sub-heading ("Upcoming" / "Past") between the entry groups. */
+function GroupLabel({ children }: { children: ReactNode }) {
+  return (
+    <div className="mt-10 mb-1 flex items-center gap-4 first:mt-0">
+      <span className="np-kicker np-smallcaps whitespace-nowrap text-[var(--c-8a8071)]">
+        {children}
+      </span>
+      <span className="h-px flex-1 bg-[var(--np-rule)]" aria-hidden />
+    </div>
+  );
+}
+
+export function ConcertsSection() {
+  const { t, lang } = useLanguage();
+  const concerts = getConcerts(lang);
+
+  // Split by today, so events move from "Upcoming" to "Past" on their own.
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const isPast = (c: Concert) => new Date(c.date + "T23:59:59") < today;
+
+  const upcoming = concerts
+    .filter((c) => !isPast(c))
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const past = concerts
+    .filter(isPast)
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  return (
+    <section className="relative bg-[var(--c-151414)] px-4 py-20 sm:py-28">
+      <div className="mx-auto max-w-5xl">
+        <SectionHeading
+          index="03"
+          dept={t.agenda.dept}
+          title={t.agenda.headline}
+          deck={t.agenda.deck}
+          byline={t.agenda.byline}
+        />
+
+        <GroupLabel>{t.agenda.upcoming}</GroupLabel>
+        {upcoming.length > 0 ? (
+          upcoming.map((c, i) => (
+            <ConcertRow key={c.id} c={c} lang={lang} upcoming delay={i * 0.05} />
+          ))
+        ) : (
+          <p className="np-body border-t border-[var(--np-rule)] py-6 text-[15px] italic leading-[1.6] text-[var(--c-8a8071)]">
+            {t.agenda.none}
+          </p>
+        )}
+
+        {showPastConcerts && past.length > 0 && (
+          <>
+            <GroupLabel>{t.agenda.past}</GroupLabel>
+            {past.map((c, i) => (
+              <ConcertRow
+                key={c.id}
+                c={c}
+                lang={lang}
+                upcoming={false}
+                delay={i * 0.05}
+              />
+            ))}
+          </>
+        )}
+      </div>
+    </section>
+  );
+}

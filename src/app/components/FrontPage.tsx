@@ -1,5 +1,6 @@
 import { DropCap } from "./DropCap";
 import { useLanguage } from "../i18n/LanguageContext";
+import { hideDispatches } from "../i18n/dispatches";
 
 function go(href: string) {
   document.querySelector(href)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -28,13 +29,15 @@ export function FrontPage() {
     .replace(/^\w/, (c) => c.toUpperCase());
 
   const index = [
-    { no: "01", dept: t.about.dept, href: "#about" },
-    { no: "02", dept: t.rack.dept, href: "#works" },
-    { no: "03", dept: t.book.dept, href: "#projects" },
-    { no: "04", dept: t.services.dept, href: "#services" },
-    { no: "05", dept: t.commissions.dept, href: "#commissions" },
-    { no: "06", dept: t.contact.dept, href: "#contact" },
-  ];
+    { dept: t.about.dept, href: "#about" },
+    { dept: t.rack.dept, href: "#works" },
+    { dept: t.agenda.dept, href: "#agenda" },
+    ...(hideDispatches ? [] : [{ dept: t.dispatches.dept, href: "#dispatches" }]),
+    { dept: t.book.dept, href: "#projects" },
+    { dept: t.services.dept, href: "#services" },
+    { dept: t.commissions.dept, href: "#commissions" },
+    { dept: t.contact.dept, href: "#contact" },
+  ].map((it, i) => ({ ...it, no: String(i + 1).padStart(2, "0") }));
 
   return (
     <section className="relative bg-[var(--c-121110)] px-4 pt-8 pb-16 sm:pt-10">

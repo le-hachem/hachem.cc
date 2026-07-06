@@ -5,6 +5,7 @@ import { LiliBoulangerLibrary } from "./LiliBoulangerLibrary";
 import { SectionHeading } from "./SectionHeading";
 import { DropCap } from "./DropCap";
 import { useLanguage } from "../i18n/LanguageContext";
+import { hideDispatches } from "../i18n/dispatches";
 
 /** Bain News Service, 1918; Library of Congress (public domain) via Wikimedia Commons */
 const LILI_BOULANGER_PORTRAIT =
@@ -15,10 +16,10 @@ export function BookSection() {
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
 
   return (
-    <section className="relative bg-[var(--c-151414)] px-4 py-20 sm:py-28">
+    <section className={`relative px-4 py-20 sm:py-28 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
       <div className="max-w-6xl mx-auto">
         <SectionHeading
-          index="03"
+          index={hideDispatches ? "04" : "05"}
           dept={t.book.dept}
           title={t.book.headline}
           deck={t.book.deck}
