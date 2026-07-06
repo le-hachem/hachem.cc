@@ -26,14 +26,105 @@
       <meta property="og:site_name"   content="Hachem" />
       <meta property="og:title"       content="Hachem — Composer · Pianist · Conductor" />
       <meta property="og:description" content="Composer, pianist and conductor in Paris, studying at the Sorbonne — new works from solo to orchestra, free Lili Boulanger editions on IMSLP, and commissions." />
-      <meta property="og:image"       content="https://hachem.cc/favicon-512.png" />
+      <meta property="og:image"       content="https://hachem.cc/og-card.jpg" />
+      <meta property="og:image:width"  content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt"   content="Hachem — Composer · Pianist · Conductor" />
       <meta property="og:locale"      content="en_GB" />
 
       <!-- Twitter / X Card -->
-      <meta name="twitter:card"        content="summary" />
+      <meta name="twitter:card"        content="summary_large_image" />
       <meta name="twitter:title"       content="Hachem — Composer · Pianist · Conductor" />
       <meta name="twitter:description" content="Composer, pianist and conductor in Paris, studying at the Sorbonne — new works from solo to orchestra, free Lili Boulanger editions on IMSLP, and commissions." />
-      <meta name="twitter:image"       content="https://hachem.cc/favicon-512.png" />
+      <meta name="twitter:image"       content="https://hachem.cc/og-card.jpg" />
+
+      <!-- Structured data — tells search engines Hachem is a composer and
+           lists the works, for richer results and knowledge-panel eligibility. -->
+      <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://hachem.cc/#hachem",
+            "name": "Hachem",
+            "url": "https://hachem.cc",
+            "image": "https://hachem.cc/og-card.jpg",
+            "jobTitle": ["Composer", "Pianist", "Conductor"],
+            "description": "Composer, pianist and conductor in Paris, studying at the Sorbonne.",
+            "sameAs": [
+              "https://www.youtube.com/@hachem.mp3",
+              "https://www.instagram.com/hachem.mp3/",
+              "https://ko-fi.com/hachem_mp3"
+            ],
+            "alumniOf": {
+              "@type": "CollegeOrUniversity",
+              "name": "Sorbonne University"
+            },
+            "worksFor": { "@id": "https://hachem.cc/#hachem" }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://hachem.cc/#website",
+            "url": "https://hachem.cc",
+            "name": "Hachem",
+            "inLanguage": ["en", "fr", "de"],
+            "publisher": { "@id": "https://hachem.cc/#hachem" }
+          },
+          {
+            "@type": "MusicComposition",
+            "name": "Myrrha — A Cantata on the Death of Sardanapalus",
+            "url": "https://hachem.cc/myrrha",
+            "composer": { "@id": "https://hachem.cc/#hachem" },
+            "dateCreated": "2026",
+            "inLanguage": "en"
+          },
+          {
+            "@type": "MusicComposition",
+            "name": "Mephistopheles — A Cantata on the Story of Faust",
+            "url": "https://hachem.cc/mephistopheles",
+            "composer": { "@id": "https://hachem.cc/#hachem" },
+            "dateCreated": "2025",
+            "inLanguage": "en"
+          },
+          {
+            "@type": "MusicComposition",
+            "name": "Quatuor à cordes No. 1 (String Quartet)",
+            "url": "https://hachem.cc/quatuor-no-1",
+            "composer": { "@id": "https://hachem.cc/#hachem" },
+            "dateCreated": "2024"
+          },
+          {
+            "@type": "MusicComposition",
+            "name": "Fantaisie for Violin and Piano",
+            "url": "https://hachem.cc/fantaisie",
+            "composer": { "@id": "https://hachem.cc/#hachem" },
+            "dateCreated": "2024"
+          },
+          {
+            "@type": "MusicComposition",
+            "name": "Nocturne for Flute and Piano",
+            "url": "https://hachem.cc/nocturne-flute",
+            "composer": { "@id": "https://hachem.cc/#hachem" },
+            "dateCreated": "2022"
+          },
+          {
+            "@type": "MusicComposition",
+            "name": "Quatre Préludes for Solo Piano",
+            "url": "https://hachem.cc/quatre-preludes",
+            "composer": { "@id": "https://hachem.cc/#hachem" },
+            "dateCreated": "2024"
+          },
+          {
+            "@type": "MusicComposition",
+            "name": "Trois Mélodies for Mezzo-Soprano and Piano",
+            "url": "https://hachem.cc/trois-melodies",
+            "composer": { "@id": "https://hachem.cc/#hachem" },
+            "dateCreated": "2023"
+          }
+        ]
+      }
+      </script>
     </head>
 
     <body>
