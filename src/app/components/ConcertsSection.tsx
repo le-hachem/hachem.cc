@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { motion } from "motion/react";
 import { Ticket, ArrowUpRight } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { useLanguage } from "../i18n/LanguageContext";
@@ -8,17 +7,51 @@ import { getConcerts, showPastConcerts, type Concert } from "../i18n/concerts";
 const localeFor = (lang: string) =>
   lang === "fr" ? "fr-FR" : lang === "de" ? "de-DE" : "en-GB";
 
+/** Give the main item prominence while keeping the rest of a programme compact. */
+function Programme({
+  title,
+  children,
+}: {
+  title?: string;
+  children: string;
+}) {
+  const works = children
+    .split(/\s*;\s*/)
+    .map((work) => work.trim())
+    .filter(Boolean);
+  const headline = title ?? works[0];
+  const repertoire = title ? works : works.slice(1);
+
+  return (
+    <>
+      <h3 className="np-head text-xl font-bold leading-snug text-[var(--c-e6e0d5)]">
+        {headline}
+      </h3>
+      {repertoire.length > 0 && (
+        <p className="np-body mt-1 flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5 text-[14px] leading-snug text-[var(--c-bcb3a3)]">
+          {repertoire.map((work, index) => (
+            <span key={`${index}-${work}`} className="inline-flex items-center gap-2.5">
+              {index > 0 && (
+                <span className="h-px w-3 bg-[var(--c-5e564f)]" aria-hidden />
+              )}
+              {work}
+            </span>
+          ))}
+        </p>
+      )}
+    </>
+  );
+}
+
 /** A single diary entry, laid out as a ruled broadsheet listing row. */
 function ConcertRow({
   c,
   lang,
   upcoming,
-  delay,
 }: {
   c: Concert;
   lang: string;
   upcoming: boolean;
-  delay: number;
 }) {
   const { t } = useLanguage();
   const d = new Date(c.date + "T12:00:00");
@@ -31,13 +64,7 @@ function ConcertRow({
   const year = d.getFullYear();
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay }}
-      viewport={{ once: true, margin: "-40px" }}
-      className="np-row grid grid-cols-[4.5rem_1fr] items-baseline gap-x-5 gap-y-1.5 py-5 sm:grid-cols-[7rem_1fr_auto] sm:gap-x-7"
-    >
+    <article className="np-row grid grid-cols-[4.5rem_1fr] items-baseline gap-x-5 gap-y-1.5 py-5 sm:grid-cols-[7rem_1fr_auto] sm:gap-x-7">
       {/* Date */}
       <time
         dateTime={c.date}
@@ -63,9 +90,7 @@ function ConcertRow({
 
       {/* Programme + place */}
       <div className="min-w-0">
-        <h3 className="np-head text-xl font-bold leading-snug text-[var(--c-e6e0d5)]">
-          {c.program}
-        </h3>
+        <Programme title={c.title}>{c.program}</Programme>
         <p className="np-kicker mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[var(--c-9a927f)]">
           {c.venue && (
             <>
@@ -105,7 +130,7 @@ function ConcertRow({
           </a>
         )}
       </div>
-    </motion.article>
+    </article>
   );
 }
 
@@ -138,7 +163,7 @@ export function ConcertsSection() {
     .sort((a, b) => b.date.localeCompare(a.date));
 
   return (
-    <section className="relative bg-[var(--c-151414)] px-4 py-20 sm:py-28">
+    <section className="relative bg-[var(--c-151414)] px-4 py-14 sm:py-28">
       <div className="mx-auto max-w-5xl">
         <SectionHeading
           index="03"
@@ -150,8 +175,8 @@ export function ConcertsSection() {
 
         <GroupLabel>{t.agenda.upcoming}</GroupLabel>
         {upcoming.length > 0 ? (
-          upcoming.map((c, i) => (
-            <ConcertRow key={c.id} c={c} lang={lang} upcoming delay={i * 0.05} />
+          upcoming.map((c) => (
+            <ConcertRow key={c.id} c={c} lang={lang} upcoming />
           ))
         ) : (
           <p className="np-body border-t border-[var(--np-rule)] py-6 text-[15px] italic leading-[1.6] text-[var(--c-8a8071)]">
@@ -162,13 +187,12 @@ export function ConcertsSection() {
         {showPastConcerts && past.length > 0 && (
           <>
             <GroupLabel>{t.agenda.past}</GroupLabel>
-            {past.map((c, i) => (
+            {past.map((c) => (
               <ConcertRow
                 key={c.id}
                 c={c}
                 lang={lang}
                 upcoming={false}
-                delay={i * 0.05}
               />
             ))}
           </>

@@ -16,7 +16,7 @@ export function BookSection() {
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
 
   return (
-    <section className={`relative px-4 py-20 sm:py-28 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
+    <section className={`relative px-4 py-14 sm:py-28 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
       <div className="max-w-6xl mx-auto">
         <SectionHeading
           index={hideDispatches ? "04" : "05"}

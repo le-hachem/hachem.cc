@@ -1,4 +1,3 @@
-import { motion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { useLanguage } from "../i18n/LanguageContext";
@@ -23,22 +22,14 @@ function formatDate(d: Dispatch, lang: string) {
 function Brief({
   d,
   lang,
-  delay,
   readMore,
 }: {
   d: Dispatch;
   lang: string;
-  delay: number;
   readMore: string;
 }) {
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay }}
-      viewport={{ once: true, margin: "-40px" }}
-      className="border-t border-[var(--np-rule)] py-7 first:border-t-0 sm:py-8"
-    >
+    <article className="border-t border-[var(--np-rule)] py-7 first:border-t-0 sm:py-8">
       <p className="np-kicker np-smallcaps text-[var(--c-8a8071)]">
         <time dateTime={d.date}>{formatDate(d, lang)}</time>
       </p>
@@ -59,7 +50,7 @@ function Brief({
           <ArrowUpRight className="h-3 w-3" />
         </a>
       )}
-    </motion.article>
+    </article>
   );
 }
 
@@ -68,7 +59,7 @@ export function DispatchesSection() {
   const dispatches = getDispatches(lang);
 
   return (
-    <section className="relative bg-[var(--c-1a1816)] px-4 py-20 sm:py-28">
+    <section className="relative bg-[var(--c-1a1816)] px-4 py-14 sm:py-28">
       <div className="mx-auto max-w-3xl">
         <SectionHeading
           index="04"
@@ -80,12 +71,11 @@ export function DispatchesSection() {
 
         {dispatches.length > 0 ? (
           <div className="border-b border-[var(--np-rule)]">
-            {dispatches.map((d, i) => (
+            {dispatches.map((d) => (
               <Brief
                 key={d.id}
                 d={d}
                 lang={lang}
-                delay={i * 0.05}
                 readMore={t.dispatches.readMore}
               />
             ))}

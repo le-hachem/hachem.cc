@@ -211,6 +211,50 @@
 .np-row:hover { background-color: rgba(230, 224, 213, 0.05); }
 
 
+/* Desktop "digital broadsheet" scaffold — the fixed cipher masthead band and
+   the fixed left table-of-contents rail. Kept as tokens so the masthead height
+   and rail width stay in lockstep with the content offsets in App.tsx. */
+:root {
+  --masthead-h: 7.25rem;
+  --rail-w: 15rem;
+}
+
+/* ───────────────────────── POCKET EDITION (mobile) ─────────────────────────
+   A phone isn't a shrunken broadsheet — it's a tabloid folded in the hand.
+   At narrow measure the broadsheet's own devices work against it: full
+   justification opens rivers of white, broadsheet letter-spacing wraps the
+   tracked kickers, and the giant drop cap swallows the column. These overrides
+   retune the print system for the pocket format without touching the desktop
+   broadsheet above the breakpoint. */
+@media (max-width: 640px) {
+  /* Ragged right at phone measure — justification only tears holes in a
+     ~34-character column. The edge stays newspaper-tidy via hyphenation. */
+  .np-justify {
+    text-align: left;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+  }
+
+  /* Condense the tracked labels so a kicker sits on one line instead of
+     wrapping into a cramped block. */
+  .np-kicker {
+    letter-spacing: 0.2em;
+    font-size: 0.62rem;
+  }
+
+  /* A pocket-scale initial: still ornamental, no longer eating a third of the
+     column. */
+  .np-dropcap-letter { font-size: 3em; }
+  .np-dropcap::first-letter { font-size: 3.4em; }
+
+  /* Tighter pull-quote so it reads as a break in the column, not a full stop. */
+  .np-pullquote {
+    margin: 1.15rem 0;
+    padding: 0.85rem 0.25rem;
+  }
+}
+
+
 /* ===================== EDITION THEME (night default / .daylight) ===================== */
 :root {
   --c-121110: #121110;

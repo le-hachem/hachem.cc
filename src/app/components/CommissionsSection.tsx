@@ -1,4 +1,3 @@
-import { motion } from "motion/react";
 import { Mail, Hourglass } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { DropCap } from "./DropCap";
@@ -45,7 +44,7 @@ export function CommissionsSection() {
   const { t } = useLanguage();
   const steps = t.commissions.steps;
   return (
-    <section className={`relative px-4 py-20 sm:py-28 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
+    <section className={`relative px-4 py-14 sm:py-28 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
       <div className="max-w-5xl mx-auto">
         <SectionHeading
           index={hideDispatches ? "06" : "07"}
@@ -55,40 +54,24 @@ export function CommissionsSection() {
           byline={t.commissions.byline}
           className="!mb-6 sm:!mb-8"
         />
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.05 }}
-          viewport={{ once: true }}
-          className="mb-12 sm:mb-16 text-center"
-        >
+        <div className="mb-8 sm:mb-16 text-center">
           <StatusSeal />
-        </motion.div>
+        </div>
 
         {/* State-dependent lede */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          viewport={{ once: true }}
-          className="np-body np-justify mx-auto max-w-3xl text-[14px] leading-[1.62] text-[var(--c-cbc2b0)]"
-        >
+        <div className="np-body np-justify mx-auto max-w-3xl text-[14px] leading-[1.62] text-[var(--c-cbc2b0)]">
           {commissionsOpen ? (
             <p><DropCap text={t.commissions.ledeOpen} /></p>
           ) : (
             <p><DropCap text={t.commissions.ledeClosed} /></p>
           )}
-        </motion.div>
+        </div>
 
         {/* Process — numbered notices */}
-        <div className="mt-12 sm:mt-16 grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-x-10 border-t-2 border-[var(--np-rule-strong)]">
+        <div className="mt-10 sm:mt-16 grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-x-10 border-t-2 border-[var(--np-rule-strong)]">
           {steps.map((s, i) => (
-            <motion.article
+            <article
               key={s.title}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: i * 0.06 }}
-              viewport={{ once: true, margin: "-40px" }}
               className="border-b border-[var(--np-rule)] py-6 sm:py-7"
             >
               <p className="np-head np-tabular text-3xl font-black leading-none text-[var(--c-5e564f)]">
@@ -100,18 +83,12 @@ export function CommissionsSection() {
               <p className="np-body np-justify mt-3 text-[15px] leading-[1.6] text-[var(--c-bcb3a3)]">
                 {s.body}
               </p>
-            </motion.article>
+            </article>
           ))}
         </div>
 
         {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          viewport={{ once: true }}
-          className="mt-10 sm:mt-12 text-center"
-        >
+        <div className="mt-10 sm:mt-12 text-center">
           {commissionsOpen ? (
             <a
               href="mailto:contact@hachem.cc?subject=Commission%20inquiry"
@@ -131,7 +108,7 @@ export function CommissionsSection() {
               {t.commissions.ctaClosed}
             </a>
           )}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

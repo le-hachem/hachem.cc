@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "motion/react";
 
 /**
  * Portrait pulled live from the GitHub avatar (kept in sync with Instagram
@@ -15,11 +14,7 @@ export function ProfilePortrait({ className = "" }: { className?: string }) {
   const [loaded, setLoaded] = useState(false);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 14 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.55 }}
-      viewport={{ once: true, margin: "-40px" }}
+    <div
       className={`border border-[var(--c-2f2c28)] bg-[var(--c-161413)] shadow-sm hover:shadow-md transition-shadow ${className}`}
     >
       <div className="p-2.5">
@@ -52,6 +47,6 @@ export function ProfilePortrait({ className = "" }: { className?: string }) {
           </p>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

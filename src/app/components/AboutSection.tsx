@@ -43,14 +43,9 @@ export function AboutSection() {
   });
 
   return (
-    <section className="relative bg-[var(--c-151414)] px-4 py-20 sm:py-28">
+    <section className="relative bg-[var(--c-151414)] px-4 py-14 sm:py-28">
       <div className="max-w-5xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-        >
+        <div>
           <SectionHeading
             index="01"
             dept={t.about.dept}
@@ -81,12 +76,8 @@ export function AboutSection() {
                   style={{ scaleY: reduceMotion ? 1 : railScale }}
                 />
                 {milestoneAges.map((age, i) => (
-                  <motion.li
+                  <li
                     key={i}
-                    initial={{ opacity: 0, x: -8 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, delay: i * 0.07 }}
-                    viewport={{ once: true }}
                     className="relative pl-6 pb-8 last:pb-0"
                   >
                     <span className="absolute -left-[4.5px] top-[5px] w-2 h-2 rounded-full bg-[var(--c-eee8dd)] border-2 border-[var(--c-161413)] ring-1 ring-[var(--c-eee8dd)]" />
@@ -97,7 +88,7 @@ export function AboutSection() {
                     <p className="text-sm font-serif text-[var(--c-c2b9ab)] leading-relaxed">
                       {t.about.milestones[i]}
                     </p>
-                  </motion.li>
+                  </li>
                 ))}
               </ol>
             </div>
@@ -157,13 +148,7 @@ export function AboutSection() {
           </div>
 
           {/* Recognition strip */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            viewport={{ once: true }}
-            className="mt-10 sm:mt-16 border-t border-[var(--c-201e1c)] pt-8 sm:pt-10"
-          >
+          <div className="mt-10 sm:mt-16 border-t border-[var(--c-201e1c)] pt-8 sm:pt-10">
             <p className="text-[10px] tracking-[0.4em] uppercase text-[var(--c-5e564f)] mb-6 text-center"
                style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
               {t.about.recognition}
@@ -179,9 +164,9 @@ export function AboutSection() {
                 </div>
               ))}
             </div>
-          </motion.div>
+          </div>
 
-        </motion.div>
+        </div>
       </div>
     </section>
   );

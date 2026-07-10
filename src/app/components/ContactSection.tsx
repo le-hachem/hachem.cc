@@ -9,7 +9,7 @@ const LINK =
 export function ContactSection() {
   const { t } = useLanguage();
   return (
-    <section className={`relative px-4 py-20 sm:py-28 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
+    <section className={`relative px-4 py-14 sm:py-28 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
       <div className="max-w-5xl mx-auto">
         <SectionHeading
           index={hideDispatches ? "07" : "08"}

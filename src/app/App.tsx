@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { ProgressiveTextReveal } from "./components/ProgressiveTextReveal";
 import { BookSection } from "./components/BookSection";
 import { CompositionRack } from "./components/CompositionRack";
 import { CompositionModal } from "./components/CompositionModal";
@@ -12,8 +11,10 @@ import { ServicesSection } from "./components/ServicesSection";
 import { CommissionsSection } from "./components/CommissionsSection";
 import { ContactSection } from "./components/ContactSection";
 import { NavHeader } from "./components/NavHeader";
+import { MastheadDesktop } from "./components/MastheadDesktop";
+import { MastheadMobile } from "./components/MastheadMobile";
+import { TocRail } from "./components/TocRail";
 import { FrontPage } from "./components/FrontPage";
-import { CandleCursor } from "./components/CandleCursor";
 import { EasterEggs } from "./components/EasterEggs";
 import { getCompositions } from "./i18n/compositions";
 import { hideDispatches } from "./i18n/dispatches";
@@ -112,8 +113,15 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[var(--c-121110)]">
-      {/* Sticky nav */}
-      <NavHeader edition={edition} onToggleEdition={toggleEdition} />
+      {/* Mobile / tablet nav (below xl) — the pocket edition's hamburger. */}
+      <div className="xl:hidden">
+        <NavHeader edition={edition} onToggleEdition={toggleEdition} />
+      </div>
+
+      {/* Desktop "digital broadsheet" chrome (xl+): the cipher becomes a fixed
+          nameplate up top and the table of contents runs fixed down the left. */}
+      <MastheadDesktop edition={edition} onToggleEdition={toggleEdition} />
+      <TocRail />
 
       {/* Background SVG — scrolls with content */}
       <div
@@ -127,9 +135,13 @@ export default function App() {
         />
       </div>
 
-      {/* Hero */}
-      <div className="relative z-10">
-        <ProgressiveTextReveal />
+      {/* Content column — cleared past the fixed masthead + rail on desktop. */}
+      <div className="xl:pl-[var(--rail-w)] xl:pt-[var(--masthead-h)]">
+      {/* Masthead — mobile / tablet only; the cipher as the paper's nameplate,
+          in place of the old full-screen photo hero. On desktop it lives fixed
+          up top instead. */}
+      <div className="relative z-10 xl:hidden">
+        <MastheadMobile />
       </div>
 
       {/* Front page — above the fold */}
@@ -138,12 +150,12 @@ export default function App() {
       </div>
 
       {/* About */}
-      <div id="about" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-151414)] scroll-mt-12">
+      <div id="about" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-151414)] scroll-mt-12 xl:scroll-mt-32">
         <AboutSection />
       </div>
 
       {/* Featured works */}
-      <div id="works" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-1a1816)] scroll-mt-12">
+      <div id="works" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-1a1816)] scroll-mt-12 xl:scroll-mt-32">
         <CompositionRack
           compositions={compositions}
           onCompositionClick={(c) => setSelectedId(c.id)}
@@ -152,52 +164,36 @@ export default function App() {
       </div>
 
       {/* Concert diary / Agenda */}
-      <div id="agenda" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-151414)] scroll-mt-12">
+      <div id="agenda" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-151414)] scroll-mt-12 xl:scroll-mt-32">
         <ConcertsSection />
       </div>
 
       {/* Dispatches — the news column (optional, via VITE_HIDE_DISPATCHES) */}
       {!hideDispatches && (
-        <div id="dispatches" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-1a1816)] scroll-mt-12">
+        <div id="dispatches" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-1a1816)] scroll-mt-12 xl:scroll-mt-32">
           <DispatchesSection />
         </div>
       )}
 
       {/* Lili Boulanger Restoration Project */}
-      <div id="projects" className={`relative z-10 border-t border-[var(--seam)] scroll-mt-12 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
+      <div id="projects" className={`relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
         <BookSection />
       </div>
 
       {/* Services */}
-      <div id="services" className={`relative z-10 border-t border-[var(--seam)] scroll-mt-12 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
+      <div id="services" className={`relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
         <ServicesSection />
       </div>
 
       {/* Commissions */}
-      <div id="commissions" className={`relative z-10 border-t border-[var(--seam)] scroll-mt-12 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
+      <div id="commissions" className={`relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
         <CommissionsSection />
       </div>
 
       {/* Contact */}
-      <div id="contact" className={`relative z-10 border-t border-[var(--seam)] scroll-mt-12 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
+      <div id="contact" className={`relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
         <ContactSection />
       </div>
-
-      {/* Full-screen modal */}
-      {selectedComposition && (
-        <CompositionModal
-          composition={selectedComposition}
-          onClose={() => setSelectedId(null)}
-        />
-      )}
-
-      {/* Compositions Library */}
-      <CompositionsLibrary
-        isOpen={isLibraryOpen}
-        onClose={() => setIsLibraryOpen(false)}
-        compositions={compositions}
-        onCompositionClick={(c) => setSelectedId(c.id)}
-      />
 
       {/* Colophon */}
       <footer className="relative z-10 bg-[var(--c-121110)] px-4 pt-12 pb-16">
@@ -235,10 +231,28 @@ export default function App() {
           </p>
         </div>
       </footer>
+      </div>
+
+      {/* Full-screen modal */}
+      {selectedComposition && (
+        <CompositionModal
+          composition={selectedComposition}
+          onClose={() => setSelectedId(null)}
+        />
+      )}
+
+      {/* Compositions Library */}
+      <CompositionsLibrary
+        isOpen={isLibraryOpen}
+        onClose={() => setIsLibraryOpen(false)}
+        compositions={compositions}
+        onCompositionClick={(c) => setSelectedId(c.id)}
+      />
 
       {/* Broadsheet column guides — faint vertical rules ruled down the whole
-          page, as if everything were set on the same columned sheet. */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 z-[55] hidden justify-center px-4 sm:flex">
+          page, as if everything were set on the same columned sheet. On desktop
+          they shift right to sit over the content column, not the rail. */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-[55] hidden justify-center px-4 sm:flex xl:pl-[var(--rail-w)]">
         <div
           className="h-full w-full max-w-6xl"
           style={{
@@ -262,9 +276,6 @@ export default function App() {
           opacity: 0.32,
         }}
       />
-
-      {/* Candlelight that follows the pointer — night edition only */}
-      {edition === "night" && <CandleCursor />}
 
       {/* Quiet delights for the curious */}
       <EasterEggs />

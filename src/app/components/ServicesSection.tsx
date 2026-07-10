@@ -1,4 +1,3 @@
-import { motion, useReducedMotion } from "motion/react";
 import { commissionsOpen } from "./CommissionsSection";
 import { SectionHeading } from "./SectionHeading";
 import { DropCap } from "./DropCap";
@@ -10,21 +9,17 @@ type IconPath = string | { d: string; fill?: boolean };
 
 /** Stroke-drawn icons that sketch themselves in on scroll. */
 function DrawnIcon({ paths, viewBox = "0 0 48 48" }: { paths: IconPath[]; viewBox?: string }) {
-  const reduceMotion = useReducedMotion();
   return (
-    <motion.svg
+    <svg
       viewBox={viewBox}
       fill="none"
       className="w-8 h-8 text-[var(--c-cbc2b0)]"
-      initial={reduceMotion ? undefined : "hidden"}
-      whileInView="visible"
-      viewport={{ once: true, margin: "-40px" }}
     >
       {paths.map((p, i) => {
         const d = typeof p === "string" ? p : p.d;
         const filled = typeof p !== "string" && p.fill;
         return (
-          <motion.path
+          <path
             key={i}
             d={d}
             stroke={filled ? "none" : "currentColor"}
@@ -32,18 +27,10 @@ function DrawnIcon({ paths, viewBox = "0 0 48 48" }: { paths: IconPath[]; viewBo
             strokeWidth="1.3"
             strokeLinecap="round"
             strokeLinejoin="round"
-            variants={{
-              hidden: { pathLength: 0, opacity: 0 },
-              visible: {
-                pathLength: 1,
-                opacity: 1,
-                transition: { duration: 0.7, delay: 0.15 + i * 0.18, ease: "easeInOut" },
-              },
-            }}
           />
         );
       })}
-    </motion.svg>
+    </svg>
   );
 }
 
@@ -112,7 +99,7 @@ export function ServicesSection() {
   }));
 
   return (
-    <section className={`relative px-4 py-20 sm:py-28 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
+    <section className={`relative px-4 py-14 sm:py-28 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
       <div className="max-w-5xl mx-auto">
         <SectionHeading
           index={hideDispatches ? "05" : "06"}
@@ -123,19 +110,15 @@ export function ServicesSection() {
         />
 
         {/* Article lede */}
-        <div className="np-body np-justify mx-auto mb-14 max-w-3xl text-[14px] leading-[1.62] text-[var(--c-cbc2b0)]">
+        <div className="np-body np-justify mx-auto mb-8 sm:mb-14 max-w-3xl text-[14px] leading-[1.62] text-[var(--c-cbc2b0)]">
           <p><DropCap text={t.services.lede} /></p>
         </div>
 
         {/* Notices — ruled columns, no boxes */}
         <div className="grid sm:grid-cols-2 sm:gap-x-12 border-t-2 border-[var(--np-rule-strong)]">
           {services.map((s, i) => (
-            <motion.article
+            <article
               key={s.title}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: i * 0.06 }}
-              viewport={{ once: true, margin: "-40px" }}
               className="border-b border-[var(--np-rule)] py-7 sm:py-8 sm:[&:nth-last-child(-n+1)]:border-b-0 sm:[&:nth-last-child(2)]:border-b-0"
             >
               <div className="flex items-baseline gap-3">
@@ -163,18 +146,12 @@ export function ServicesSection() {
                   {s.body}
                 </p>
               </div>
-            </motion.article>
+            </article>
           ))}
         </div>
 
         {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          viewport={{ once: true }}
-          className="mt-10 text-center"
-        >
+        <div className="mt-10 text-center">
           <p className="font-serif italic text-[var(--c-7b7267)] text-sm sm:text-base">
             {t.services.ctaPre}
             <a
@@ -189,7 +166,7 @@ export function ServicesSection() {
             </a>
             {t.services.ctaPost}
           </p>
-        </motion.div>
+        </div>
 
         <div className="np-head mt-12 text-center text-xl tracking-[0.6em] text-[var(--c-5e564f)]" aria-hidden>
           * * *

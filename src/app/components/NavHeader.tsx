@@ -105,13 +105,25 @@ export function NavHeader({
         }
       >
         <div
-          className="max-w-7xl mx-auto px-5 sm:px-10 h-12 flex items-center justify-center"
+          className="max-w-7xl mx-auto px-5 sm:px-10 h-12 flex items-center justify-between xl:justify-center"
           style={
             scrolled || menuOpen
               ? undefined
               : { textShadow: "var(--hero-textshadow)" }
           }
         >
+          {/* Running head — the masthead folds up into the bar once the reader
+              is past the front page (or has the index open), the way a paper
+              carries its nameplate small across every inside page. */}
+          <span
+            aria-hidden
+            className={`np-head xl:hidden select-none whitespace-nowrap text-lg font-black tracking-[0.01em] text-[var(--c-e6e0d5)] transition-opacity duration-300 ${
+              scrolled || menuOpen ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            Hachem
+          </span>
+
           {/* Desktop section index — the whole group (links + language + theme)
               centered as one; collapses to the hamburger below xl. */}
           <nav className="hidden xl:flex items-baseline gap-6">

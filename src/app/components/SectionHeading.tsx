@@ -25,13 +25,7 @@ export function SectionHeading({
 }) {
   const { t } = useLanguage();
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.45, ease: "easeOut" }}
-      className={`mb-10 sm:mb-14 ${className}`}
-    >
+    <div className={`mb-8 sm:mb-14 ${className}`}>
       <motion.div
         className="np-rule-double"
         style={{ transformOrigin: "left" }}
@@ -76,6 +70,6 @@ export function SectionHeading({
       {byline && (
         <p className="np-kicker mt-4 text-[var(--c-8a8071)]">{byline}</p>
       )}
-    </motion.div>
+    </div>
   );
 }

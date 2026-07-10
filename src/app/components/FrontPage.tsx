@@ -40,19 +40,10 @@ export function FrontPage() {
   ].map((it, i) => ({ ...it, no: String(i + 1).padStart(2, "0") }));
 
   return (
-    <section className="relative bg-[var(--c-121110)] px-4 pt-8 pb-16 sm:pt-10">
+    <section className="relative bg-[var(--c-121110)] px-4 pt-8 pb-12 sm:pt-10 sm:pb-16">
       <div className="max-w-6xl mx-auto">
-        {/* Cutline for the lead photograph above */}
-        <div className="np-rule" />
-        <p className="np-kicker flex flex-wrap items-center justify-center gap-x-3 gap-y-1 py-2 text-center text-[var(--c-8a8071)]">
-          <span className="np-smallcaps text-[var(--c-cbc2b0)]">{f.leadPhoto}</span>
-          <Dot />
-          <span className="np-body text-[13px] italic text-[var(--c-a59b89)]">{f.cutline}</span>
-          <Dot />
-          <span className="hero-credit" />
-        </p>
-
-        {/* Stop-press / edition strip */}
+        {/* Stop-press / edition strip — the cipher masthead now leads above,
+            so the page opens straight onto the edition line. */}
         <div className="np-rule-strong" />
         <p className="np-kicker flex flex-wrap items-center justify-center gap-x-4 gap-y-1 py-2 text-[var(--c-8a8071)]">
           <span className="np-smallcaps text-[var(--c-cbc2b0)]">{f.edition}</span>
@@ -68,18 +59,18 @@ export function FrontPage() {
         <div className="np-rule-strong" />
 
         {/* Above the fold: lead story + index box */}
-        <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_17rem] lg:gap-12">
-          <article className="lg:border-r lg:border-[var(--np-rule)] lg:pr-12">
+        <div className="mt-6 sm:mt-8 grid gap-8 lg:grid-cols-[1fr_17rem] lg:gap-12 xl:grid-cols-1">
+          <article className="lg:border-r lg:border-[var(--np-rule)] lg:pr-12 xl:border-r-0 xl:pr-0">
             <p className="np-kicker text-[var(--c-cbc2b0)]">{f.theLead}</p>
             <h1 className="np-head mt-3 text-5xl font-black leading-[0.94] tracking-tight text-[var(--c-f0ead8)] sm:text-7xl [text-wrap:balance] [overflow-wrap:break-word]">
               {t.about.headline}
             </h1>
-            <p className="np-body mt-4 text-xl italic text-[var(--c-b5ab98)]">{t.about.deck}</p>
+            <p className="np-body mt-4 text-xl italic text-[var(--c-b5ab98)] xl:max-w-3xl">{t.about.deck}</p>
             <p className="np-kicker mt-4 text-[var(--c-8a8071)]">{t.about.byline}</p>
 
-            <div className="np-rule mt-5 mb-5" />
+            <div className="np-rule mt-5 mb-5 xl:max-w-3xl" />
 
-            <p className="np-body np-justify text-[13.5px] leading-[1.6] text-[var(--c-bcb3a3)]"><DropCap text={t.about.bio1} /></p>
+            <p className="np-body np-justify text-[13.5px] leading-[1.6] text-[var(--c-bcb3a3)] xl:max-w-3xl"><DropCap text={t.about.bio1} /></p>
 
             <button
               onClick={() => go("#about")}
@@ -89,7 +80,7 @@ export function FrontPage() {
             </button>
           </article>
 
-          <aside className="h-fit border border-[var(--np-rule)] p-5">
+          <aside className="h-fit border border-[var(--np-rule)] p-5 xl:hidden">
             <p className="np-kicker np-smallcaps border-b border-[var(--np-rule)] pb-3 text-center text-[var(--c-cbc2b0)]">
               {f.inThisIssue}
             </p>

@@ -1,4 +1,3 @@
-import { motion } from "motion/react";
 import { Award, Headphones } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { DropCap } from "./DropCap";
@@ -29,7 +28,7 @@ export function CompositionRack({ compositions, onCompositionClick, onViewAllCli
   );
 
   return (
-    <section className="relative bg-[var(--c-1a1816)] px-4 py-20 sm:py-28">
+    <section className="relative bg-[var(--c-1a1816)] px-4 py-14 sm:py-28">
       <div className="max-w-5xl mx-auto">
         <SectionHeading
           index="02"
@@ -46,18 +45,14 @@ export function CompositionRack({ compositions, onCompositionClick, onViewAllCli
         ) : (
           <>
             {/* Lead review */}
-            <div className="np-body np-justify mx-auto mb-12 max-w-3xl text-[14px] leading-[1.62] text-[var(--c-cbc2b0)]">
+            <div className="np-body np-justify mx-auto mb-8 sm:mb-12 max-w-3xl text-[14px] leading-[1.62] text-[var(--c-cbc2b0)]">
               <p><DropCap text={t.rack.review} /></p>
             </div>
 
             <ul className="border-t-2 border-[var(--np-rule-strong)]">
               {featuredCompositions.map((c, i) => (
-                <motion.li
+                <li
                   key={c.id}
-                  initial={{ opacity: 0, y: 8 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-40px" }}
-                  transition={{ duration: 0.4, delay: i * 0.05 }}
                   className="np-row"
                 >
                   <button
@@ -101,7 +96,7 @@ export function CompositionRack({ compositions, onCompositionClick, onViewAllCli
                       {c.duration}
                     </span>
                   </button>
-                </motion.li>
+                </li>
               ))}
             </ul>
 
