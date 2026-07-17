@@ -7,6 +7,7 @@ import { SectionHeading } from "./SectionHeading";
 import { DropCap } from "./DropCap";
 import { Reveal } from "./Reveal";
 import { SectionEnd, PlateCorners } from "./Ornaments";
+import { Tilt } from "./Tilt";
 import { useLanguage } from "../i18n/LanguageContext";
 import { hideDispatches } from "../i18n/dispatches";
 
@@ -75,13 +76,15 @@ export function BookSection() {
             <motion.div ref={figureRef} style={reduceMotion ? undefined : { y: figureY }}>
             <div className="relative">
               <PlateCorners />
-              <div className="np-screen aspect-[3/4] overflow-hidden border border-[var(--c-201e1c)] bg-[var(--c-161413)]">
-                <ImageWithFallback
-                  src={LILI_BOULANGER_PORTRAIT}
-                  alt="Lili Boulanger, portrait photograph (Bain News Service, 1918, Library of Congress)"
-                  className="np-halftone h-full w-full object-cover object-top"
-                />
-              </div>
+              <Tilt max={5}>
+                <div className="np-screen aspect-[3/4] overflow-hidden border border-[var(--c-201e1c)] bg-[var(--c-161413)] shadow-[0_22px_44px_-26px_rgba(0,0,0,0.75)]">
+                  <ImageWithFallback
+                    src={LILI_BOULANGER_PORTRAIT}
+                    alt="Lili Boulanger, portrait photograph (Bain News Service, 1918, Library of Congress)"
+                    className="np-halftone h-full w-full object-cover object-top"
+                  />
+                </div>
+              </Tilt>
             </div>
             <figcaption className="mt-3 border-t border-[var(--c-201e1c)] pt-3 text-center">
               <p className="np-kicker mb-1.5 text-[9px] text-[var(--c-8a8071)]">Fig.&nbsp;2</p>

@@ -63,7 +63,7 @@ export function TocRail() {
   return (
     <nav
       aria-label={t.front?.inThisIssue ?? "In this issue"}
-      className="fixed left-0 top-[var(--masthead-h)] bottom-0 z-[800] hidden w-[var(--rail-w)] flex-col border-r border-[var(--seam-strong)] bg-[var(--c-121110)] px-7 py-8 xl:flex"
+      className="fixed left-0 top-[var(--masthead-h)] bottom-0 z-[800] hidden w-[var(--rail-w)] flex-col border-r border-[var(--seam-strong)] bg-[var(--c-121110)] px-7 py-8 shadow-[18px_0_38px_-28px_rgba(0,0,0,0.55)] xl:flex"
     >
       <p className="np-kicker np-smallcaps border-b border-[var(--np-rule)] pb-3 text-[var(--c-cbc2b0)]">
         {t.front?.inThisIssue ?? "In This Issue"}

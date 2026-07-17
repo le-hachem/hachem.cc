@@ -1,5 +1,10 @@
-import { motion } from "motion/react";
-import type { ReactNode } from "react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "motion/react";
+import { useRef, type ReactNode } from "react";
 import { InkReveal, Reveal, RuleReveal, PRESS_EASE } from "./Reveal";
 import { useLanguage } from "../i18n/LanguageContext";
 
@@ -27,15 +32,26 @@ export function SectionHeading({
   className?: string;
 }) {
   const { t } = useLanguage();
+  // The ghost numeral rides a slower plane than the type: as the heading
+  // scrolls through the viewport it drifts a few dozen pixels against the
+  // scroll, so the watermark reads as a layer beneath the page.
+  const headRef = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: headRef,
+    offset: ["start end", "end start"],
+  });
+  const ghostY = useTransform(scrollYProgress, [0, 1], [44, -44]);
   return (
-    <div className={`relative mb-8 sm:mb-14 ${className}`}>
+    <div ref={headRef} className={`relative mb-8 sm:mb-14 ${className}`}>
       {/* Ghost folio numeral — the section's number engraved faintly into the
           stock behind the headline, like a plate number on an old print. */}
       <motion.span
         aria-hidden
         className="np-head pointer-events-none absolute -top-4 right-0 select-none text-[6.5rem] font-black leading-none tracking-tight text-[var(--np-ink)] sm:top-[-1.5rem] sm:text-[11rem]"
-        initial={{ opacity: 0, y: 14 }}
-        whileInView={{ opacity: 0.055, y: 0 }}
+        style={reduce ? undefined : { y: ghostY }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 0.055 }}
         viewport={{ once: true, margin: "-40px" }}
         transition={{ duration: 1.1, delay: 0.2, ease: PRESS_EASE }}
       >
@@ -66,7 +82,7 @@ export function SectionHeading({
       <RuleReveal className="np-rule" delay={0.12} duration={0.6} />
 
       <InkReveal delay={0.15}>
-        <h2 className="np-head mt-5 sm:mt-6 text-4xl sm:text-6xl font-black tracking-tight leading-[1.02] text-[var(--c-e6e0d5)] [text-wrap:balance] [overflow-wrap:break-word]">
+        <h2 className="np-head np-letterpress mt-5 sm:mt-6 text-4xl sm:text-6xl font-black tracking-tight leading-[1.02] text-[var(--c-e6e0d5)] [text-wrap:balance] [overflow-wrap:break-word]">
           {title}
         </h2>
       </InkReveal>

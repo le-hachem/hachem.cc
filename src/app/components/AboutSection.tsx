@@ -11,6 +11,7 @@ import { SectionHeading } from "./SectionHeading";
 import { DropCap } from "./DropCap";
 import { Reveal } from "./Reveal";
 import { PlateCorners } from "./Ornaments";
+import { Tilt } from "./Tilt";
 import { useLanguage } from "../i18n/LanguageContext";
 
 /** Ages/years align by index with t.about.milestones. */
@@ -65,7 +66,9 @@ export function AboutSection() {
                 <p className="np-kicker text-[9px] text-[var(--c-8a8071)] mb-2">Fig.&nbsp;1</p>
                 <div className="relative w-full max-w-[220px]">
                   <PlateCorners />
-                  <ProfilePortrait className="w-full" />
+                  <Tilt max={6}>
+                    <ProfilePortrait className="w-full" />
+                  </Tilt>
                 </div>
               </Reveal>
               <div className="np-rule mb-5" />

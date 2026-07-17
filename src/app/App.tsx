@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { MotionConfig } from "motion/react";
+import {
+  MotionConfig,
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "motion/react";
 import { BookSection } from "./components/BookSection";
 import { CompositionRack } from "./components/CompositionRack";
 import { CompositionModal } from "./components/CompositionModal";
@@ -74,6 +80,12 @@ export default function App() {
     window.setTimeout(() => setSweeping(false), 720); // panel gone
   };
 
+  // The engraved-score background drifts slower than the page — the sheet
+  // beneath the sheets. A little vertical bleed keeps its edges covered.
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll();
+  const bgY = useTransform(scrollYProgress, [0, 1], [0, -140]);
+
   const selectedComposition =
     compositions.find((c) => c.id === selectedId) ?? null;
 
@@ -127,17 +139,19 @@ export default function App() {
       <MastheadDesktop edition={edition} onToggleEdition={toggleEdition} />
       <TocRail />
 
-      {/* Background SVG — scrolls with content */}
-      <div
+      {/* Background SVG — a parallax layer beneath the page, drifting slower
+          than the content so the paper reads as sitting above it. */}
+      <motion.div
         aria-hidden
-        className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.07] z-0"
+        className="absolute inset-x-0 top-[-2%] h-[104%] overflow-hidden pointer-events-none opacity-[0.07] z-0"
+        style={reduceMotion ? undefined : { y: bgY }}
       >
         <img
           src={backgroundSvg}
           alt=""
           className={`h-full w-full object-cover ${edition === "night" ? "invert" : ""}`}
         />
-      </div>
+      </motion.div>
 
       {/* Content column — cleared past the fixed masthead + rail on desktop. */}
       <div className="xl:pl-[var(--rail-w)] xl:pt-[var(--masthead-h)]">
@@ -154,12 +168,12 @@ export default function App() {
       </div>
 
       {/* About */}
-      <div id="about" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-151414)] scroll-mt-12 xl:scroll-mt-32">
+      <div id="about" className="np-sheet relative z-10 border-t border-[var(--seam)] bg-[var(--c-151414)] scroll-mt-12 xl:scroll-mt-32">
         <AboutSection />
       </div>
 
       {/* Featured works */}
-      <div id="works" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-1a1816)] scroll-mt-12 xl:scroll-mt-32">
+      <div id="works" className="np-sheet relative z-10 border-t border-[var(--seam)] bg-[var(--c-1a1816)] scroll-mt-12 xl:scroll-mt-32">
         <CompositionRack
           compositions={compositions}
           onCompositionClick={(c) => setSelectedId(c.id)}
@@ -168,34 +182,34 @@ export default function App() {
       </div>
 
       {/* Concert diary / Agenda */}
-      <div id="agenda" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-151414)] scroll-mt-12 xl:scroll-mt-32">
+      <div id="agenda" className="np-sheet relative z-10 border-t border-[var(--seam)] bg-[var(--c-151414)] scroll-mt-12 xl:scroll-mt-32">
         <ConcertsSection />
       </div>
 
       {/* Dispatches — the news column (optional, via VITE_HIDE_DISPATCHES) */}
       {!hideDispatches && (
-        <div id="dispatches" className="relative z-10 border-t border-[var(--seam)] bg-[var(--c-1a1816)] scroll-mt-12 xl:scroll-mt-32">
+        <div id="dispatches" className="np-sheet relative z-10 border-t border-[var(--seam)] bg-[var(--c-1a1816)] scroll-mt-12 xl:scroll-mt-32">
           <DispatchesSection />
         </div>
       )}
 
       {/* Lili Boulanger Restoration Project */}
-      <div id="projects" className={`relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
+      <div id="projects" className={`np-sheet relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
         <BookSection />
       </div>
 
       {/* Services */}
-      <div id="services" className={`relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
+      <div id="services" className={`np-sheet relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
         <ServicesSection />
       </div>
 
       {/* Commissions */}
-      <div id="commissions" className={`relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
+      <div id="commissions" className={`np-sheet relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
         <CommissionsSection />
       </div>
 
       {/* Contact */}
-      <div id="contact" className={`relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
+      <div id="contact" className={`np-sheet relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
         <ContactSection />
       </div>
 

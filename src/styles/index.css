@@ -265,6 +265,8 @@
 .np-btn:focus-visible::before {
   transform: scaleX(1);
 }
+/* The plate gives slightly under the press. */
+.np-btn:active { transform: translateY(1px); }
 
 /* Double-ruled news box: the classic boxed item — a hairline frame inside a
    second hairline, set a few points out. (Border on the element, echo drawn
@@ -273,6 +275,53 @@
   border: 1px solid var(--np-rule);
   outline: 1px solid var(--np-rule);
   outline-offset: 3px;
+}
+
+/* Stacked sheets: two ghost copies of the element peek out beneath it at a
+   slight skew, like clippings piled on the desk. The element must carry an
+   opaque background (the pseudos inherit it to occlude what's underneath),
+   and must not create its own stacking context — the sheets sit at z -1 in
+   the parent's context, behind the element's own paper. */
+.np-stack {
+  position: relative;
+}
+.np-stack::before,
+.np-stack::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: inherit;
+  border: 1px solid var(--np-rule);
+  pointer-events: none;
+}
+/* ::after paints above ::before, so it is the nearer sheet. */
+.np-stack::after { transform: translate(7px, 8px) rotate(0.5deg); }
+.np-stack::before { transform: translate(14px, 16px) rotate(-0.45deg); opacity: 0.55; }
+
+/* Letterpress type: night raises the cream ink off the dark stock with a soft
+   under-shadow; day presses the ink into the paper (light spills below the
+   stroke, a hint of shade above). */
+.np-letterpress {
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5), 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+.daylight .np-letterpress {
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6), 0 -1px 0 rgba(28, 22, 15, 0.16);
+}
+
+/* Sheet seam: a breath of shadow along a section's top edge, so each section
+   reads as a fresh sheet laid over the one before. */
+.np-sheet { position: relative; }
+.np-sheet::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 18px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.30), transparent);
+}
+.daylight .np-sheet::before {
+  background: linear-gradient(to bottom, rgba(31, 25, 17, 0.09), transparent);
 }
 
 /* Opening line set in small caps after the drop cap — the compositor's

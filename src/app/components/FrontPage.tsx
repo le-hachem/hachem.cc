@@ -66,7 +66,7 @@ export function FrontPage() {
           <article className="lg:border-r lg:border-[var(--np-rule)] lg:pr-12 xl:border-r-0 xl:pr-0">
             <Reveal as="p" delay={0.25} y={6} className="np-kicker text-[var(--c-cbc2b0)]">{f.theLead}</Reveal>
             <InkReveal delay={0.3}>
-              <h1 className="np-head mt-3 text-5xl font-black leading-[0.94] tracking-tight text-[var(--c-f0ead8)] sm:text-7xl [text-wrap:balance] [overflow-wrap:break-word]">
+              <h1 className="np-head np-letterpress mt-3 text-5xl font-black leading-[0.94] tracking-tight text-[var(--c-f0ead8)] sm:text-7xl [text-wrap:balance] [overflow-wrap:break-word]">
                 {t.about.headline}
               </h1>
             </InkReveal>
@@ -87,8 +87,10 @@ export function FrontPage() {
             </Reveal>
           </article>
 
-          <Reveal as="div" delay={0.45} y={16} className="np-box-double h-fit p-5 xl:hidden">
-            <aside>
+          <Reveal as="div" delay={0.45} y={16} className="h-fit xl:hidden">
+            {/* The index prints on its own slip of paper, stacked on two more
+                beneath — np-stack needs the opaque background to occlude. */}
+            <aside className="np-stack np-box-double bg-[var(--c-121110)] p-5">
               <p className="np-kicker np-smallcaps border-b border-[var(--np-rule)] pb-3 text-center text-[var(--c-cbc2b0)]">
                 {f.inThisIssue}
               </p>

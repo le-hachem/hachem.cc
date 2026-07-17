@@ -82,7 +82,7 @@ export function NavHeader({
         transition={{ duration: 0.6, delay: 0.3 }}
         className={`fixed top-0 left-0 right-0 z-[900] transition-all duration-300 ${
           scrolled || menuOpen
-            ? "bg-[var(--c-121110)]/95 backdrop-blur-sm border-y border-[var(--seam-strong)]"
+            ? "bg-[var(--c-121110)]/95 backdrop-blur-sm border-y border-[var(--seam-strong)] shadow-[0_14px_32px_-22px_rgba(0,0,0,0.6)]"
             : ""
         }`}
         style={

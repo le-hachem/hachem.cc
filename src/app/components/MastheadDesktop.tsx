@@ -61,7 +61,7 @@ export function MastheadDesktop({
 
   return (
     <header
-      className="fixed inset-x-0 top-0 z-[900] hidden h-[var(--masthead-h)] bg-[var(--c-121110)] xl:block"
+      className="fixed inset-x-0 top-0 z-[900] hidden h-[var(--masthead-h)] bg-[var(--c-121110)] shadow-[0_18px_38px_-24px_rgba(0,0,0,0.6)] xl:block"
       style={{ isolation: "isolate" }}
     >
       {/* Heavy masthead rule */}
