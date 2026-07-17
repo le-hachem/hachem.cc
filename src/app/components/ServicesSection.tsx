@@ -1,25 +1,32 @@
+import { motion, useReducedMotion } from "motion/react";
 import { commissionsOpen } from "./CommissionsSection";
 import { SectionHeading } from "./SectionHeading";
 import { DropCap } from "./DropCap";
+import { Reveal, RuleReveal, PRESS_EASE } from "./Reveal";
 import { useLanguage } from "../i18n/LanguageContext";
 import { hideDispatches } from "../i18n/dispatches";
 
 /** A drawn path: a plain stroke, or a solid (filled) shape like a black key. */
 type IconPath = string | { d: string; fill?: boolean };
 
-/** Stroke-drawn icons that sketch themselves in on scroll. */
+/** Stroke-drawn icons that sketch themselves in on scroll: each stroke traces
+ *  itself pen-fashion, and the solid shapes (black keys) ink in afterwards. */
 function DrawnIcon({ paths, viewBox = "0 0 48 48" }: { paths: IconPath[]; viewBox?: string }) {
+  const reduce = useReducedMotion();
   return (
-    <svg
+    <motion.svg
       viewBox={viewBox}
       fill="none"
       className="w-8 h-8 text-[var(--c-cbc2b0)]"
+      initial={reduce ? undefined : "hidden"}
+      whileInView="visible"
+      viewport={{ once: true, margin: "-60px" }}
     >
       {paths.map((p, i) => {
         const d = typeof p === "string" ? p : p.d;
         const filled = typeof p !== "string" && p.fill;
         return (
-          <path
+          <motion.path
             key={i}
             d={d}
             stroke={filled ? "none" : "currentColor"}
@@ -27,10 +34,32 @@ function DrawnIcon({ paths, viewBox = "0 0 48 48" }: { paths: IconPath[]; viewBo
             strokeWidth="1.3"
             strokeLinecap="round"
             strokeLinejoin="round"
+            variants={
+              filled
+                ? {
+                    hidden: { opacity: 0 },
+                    visible: {
+                      opacity: 1,
+                      transition: { duration: 0.4, delay: 0.7 + i * 0.05 },
+                    },
+                  }
+                : {
+                    hidden: { pathLength: 0, opacity: 0 },
+                    visible: {
+                      pathLength: 1,
+                      opacity: 1,
+                      transition: {
+                        duration: 0.7,
+                        delay: 0.15 + i * 0.12,
+                        ease: PRESS_EASE,
+                      },
+                    },
+                  }
+            }
           />
         );
       })}
-    </svg>
+    </motion.svg>
   );
 }
 
@@ -110,15 +139,19 @@ export function ServicesSection() {
         />
 
         {/* Article lede */}
-        <div className="np-body np-justify mx-auto mb-8 sm:mb-14 max-w-3xl text-[14px] leading-[1.62] text-[var(--c-cbc2b0)]">
+        <Reveal className="np-body np-justify mx-auto mb-8 sm:mb-14 max-w-3xl text-[14px] leading-[1.62] text-[var(--c-cbc2b0)]">
           <p><DropCap text={t.services.lede} /></p>
-        </div>
+        </Reveal>
 
         {/* Notices — ruled columns, no boxes */}
-        <div className="grid sm:grid-cols-2 sm:gap-x-12 border-t-2 border-[var(--np-rule-strong)]">
+        <RuleReveal className="border-t-2 border-[var(--np-rule-strong)]" />
+        <div className="grid sm:grid-cols-2 sm:gap-x-12">
           {services.map((s, i) => (
-            <article
+            <Reveal
+              as="article"
               key={s.title}
+              index={i}
+              amount={0.15}
               className="border-b border-[var(--np-rule)] py-7 sm:py-8 sm:[&:nth-last-child(-n+1)]:border-b-0 sm:[&:nth-last-child(2)]:border-b-0"
             >
               <div className="flex items-baseline gap-3">
@@ -146,12 +179,12 @@ export function ServicesSection() {
                   {s.body}
                 </p>
               </div>
-            </article>
+            </Reveal>
           ))}
         </div>
 
         {/* CTA */}
-        <div className="mt-10 text-center">
+        <Reveal className="mt-10 text-center" y={10}>
           <p className="font-serif italic text-[var(--c-7b7267)] text-sm sm:text-base">
             {t.services.ctaPre}
             <a
@@ -166,11 +199,11 @@ export function ServicesSection() {
             </a>
             {t.services.ctaPost}
           </p>
-        </div>
+        </Reveal>
 
-        <div className="np-head mt-12 text-center text-xl tracking-[0.6em] text-[var(--c-5e564f)]" aria-hidden>
+        <Reveal className="np-head mt-12 text-center text-xl tracking-[0.6em] text-[var(--c-5e564f)]" y={6} aria-hidden>
           * * *
-        </div>
+        </Reveal>
       </div>
     </section>
   );

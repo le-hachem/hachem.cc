@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
+import { motion } from "motion/react";
 import { Ticket, ArrowUpRight } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
+import { Reveal, PRESS_EASE } from "./Reveal";
 import { useLanguage } from "../i18n/LanguageContext";
 import { getConcerts, showPastConcerts, type Concert } from "../i18n/concerts";
 
@@ -48,10 +50,12 @@ function ConcertRow({
   c,
   lang,
   upcoming,
+  index = 0,
 }: {
   c: Concert;
   lang: string;
   upcoming: boolean;
+  index?: number;
 }) {
   const { t } = useLanguage();
   const d = new Date(c.date + "T12:00:00");
@@ -64,7 +68,7 @@ function ConcertRow({
   const year = d.getFullYear();
 
   return (
-    <article className="np-row grid grid-cols-[4.5rem_1fr] items-baseline gap-x-5 gap-y-1.5 py-5 sm:grid-cols-[7rem_1fr_auto] sm:gap-x-7">
+    <Reveal as="article" index={index} amount={0.1} className="np-row grid grid-cols-[4.5rem_1fr] items-baseline gap-x-5 gap-y-1.5 py-5 sm:grid-cols-[7rem_1fr_auto] sm:gap-x-7">
       {/* Date */}
       <time
         dateTime={c.date}
@@ -122,7 +126,7 @@ function ConcertRow({
             href={c.ticketUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="np-kicker inline-flex items-center gap-1.5 border border-[var(--c-5e564f)] px-3 py-2 text-[var(--c-cbc2b0)] transition-colors hover:border-[var(--c-e6e0d5)] hover:text-[var(--c-e6e0d5)]"
+            className="np-btn np-kicker inline-flex items-center gap-1.5 border border-[var(--c-5e564f)] px-3 py-2 text-[var(--c-cbc2b0)]"
           >
             <Ticket className="h-3.5 w-3.5" />
             {t.agenda.tickets}
@@ -130,7 +134,7 @@ function ConcertRow({
           </a>
         )}
       </div>
-    </article>
+    </Reveal>
   );
 }
 
@@ -138,10 +142,23 @@ function ConcertRow({
 function GroupLabel({ children }: { children: ReactNode }) {
   return (
     <div className="mt-10 mb-1 flex items-center gap-4 first:mt-0">
-      <span className="np-kicker np-smallcaps whitespace-nowrap text-[var(--c-8a8071)]">
+      <motion.span
+        className="np-kicker np-smallcaps whitespace-nowrap text-[var(--c-8a8071)]"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 0.5, ease: PRESS_EASE }}
+      >
         {children}
-      </span>
-      <span className="h-px flex-1 bg-[var(--np-rule)]" aria-hidden />
+      </motion.span>
+      <motion.span
+        className="h-px flex-1 bg-[var(--np-rule)] origin-left"
+        aria-hidden
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 0.7, delay: 0.1, ease: PRESS_EASE }}
+      />
     </div>
   );
 }
@@ -175,24 +192,25 @@ export function ConcertsSection() {
 
         <GroupLabel>{t.agenda.upcoming}</GroupLabel>
         {upcoming.length > 0 ? (
-          upcoming.map((c) => (
-            <ConcertRow key={c.id} c={c} lang={lang} upcoming />
+          upcoming.map((c, i) => (
+            <ConcertRow key={c.id} c={c} lang={lang} upcoming index={i} />
           ))
         ) : (
-          <p className="np-body border-t border-[var(--np-rule)] py-6 text-[15px] italic leading-[1.6] text-[var(--c-8a8071)]">
+          <Reveal as="p" className="np-body border-t border-[var(--np-rule)] py-6 text-[15px] italic leading-[1.6] text-[var(--c-8a8071)]">
             {t.agenda.none}
-          </p>
+          </Reveal>
         )}
 
         {showPastConcerts && past.length > 0 && (
           <>
             <GroupLabel>{t.agenda.past}</GroupLabel>
-            {past.map((c) => (
+            {past.map((c, i) => (
               <ConcertRow
                 key={c.id}
                 c={c}
                 lang={lang}
                 upcoming={false}
+                index={i}
               />
             ))}
           </>

@@ -1,6 +1,8 @@
+import { motion, useReducedMotion } from "motion/react";
 import { Mail, Hourglass } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { DropCap } from "./DropCap";
+import { Reveal, RuleReveal } from "./Reveal";
 import { useLanguage } from "../i18n/LanguageContext";
 import { hideDispatches } from "../i18n/dispatches";
 
@@ -8,10 +10,27 @@ import { hideDispatches } from "../i18n/dispatches";
 export const commissionsOpen =
   import.meta.env.VITE_COMMISSIONS_OPEN === "true";
 
+/** The office's rubber stamp: it comes down onto the page as it scrolls into
+ *  view — oversized and airborne, then pressed flat with a spring. */
 function StatusSeal() {
   const { t } = useLanguage();
+  const reduce = useReducedMotion();
   return (
-    <div className="inline-flex items-center gap-3 border border-[var(--c-eee8dd)] px-5 py-2.5">
+    <motion.div
+      className="inline-flex items-center gap-3 border border-[var(--c-eee8dd)] px-5 py-2.5"
+      initial={
+        reduce
+          ? { opacity: 0 }
+          : { opacity: 0, scale: 1.5, rotate: -7 }
+      }
+      whileInView={
+        reduce
+          ? { opacity: 1 }
+          : { opacity: 1, scale: 1, rotate: -1.5 }
+      }
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ type: "spring", stiffness: 320, damping: 19, mass: 0.9 }}
+    >
       {commissionsOpen ? (
         <>
           <span className="relative flex h-2 w-2">
@@ -36,7 +55,7 @@ function StatusSeal() {
           </span>
         </>
       )}
-    </div>
+    </motion.div>
   );
 }
 
@@ -59,19 +78,23 @@ export function CommissionsSection() {
         </div>
 
         {/* State-dependent lede */}
-        <div className="np-body np-justify mx-auto max-w-3xl text-[14px] leading-[1.62] text-[var(--c-cbc2b0)]">
+        <Reveal className="np-body np-justify mx-auto max-w-3xl text-[14px] leading-[1.62] text-[var(--c-cbc2b0)]">
           {commissionsOpen ? (
             <p><DropCap text={t.commissions.ledeOpen} /></p>
           ) : (
             <p><DropCap text={t.commissions.ledeClosed} /></p>
           )}
-        </div>
+        </Reveal>
 
         {/* Process — numbered notices */}
-        <div className="mt-10 sm:mt-16 grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-x-10 border-t-2 border-[var(--np-rule-strong)]">
+        <RuleReveal className="mt-10 sm:mt-16 border-t-2 border-[var(--np-rule-strong)]" />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-x-10">
           {steps.map((s, i) => (
-            <article
+            <Reveal
+              as="article"
               key={s.title}
+              index={i}
+              amount={0.15}
               className="border-b border-[var(--np-rule)] py-6 sm:py-7"
             >
               <p className="np-head np-tabular text-3xl font-black leading-none text-[var(--c-5e564f)]">
@@ -83,12 +106,12 @@ export function CommissionsSection() {
               <p className="np-body np-justify mt-3 text-[15px] leading-[1.6] text-[var(--c-bcb3a3)]">
                 {s.body}
               </p>
-            </article>
+            </Reveal>
           ))}
         </div>
 
         {/* CTA */}
-        <div className="mt-10 sm:mt-12 text-center">
+        <Reveal className="mt-10 sm:mt-12 text-center" y={10}>
           {commissionsOpen ? (
             <a
               href="mailto:contact@hachem.cc?subject=Commission%20inquiry"
@@ -101,14 +124,14 @@ export function CommissionsSection() {
           ) : (
             <a
               href="mailto:contact@hachem.cc?subject=Future%20commission%20inquiry"
-              className="inline-flex items-center gap-2 border border-[var(--c-5e564f)] bg-[var(--c-161413)] text-[var(--c-a1998a)] px-5 py-2.5 text-xs tracking-widest uppercase transition-colors hover:border-[var(--c-eee8dd)] hover:text-[var(--c-eee8dd)]"
+              className="np-btn inline-flex items-center gap-2 border border-[var(--c-5e564f)] bg-[var(--c-161413)] text-[var(--c-a1998a)] px-5 py-2.5 text-xs tracking-widest uppercase"
               style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
             >
               <Mail className="h-3.5 w-3.5" />
               {t.commissions.ctaClosed}
             </a>
           )}
-        </div>
+        </Reveal>
       </div>
     </section>
   );

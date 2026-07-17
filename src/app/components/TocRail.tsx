@@ -85,7 +85,7 @@ export function TocRail() {
                   {it.no}
                 </span>
                 <span
-                  className={`np-kicker relative transition-colors group-hover:text-[var(--c-e6e0d5)] ${
+                  className={`np-kicker relative transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-[var(--c-e6e0d5)] ${
                     current ? "text-[var(--c-e6e0d5)]" : "text-[var(--c-9a927f)]"
                   }`}
                 >
@@ -113,7 +113,7 @@ export function TocRail() {
               href={s.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="np-kicker text-[9px] text-[var(--c-7b7267)] transition-colors hover:text-[var(--c-e6e0d5)]"
+              className="np-kicker np-link-grow text-[9px] text-[var(--c-7b7267)] transition-colors hover:text-[var(--c-e6e0d5)]"
             >
               {s.label}
             </a>

@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { Library } from "lucide-react";
 import { LiliBoulangerLibrary } from "./LiliBoulangerLibrary";
 import { SectionHeading } from "./SectionHeading";
 import { DropCap } from "./DropCap";
+import { Reveal } from "./Reveal";
 import { useLanguage } from "../i18n/LanguageContext";
 import { hideDispatches } from "../i18n/dispatches";
 
@@ -14,6 +16,16 @@ const LILI_BOULANGER_PORTRAIT =
 export function BookSection() {
   const { t } = useLanguage();
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
+
+  // The inset portrait drifts a touch slower than the column around it — the
+  // slight parallax of a tipped-in plate. Disabled under reduced motion.
+  const figureRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: figureRef,
+    offset: ["start end", "end start"],
+  });
+  const figureY = useTransform(scrollYProgress, [0, 1], [26, -26]);
 
   return (
     <section className={`relative px-4 py-14 sm:py-28 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
@@ -29,7 +41,7 @@ export function BookSection() {
         <div className="grid gap-10 md:grid-cols-[2fr_1fr] md:gap-14 items-start">
           {/* The article, set in justified columns */}
           <article>
-            <div className="np-body np-columns np-justify text-[14px] leading-[1.62] text-[var(--c-cbc2b0)] [&>p]:mb-3.5">
+            <Reveal amount={0.08} className="np-body np-columns np-justify text-[14px] leading-[1.62] text-[var(--c-cbc2b0)] [&>p]:mb-3.5">
               <p><DropCap text={t.book.p1} /></p>
               <p>
                 {t.book.p2}
@@ -43,20 +55,23 @@ export function BookSection() {
               <p className="np-endmark">
                 {t.book.p4}
               </p>
-            </div>
+            </Reveal>
 
-            <button
-              type="button"
-              onClick={() => setIsLibraryOpen(true)}
-              className="np-kicker group mt-7 inline-flex cursor-pointer items-center gap-2 border border-[var(--c-5e564f)] px-5 py-2.5 text-[var(--c-cbc2b0)] transition-colors hover:border-[var(--c-e6e0d5)] hover:text-[var(--c-e6e0d5)]"
-            >
-              <Library className="h-3.5 w-3.5 shrink-0" />
-              {t.book.viewCatalogue}
-            </button>
+            <Reveal y={10}>
+              <button
+                type="button"
+                onClick={() => setIsLibraryOpen(true)}
+                className="np-btn np-kicker group mt-7 inline-flex cursor-pointer items-center gap-2 border border-[var(--c-5e564f)] px-5 py-2.5 text-[var(--c-cbc2b0)]"
+              >
+                <Library className="h-3.5 w-3.5 shrink-0" />
+                {t.book.viewCatalogue}
+              </button>
+            </Reveal>
           </article>
 
           {/* Inset figure */}
-          <figure className="md:pt-1">
+          <Reveal as="figure" y={20} amount={0.2} className="md:pt-1">
+            <motion.div ref={figureRef} style={reduceMotion ? undefined : { y: figureY }}>
             <div className="np-screen aspect-[3/4] overflow-hidden border border-[var(--c-201e1c)] bg-[var(--c-161413)]">
               <ImageWithFallback
                 src={LILI_BOULANGER_PORTRAIT}
@@ -74,12 +89,13 @@ export function BookSection() {
                 {t.book.portraitCaption}
               </p>
             </figcaption>
-          </figure>
+            </motion.div>
+          </Reveal>
         </div>
 
-        <div className="np-head mt-14 text-center text-xl tracking-[0.6em] text-[var(--c-5e564f)]" aria-hidden>
+        <Reveal className="np-head mt-14 text-center text-xl tracking-[0.6em] text-[var(--c-5e564f)]" y={6} aria-hidden>
           * * *
-        </div>
+        </Reveal>
       </div>
 
       <LiliBoulangerLibrary isOpen={isLibraryOpen} onClose={() => setIsLibraryOpen(false)} />

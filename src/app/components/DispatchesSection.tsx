@@ -1,5 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
+import { Reveal } from "./Reveal";
 import { useLanguage } from "../i18n/LanguageContext";
 import { getDispatches, type Dispatch } from "../i18n/dispatches";
 
@@ -23,13 +24,15 @@ function Brief({
   d,
   lang,
   readMore,
+  index = 0,
 }: {
   d: Dispatch;
   lang: string;
   readMore: string;
+  index?: number;
 }) {
   return (
-    <article className="border-t border-[var(--np-rule)] py-7 first:border-t-0 sm:py-8">
+    <Reveal as="article" index={index} amount={0.1} className="border-t border-[var(--np-rule)] py-7 first:border-t-0 sm:py-8">
       <p className="np-kicker np-smallcaps text-[var(--c-8a8071)]">
         <time dateTime={d.date}>{formatDate(d, lang)}</time>
       </p>
@@ -50,7 +53,7 @@ function Brief({
           <ArrowUpRight className="h-3 w-3" />
         </a>
       )}
-    </article>
+    </Reveal>
   );
 }
 
@@ -71,19 +74,20 @@ export function DispatchesSection() {
 
         {dispatches.length > 0 ? (
           <div className="border-b border-[var(--np-rule)]">
-            {dispatches.map((d) => (
+            {dispatches.map((d, i) => (
               <Brief
                 key={d.id}
                 d={d}
                 lang={lang}
                 readMore={t.dispatches.readMore}
+                index={i}
               />
             ))}
           </div>
         ) : (
-          <p className="np-body border-t border-[var(--np-rule)] py-6 text-[15px] italic text-[var(--c-8a8071)]">
+          <Reveal as="p" className="np-body border-t border-[var(--np-rule)] py-6 text-[15px] italic text-[var(--c-8a8071)]">
             {t.dispatches.none}
-          </p>
+          </Reveal>
         )}
       </div>
     </section>

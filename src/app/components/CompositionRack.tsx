@@ -1,6 +1,7 @@
 import { Award, Headphones } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { DropCap } from "./DropCap";
+import { Reveal, RuleReveal } from "./Reveal";
 import { useLanguage } from "../i18n/LanguageContext";
 import { tInstrument } from "../i18n/translations";
 import { featuredCompositionIds } from "../i18n/compositions";
@@ -45,14 +46,18 @@ export function CompositionRack({ compositions, onCompositionClick, onViewAllCli
         ) : (
           <>
             {/* Lead review */}
-            <div className="np-body np-justify mx-auto mb-8 sm:mb-12 max-w-3xl text-[14px] leading-[1.62] text-[var(--c-cbc2b0)]">
+            <Reveal className="np-body np-justify mx-auto mb-8 sm:mb-12 max-w-3xl text-[14px] leading-[1.62] text-[var(--c-cbc2b0)]">
               <p><DropCap text={t.rack.review} /></p>
-            </div>
+            </Reveal>
 
-            <ul className="border-t-2 border-[var(--np-rule-strong)]">
+            <RuleReveal className="border-t-2 border-[var(--np-rule-strong)]" />
+            <ul>
               {featuredCompositions.map((c, i) => (
-                <li
+                <Reveal
+                  as="li"
                   key={c.id}
+                  index={i}
+                  amount={0.1}
                   className="np-row"
                 >
                   <button
@@ -96,23 +101,23 @@ export function CompositionRack({ compositions, onCompositionClick, onViewAllCli
                       {c.duration}
                     </span>
                   </button>
-                </li>
+                </Reveal>
               ))}
             </ul>
 
-            <div className="mt-9 flex justify-center">
+            <Reveal className="mt-9 flex justify-center" y={10}>
               <button
                 onClick={onViewAllClick}
-                className="np-kicker group inline-flex items-center gap-2 border border-[var(--c-5e564f)] px-5 py-2.5 text-[var(--c-cbc2b0)] transition-colors hover:border-[var(--c-e6e0d5)] hover:text-[var(--c-e6e0d5)]"
+                className="np-btn np-kicker group inline-flex items-center gap-2 border border-[var(--c-5e564f)] px-5 py-2.5 text-[var(--c-cbc2b0)]"
               >
                 {t.rack.allCompositions}
                 <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
               </button>
-            </div>
+            </Reveal>
 
-            <div className="np-head mt-12 text-center text-xl tracking-[0.6em] text-[var(--c-5e564f)]" aria-hidden>
+            <Reveal className="np-head mt-12 text-center text-xl tracking-[0.6em] text-[var(--c-5e564f)]" y={6} aria-hidden>
               * * *
-            </div>
+            </Reveal>
           </>
         )}
       </div>

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { MotionConfig } from "motion/react";
 import { BookSection } from "./components/BookSection";
 import { CompositionRack } from "./components/CompositionRack";
 import { CompositionModal } from "./components/CompositionModal";
@@ -15,6 +16,8 @@ import { MastheadDesktop } from "./components/MastheadDesktop";
 import { MastheadMobile } from "./components/MastheadMobile";
 import { TocRail } from "./components/TocRail";
 import { FrontPage } from "./components/FrontPage";
+import { StaffDivider } from "./components/StaffDivider";
+import { Reveal } from "./components/Reveal";
 import { EasterEggs } from "./components/EasterEggs";
 import { getCompositions } from "./i18n/compositions";
 import { hideDispatches } from "./i18n/dispatches";
@@ -112,6 +115,7 @@ export default function App() {
   }
 
   return (
+    <MotionConfig reducedMotion="user">
     <div className="relative min-h-screen overflow-x-hidden bg-[var(--c-121110)]">
       {/* Mobile / tablet nav (below xl) — the pocket edition's hamburger. */}
       <div className="xl:hidden">
@@ -195,13 +199,14 @@ export default function App() {
         <ContactSection />
       </div>
 
-      {/* Colophon */}
+      {/* Colophon — the paper signs off with a closing measure of music. */}
       <footer className="relative z-10 bg-[var(--c-121110)] px-4 pt-12 pb-16">
         <div className="max-w-5xl mx-auto text-center">
+          <StaffDivider className="mb-10" />
           <div className="np-rule-strong" />
-          <p className="np-smallcaps np-head mt-5 text-xl sm:text-2xl tracking-[0.05em] text-[var(--c-e6e0d5)]">
+          <Reveal as="p" y={10} className="np-smallcaps np-head mt-5 text-xl sm:text-2xl tracking-[0.05em] text-[var(--c-e6e0d5)]">
             {t.masthead}
-          </p>
+          </Reveal>
 
           <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             {[
@@ -210,25 +215,25 @@ export default function App() {
               { label: "Ko-fi",     href: "https://ko-fi.com/hachem_mp3" },
               { label: "Email",     href: "mailto:contact@hachem.cc" },
             ].map((l, i) => (
-              <span key={l.label} className="flex items-center gap-x-6">
+              <Reveal as="span" key={l.label} index={i} y={6} className="flex items-center gap-x-6">
                 {i > 0 && <span className="text-[var(--c-2f2c28)]" aria-hidden>·</span>}
                 <a
                   href={l.href}
                   target={l.href.startsWith("http") ? "_blank" : undefined}
                   rel={l.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  className="np-kicker text-[var(--c-8a8071)] hover:text-[var(--c-e6e0d5)] transition-colors"
+                  className="np-kicker np-link-grow text-[var(--c-8a8071)] hover:text-[var(--c-e6e0d5)] transition-colors"
                 >
                   {l.label}
                 </a>
-              </span>
+              </Reveal>
             ))}
           </div>
 
           <div className="np-rule mt-6 mb-5" />
-          <p className="np-body italic text-sm text-[var(--c-7b7267)]">
+          <Reveal as="p" y={6} className="np-body italic text-sm text-[var(--c-7b7267)]">
             © 2026 Hachem <span className="mx-1.5" aria-hidden>·</span>
             {t.footer.fine}
-          </p>
+          </Reveal>
         </div>
       </footer>
       </div>
@@ -289,5 +294,6 @@ export default function App() {
         />
       )}
     </div>
+    </MotionConfig>
   );
 }

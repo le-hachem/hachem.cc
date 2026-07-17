@@ -205,10 +205,63 @@
   .np-grain-anim { animation: none; }
 }
 
-/* Listings/index table: a hairline-ruled row that lights up on hover. */
-.np-row { border-bottom: 1px solid var(--np-rule); transition: background-color 0.18s ease; }
+/* Listings/index table: a hairline-ruled row that lights up on hover — the
+   hover also bleeds a heavier ink rule in from the left edge, like a proof
+   mark against the entry being read. */
+.np-row {
+  border-bottom: 1px solid var(--np-rule);
+  transition: background-color 0.18s ease, box-shadow 0.3s cubic-bezier(0.6, 0, 0.2, 1);
+}
 .np-row:first-child { border-top: 1px solid var(--np-rule); }
-.np-row:hover { background-color: rgba(230, 224, 213, 0.05); }
+.np-row:hover {
+  background-color: rgba(230, 224, 213, 0.05);
+  box-shadow: inset 3px 0 0 var(--np-rule-strong);
+}
+.daylight .np-row:hover { background-color: rgba(20, 17, 12, 0.045); }
+
+/* Ink-fill button: the label box floods with ink from the left on hover and
+   the type reverses out of it — a plate being inked. Set the resting colors
+   on the element as usual; the fill + reversed type come from these rules. */
+.np-btn {
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+  transition: color 0.3s cubic-bezier(0.6, 0, 0.2, 1),
+              border-color 0.3s cubic-bezier(0.6, 0, 0.2, 1);
+}
+.np-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--np-ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.34s cubic-bezier(0.6, 0, 0.2, 1);
+}
+.np-btn:hover,
+.np-btn:focus-visible {
+  color: var(--c-121110);
+  border-color: var(--np-ink);
+}
+.np-btn:hover::before,
+.np-btn:focus-visible::before {
+  transform: scaleX(1);
+}
+
+/* Underline that grows in from the left — for imprint links and folio lines. */
+.np-link-grow {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size 0.3s cubic-bezier(0.6, 0, 0.2, 1), color 0.2s ease;
+  padding-bottom: 2px;
+}
+.np-link-grow:hover,
+.np-link-grow:focus-visible {
+  background-size: 100% 1px;
+}
 
 
 /* Desktop "digital broadsheet" scaffold — the fixed cipher masthead band and
