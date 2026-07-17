@@ -123,8 +123,10 @@
 /* Justified copy hangs its punctuation into the margin where supported. */
 .np-justify { hanging-punctuation: first allow-end last; }
 
-/* Pull-quote: a column-spanning display quote with rules above and below. */
+/* Pull-quote: a column-spanning display quote with rules above and below,
+   and an oversized ghost quotation mark floating behind the opening line. */
 .np-pullquote {
+  position: relative;
   font-family: 'Playfair Display', Georgia, serif;
   font-style: italic;
   font-weight: 400;
@@ -137,6 +139,21 @@
   padding: 1.1rem 0.5rem;
   border-top: 2px solid var(--np-rule-strong);
   border-bottom: 1px solid var(--np-rule);
+}
+.np-pullquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.08em;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: normal;
+  font-weight: 900;
+  font-size: 4.6em;
+  line-height: 1;
+  color: var(--np-ink);
+  opacity: 0.08;
+  pointer-events: none;
 }
 @media (min-width: 640px) { .np-pullquote { font-size: 2rem; } }
 
@@ -247,6 +264,22 @@
 .np-btn:hover::before,
 .np-btn:focus-visible::before {
   transform: scaleX(1);
+}
+
+/* Double-ruled news box: the classic boxed item — a hairline frame inside a
+   second hairline, set a few points out. (Border on the element, echo drawn
+   by the outline.) */
+.np-box-double {
+  border: 1px solid var(--np-rule);
+  outline: 1px solid var(--np-rule);
+  outline-offset: 3px;
+}
+
+/* Opening line set in small caps after the drop cap — the compositor's
+   traditional welcome into a column of text. */
+.np-opener::first-line {
+  font-variant-caps: small-caps;
+  letter-spacing: 0.04em;
 }
 
 /* Underline that grows in from the left — for imprint links and folio lines. */
@@ -392,6 +425,21 @@
   --hero-credit: "Photograph — Matthias Kohler / Pexels";
 }
 .hero-credit::after { content: var(--hero-credit); }
+
+/* ============ SCROLLBAR — a thin brass rail on the page's stone ============
+   Styled through the edition tokens so it flips with the theme. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-3a352f) var(--c-121110);
+}
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--c-121110); }
+::-webkit-scrollbar-thumb {
+  background: var(--c-3a352f);
+  border: 2px solid var(--c-121110);
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--c-5e564f); }
 
 /* ============ EDITION CHANGE (theme toggle) — the ink-bar sweep ============
    A printing bar wipes across; the edition swaps behind it (hidden), then it

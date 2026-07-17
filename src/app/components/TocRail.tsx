@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { motion } from "motion/react";
+import { Manicule } from "./Ornaments";
 import { useLanguage } from "../i18n/LanguageContext";
 import { hideDispatches } from "../i18n/dispatches";
 
@@ -77,6 +79,22 @@ export function TocRail() {
                 aria-current={current ? "true" : undefined}
                 className="group flex w-full items-baseline gap-3 border-b border-[var(--np-rule)] py-3 text-left last:border-b-0"
               >
+                {/* The printer's manicule points out the section being read;
+                    the line indents to make room for it, like an index mark. */}
+                <motion.span
+                  aria-hidden
+                  className="self-center overflow-hidden"
+                  initial={false}
+                  animate={{
+                    width: current ? 18 : 0,
+                    opacity: current ? 1 : 0,
+                    // A collapsed span still costs one flex gap — swallow it.
+                    marginRight: current ? 0 : -12,
+                  }}
+                  transition={{ duration: 0.35, ease: [0.6, 0, 0.2, 1] }}
+                >
+                  <Manicule className="w-[15px] text-[var(--c-cbc2b0)]" />
+                </motion.span>
                 <span
                   className={`np-kicker np-tabular text-[9px] transition-colors ${
                     current ? "text-[var(--c-e6e0d5)]" : "text-[var(--c-5e564f)]"

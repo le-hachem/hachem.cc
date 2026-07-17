@@ -76,7 +76,7 @@ export function FrontPage() {
             <RuleReveal className="np-rule mt-5 mb-5 xl:max-w-3xl" delay={0.55} />
 
             <Reveal delay={0.65} y={12}>
-              <p className="np-body np-justify text-[13.5px] leading-[1.6] text-[var(--c-bcb3a3)] xl:max-w-3xl"><DropCap text={t.about.bio1} /></p>
+              <p className="np-body np-justify np-opener text-[13.5px] leading-[1.6] text-[var(--c-bcb3a3)] xl:max-w-3xl"><DropCap text={t.about.bio1} /></p>
 
               <button
                 onClick={() => go("#about")}
@@ -87,7 +87,7 @@ export function FrontPage() {
             </Reveal>
           </article>
 
-          <Reveal as="div" delay={0.45} y={16} className="h-fit border border-[var(--np-rule)] p-5 xl:hidden">
+          <Reveal as="div" delay={0.45} y={16} className="np-box-double h-fit p-5 xl:hidden">
             <aside>
               <p className="np-kicker np-smallcaps border-b border-[var(--np-rule)] pb-3 text-center text-[var(--c-cbc2b0)]">
                 {f.inThisIssue}

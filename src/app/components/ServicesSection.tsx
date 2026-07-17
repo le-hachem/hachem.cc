@@ -3,6 +3,7 @@ import { commissionsOpen } from "./CommissionsSection";
 import { SectionHeading } from "./SectionHeading";
 import { DropCap } from "./DropCap";
 import { Reveal, RuleReveal, PRESS_EASE } from "./Reveal";
+import { SectionEnd } from "./Ornaments";
 import { useLanguage } from "../i18n/LanguageContext";
 import { hideDispatches } from "../i18n/dispatches";
 
@@ -140,7 +141,7 @@ export function ServicesSection() {
 
         {/* Article lede */}
         <Reveal className="np-body np-justify mx-auto mb-8 sm:mb-14 max-w-3xl text-[14px] leading-[1.62] text-[var(--c-cbc2b0)]">
-          <p><DropCap text={t.services.lede} /></p>
+          <p className="np-opener"><DropCap text={t.services.lede} /></p>
         </Reveal>
 
         {/* Notices — ruled columns, no boxes */}
@@ -201,9 +202,7 @@ export function ServicesSection() {
           </p>
         </Reveal>
 
-        <Reveal className="np-head mt-12 text-center text-xl tracking-[0.6em] text-[var(--c-5e564f)]" y={6} aria-hidden>
-          * * *
-        </Reveal>
+        <SectionEnd className="mt-12" />
       </div>
     </section>
   );

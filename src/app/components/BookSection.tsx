@@ -6,6 +6,7 @@ import { LiliBoulangerLibrary } from "./LiliBoulangerLibrary";
 import { SectionHeading } from "./SectionHeading";
 import { DropCap } from "./DropCap";
 import { Reveal } from "./Reveal";
+import { SectionEnd, PlateCorners } from "./Ornaments";
 import { useLanguage } from "../i18n/LanguageContext";
 import { hideDispatches } from "../i18n/dispatches";
 
@@ -42,7 +43,7 @@ export function BookSection() {
           {/* The article, set in justified columns */}
           <article>
             <Reveal amount={0.08} className="np-body np-columns np-justify text-[14px] leading-[1.62] text-[var(--c-cbc2b0)] [&>p]:mb-3.5">
-              <p><DropCap text={t.book.p1} /></p>
+              <p className="np-opener"><DropCap text={t.book.p1} /></p>
               <p>
                 {t.book.p2}
               </p>
@@ -72,12 +73,15 @@ export function BookSection() {
           {/* Inset figure */}
           <Reveal as="figure" y={20} amount={0.2} className="md:pt-1">
             <motion.div ref={figureRef} style={reduceMotion ? undefined : { y: figureY }}>
-            <div className="np-screen aspect-[3/4] overflow-hidden border border-[var(--c-201e1c)] bg-[var(--c-161413)]">
-              <ImageWithFallback
-                src={LILI_BOULANGER_PORTRAIT}
-                alt="Lili Boulanger, portrait photograph (Bain News Service, 1918, Library of Congress)"
-                className="np-halftone h-full w-full object-cover object-top"
-              />
+            <div className="relative">
+              <PlateCorners />
+              <div className="np-screen aspect-[3/4] overflow-hidden border border-[var(--c-201e1c)] bg-[var(--c-161413)]">
+                <ImageWithFallback
+                  src={LILI_BOULANGER_PORTRAIT}
+                  alt="Lili Boulanger, portrait photograph (Bain News Service, 1918, Library of Congress)"
+                  className="np-halftone h-full w-full object-cover object-top"
+                />
+              </div>
             </div>
             <figcaption className="mt-3 border-t border-[var(--c-201e1c)] pt-3 text-center">
               <p className="np-kicker mb-1.5 text-[9px] text-[var(--c-8a8071)]">Fig.&nbsp;2</p>
@@ -93,9 +97,7 @@ export function BookSection() {
           </Reveal>
         </div>
 
-        <Reveal className="np-head mt-14 text-center text-xl tracking-[0.6em] text-[var(--c-5e564f)]" y={6} aria-hidden>
-          * * *
-        </Reveal>
+        <SectionEnd className="mt-14" />
       </div>
 
       <LiliBoulangerLibrary isOpen={isLibraryOpen} onClose={() => setIsLibraryOpen(false)} />

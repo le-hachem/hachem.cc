@@ -24,7 +24,7 @@ export function ContactSection() {
 
         <article className="mx-auto max-w-3xl">
           <Reveal amount={0.1} className="np-body np-columns np-justify text-[14px] leading-[1.62] text-[var(--c-cbc2b0)] [&>p]:mb-3.5">
-            <p><DropCap text={t.contact.p1} /></p>
+            <p className="np-opener"><DropCap text={t.contact.p1} /></p>
             <p>
               {t.contact.p2}
             </p>

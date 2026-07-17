@@ -2,6 +2,7 @@ import { Award, Headphones } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { DropCap } from "./DropCap";
 import { Reveal, RuleReveal } from "./Reveal";
+import { SectionEnd } from "./Ornaments";
 import { useLanguage } from "../i18n/LanguageContext";
 import { tInstrument } from "../i18n/translations";
 import { featuredCompositionIds } from "../i18n/compositions";
@@ -47,7 +48,7 @@ export function CompositionRack({ compositions, onCompositionClick, onViewAllCli
           <>
             {/* Lead review */}
             <Reveal className="np-body np-justify mx-auto mb-8 sm:mb-12 max-w-3xl text-[14px] leading-[1.62] text-[var(--c-cbc2b0)]">
-              <p><DropCap text={t.rack.review} /></p>
+              <p className="np-opener"><DropCap text={t.rack.review} /></p>
             </Reveal>
 
             <RuleReveal className="border-t-2 border-[var(--np-rule-strong)]" />
@@ -115,9 +116,7 @@ export function CompositionRack({ compositions, onCompositionClick, onViewAllCli
               </button>
             </Reveal>
 
-            <Reveal className="np-head mt-12 text-center text-xl tracking-[0.6em] text-[var(--c-5e564f)]" y={6} aria-hidden>
-              * * *
-            </Reveal>
+            <SectionEnd className="mt-12" />
           </>
         )}
       </div>

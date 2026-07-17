@@ -10,6 +10,7 @@ import { ProfilePortrait } from "./ProfilePortrait";
 import { SectionHeading } from "./SectionHeading";
 import { DropCap } from "./DropCap";
 import { Reveal } from "./Reveal";
+import { PlateCorners } from "./Ornaments";
 import { useLanguage } from "../i18n/LanguageContext";
 
 /** Ages/years align by index with t.about.milestones. */
@@ -62,7 +63,10 @@ export function AboutSection() {
             <div className="relative">
               <Reveal as="figure" className="mb-8" y={16}>
                 <p className="np-kicker text-[9px] text-[var(--c-8a8071)] mb-2">Fig.&nbsp;1</p>
-                <ProfilePortrait className="w-full max-w-[220px]" />
+                <div className="relative w-full max-w-[220px]">
+                  <PlateCorners />
+                  <ProfilePortrait className="w-full" />
+                </div>
               </Reveal>
               <div className="np-rule mb-5" />
               <p className="np-kicker text-[var(--c-8a8071)] mb-6">
@@ -103,7 +107,7 @@ export function AboutSection() {
               <Reveal as="p" y={8} className="np-kicker text-[var(--c-8a8071)] mb-5">By&nbsp;Hachem</Reveal>
 
               <Reveal className="np-columns np-columns-lg3 np-justify [&>p]:mb-3.5" amount={0.08}>
-                <p><DropCap text={t.about.bio1} /></p>
+                <p className="np-opener"><DropCap text={t.about.bio1} /></p>
                 <p>{t.about.bio2}</p>
                 <p>{t.about.bio3}</p>
                 <blockquote className="np-pullquote np-colspan-all">

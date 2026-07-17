@@ -28,7 +28,20 @@ export function SectionHeading({
 }) {
   const { t } = useLanguage();
   return (
-    <div className={`mb-8 sm:mb-14 ${className}`}>
+    <div className={`relative mb-8 sm:mb-14 ${className}`}>
+      {/* Ghost folio numeral — the section's number engraved faintly into the
+          stock behind the headline, like a plate number on an old print. */}
+      <motion.span
+        aria-hidden
+        className="np-head pointer-events-none absolute -top-4 right-0 select-none text-[6.5rem] font-black leading-none tracking-tight text-[var(--np-ink)] sm:top-[-1.5rem] sm:text-[11rem]"
+        initial={{ opacity: 0, y: 14 }}
+        whileInView={{ opacity: 0.055, y: 0 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 1.1, delay: 0.2, ease: PRESS_EASE }}
+      >
+        {index}
+      </motion.span>
+
       <RuleReveal className="np-rule-double" />
       <motion.div
         className="flex items-center justify-between gap-3 py-2"

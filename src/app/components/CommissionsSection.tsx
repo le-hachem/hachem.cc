@@ -18,6 +18,7 @@ function StatusSeal() {
   return (
     <motion.div
       className="inline-flex items-center gap-3 border border-[var(--c-eee8dd)] px-5 py-2.5"
+      style={{ outline: "1px solid var(--c-eee8dd)", outlineOffset: "2.5px" }}
       initial={
         reduce
           ? { opacity: 0 }
@@ -80,9 +81,9 @@ export function CommissionsSection() {
         {/* State-dependent lede */}
         <Reveal className="np-body np-justify mx-auto max-w-3xl text-[14px] leading-[1.62] text-[var(--c-cbc2b0)]">
           {commissionsOpen ? (
-            <p><DropCap text={t.commissions.ledeOpen} /></p>
+            <p className="np-opener"><DropCap text={t.commissions.ledeOpen} /></p>
           ) : (
-            <p><DropCap text={t.commissions.ledeClosed} /></p>
+            <p className="np-opener"><DropCap text={t.commissions.ledeClosed} /></p>
           )}
         </Reveal>
 
