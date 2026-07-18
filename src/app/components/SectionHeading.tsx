@@ -81,8 +81,8 @@ export function SectionHeading({
       </motion.div>
       <RuleReveal className="np-rule" delay={0.12} duration={0.6} />
 
-      <InkReveal delay={0.15}>
-        <h2 className="np-head np-letterpress mt-5 sm:mt-6 text-4xl sm:text-6xl font-black tracking-tight leading-[1.02] text-[var(--c-e6e0d5)] [text-wrap:balance] [overflow-wrap:break-word]">
+      <InkReveal delay={0.15} tilt>
+        <h2 className="np-head np-letterpress np-misprint mt-5 sm:mt-6 text-4xl sm:text-6xl font-black tracking-tight leading-[1.02] text-[var(--c-e6e0d5)] [text-wrap:balance] [overflow-wrap:break-word]">
           {title}
         </h2>
       </InkReveal>

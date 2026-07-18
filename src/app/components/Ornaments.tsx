@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from "motion/react";
+import type { ReactNode } from "react";
 import { PRESS_EASE } from "./Reveal";
 
 /**
@@ -83,6 +84,140 @@ export function PlateCorners({ offset = 5 }: { offset?: number }) {
       <span className={`${arm} bottom-0 left-0 border-b border-l`} />
       <span className={`${arm} bottom-0 right-0 border-b border-r`} />
     </div>
+  );
+}
+
+/**
+ * Printer's registration marks — the ⌖ crosshairs pressmen use to align the
+ * plates, set faintly at the corners of the printable area (xl only).
+ */
+export function RegistrationMarks() {
+  const mark = (pos: string) => (
+    <svg
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1"
+      className={`absolute h-3.5 w-3.5 text-[var(--c-5e564f)] opacity-45 ${pos}`}
+    >
+      <circle cx="10" cy="10" r="5.5" />
+      <path d="M10 0 V20 M0 10 H20" />
+    </svg>
+  );
+  return (
+    <div aria-hidden className="pointer-events-none fixed inset-0 z-[40] hidden xl:block">
+      {mark("left-[calc(var(--rail-w)+12px)] top-[calc(var(--masthead-h)+12px)]")}
+      {mark("right-[12px] top-[calc(var(--masthead-h)+12px)]")}
+      {mark("left-[calc(var(--rail-w)+12px)] bottom-[12px]")}
+      {mark("right-[12px] bottom-[12px]")}
+    </div>
+  );
+}
+
+/**
+ * The pressman's thumbprint — an inky whorl left on the colophon, the one
+ * human smudge on an otherwise clean sheet.
+ */
+export function Thumbprint({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 40 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.1"
+      strokeLinecap="round"
+      className={className}
+      aria-hidden
+    >
+      {/* Outer ridges */}
+      <path d="M20 45 C10.5 43.5 5.5 36 5.5 26 C5.5 14.5 11.5 5.5 20 5.5 C28.5 5.5 34.5 14.5 34.5 26 C34.5 32 33 37.5 30 41" />
+      <path d="M20 41.5 C13 40 9 34 9 26 C9 16.5 13.5 9 20 9 C26.5 9 31 16.5 31 26 C31 31 30 35.5 27.5 38.5" />
+      <path d="M19 38 C14.5 36.5 12.5 32 12.5 26 C12.5 18.5 15.5 12.5 20 12.5 C24.5 12.5 27.5 18.5 27.5 26 C27.5 30 26.8 33.5 25 36" />
+      {/* Inner whorl, broken like a real ridge */}
+      <path d="M17.5 33.5 C15.8 31.5 15.8 28 16 25 C16.3 20.5 17.5 16 20 16 C22.8 16 24.2 20 24.2 25 C24.2 28.4 23.6 31.4 22.2 33.2" />
+      <path d="M19.5 29.5 C19.1 27.5 19.2 24.5 19.6 22.4 C19.9 20.9 20.5 19.8 21 20.4 C21.7 21.3 21.6 25.4 21 28.2" />
+      {/* Ridge breaks */}
+      <path d="M11 20 C12 18 13 16.4 14.4 15.2" opacity="0.55" />
+      <path d="M28.6 34.6 C29.6 33 30.2 31.2 30.5 29.2" opacity="0.55" />
+    </svg>
+  );
+}
+
+/**
+ * The sort — a single piece of metal type, the letter H, turning slowly in
+ * space. The glyph is cast mirror-wise on its face, as real type is; the
+ * groove on its flank is the nick a compositor reads by touch. Click it to
+ * hear the letter's note (H = B natural, in the German manner).
+ */
+export function TypeSort({
+  size = 46,
+  className = "",
+  onPlay,
+}: {
+  size?: number;
+  className?: string;
+  onPlay?: () => void;
+}) {
+  const half = size / 2;
+  const face = (transform: string, extra = "", children?: ReactNode) => (
+    <div className={`sort-face ${extra}`} style={{ transform }}>
+      {children}
+    </div>
+  );
+  const glyphCls =
+    "np-head font-black select-none text-[var(--c-cbc2b0)]";
+  return (
+    <button
+      type="button"
+      onClick={onPlay}
+      aria-label="A piece of metal type — the letter H. Click to hear its note."
+      title="La casse du compositeur — H"
+      className={`sort-scene cursor-pointer bg-transparent ${className}`}
+      style={{ width: size, height: size }}
+    >
+      <div className="sort-cube">
+        {/* Face: the glyph, reversed as cast */}
+        {face(`translateZ(${half}px)`, "", (
+          <span className={glyphCls} style={{ fontSize: size * 0.62, transform: "scaleX(-1)" }}>
+            H
+          </span>
+        ))}
+        {/* Back: the foot of the sort */}
+        {face(`rotateY(180deg) translateZ(${half}px)`)}
+        {/* Flanks — one carries the nick */}
+        {face(`rotateY(90deg) translateZ(${half}px)`, "sort-face--nick")}
+        {face(`rotateY(-90deg) translateZ(${half}px)`)}
+        {face(`rotateX(90deg) translateZ(${half}px)`)}
+        {face(`rotateX(-90deg) translateZ(${half}px)`)}
+      </div>
+    </button>
+  );
+}
+
+/**
+ * A coffee ring — the mark of a mug set down on the diary page while the
+ * dates were checked. Two broken rings and a couple of drips.
+ */
+export function CoffeeRing({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 120 120" fill="none" className={className} aria-hidden>
+      {/* The heavy inner ring, broken where the mug lifted */}
+      <circle
+        cx="60" cy="60" r="42"
+        stroke="currentColor" strokeWidth="6.5" strokeLinecap="round"
+        strokeDasharray="150 22 52 14 26 10" opacity="0.55"
+      />
+      {/* A thinner halo where the spill spread */}
+      <circle
+        cx="60" cy="60" r="49"
+        stroke="currentColor" strokeWidth="1.6"
+        strokeDasharray="120 34 70 26" opacity="0.35"
+      />
+      {/* Drips */}
+      <circle cx="103" cy="74" r="2.6" fill="currentColor" opacity="0.3" />
+      <circle cx="20" cy="43" r="1.8" fill="currentColor" opacity="0.25" />
+      <circle cx="94" cy="96" r="1.4" fill="currentColor" opacity="0.25" />
+    </svg>
   );
 }
 

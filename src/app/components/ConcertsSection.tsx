@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { Ticket, ArrowUpRight } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { Reveal, PRESS_EASE } from "./Reveal";
+import { CoffeeRing } from "./Ornaments";
 import { useLanguage } from "../i18n/LanguageContext";
 import { getConcerts, showPastConcerts, type Concert } from "../i18n/concerts";
 
@@ -180,7 +181,9 @@ export function ConcertsSection() {
     .sort((a, b) => b.date.localeCompare(a.date));
 
   return (
-    <section className="relative bg-[var(--c-151414)] px-4 py-14 sm:py-28">
+    <section className="relative overflow-hidden bg-[var(--c-151414)] px-4 py-14 sm:py-28">
+      {/* A mug was set down on the diary while the dates were checked. */}
+      <CoffeeRing className="pointer-events-none absolute -right-8 bottom-24 hidden w-36 rotate-[14deg] text-[var(--c-7b7267)] opacity-[0.13] sm:block lg:right-[6%]" />
       <div className="mx-auto max-w-5xl">
         <SectionHeading
           index="03"

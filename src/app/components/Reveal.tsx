@@ -64,30 +64,42 @@ export function Reveal({
 /**
  * Headline entrance: the line is wiped on left-to-right, as if coming off the
  * press. Negative vertical outsets keep ascenders/descenders unclipped while
- * the wipe runs. Reduced motion gets a plain fade.
+ * the wipe runs. `tilt` adds a perspective tip-in — the headline lies down
+ * onto the page like a forme being planed. Reduced motion gets a plain fade.
  */
 export function InkReveal({
   children,
   className,
   delay = 0,
+  tilt = false,
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
+  tilt?: boolean;
 }) {
   const reduce = useReducedMotion();
   return (
     <motion.div
       className={className}
+      style={tilt ? { transformOrigin: "top center" } : undefined}
       initial={
         reduce
           ? { opacity: 0 }
-          : { clipPath: "inset(-15% 100% -15% 0)", opacity: 0.001 }
+          : {
+              clipPath: "inset(-15% 100% -15% 0)",
+              opacity: 0.001,
+              ...(tilt ? { transformPerspective: 900, rotateX: -14 } : {}),
+            }
       }
       whileInView={
         reduce
           ? { opacity: 1 }
-          : { clipPath: "inset(-15% 0% -15% 0)", opacity: 1 }
+          : {
+              clipPath: "inset(-15% 0% -15% 0)",
+              opacity: 1,
+              ...(tilt ? { transformPerspective: 900, rotateX: 0 } : {}),
+            }
       }
       viewport={{ once: true, amount: 0.4, margin: "0px 0px -40px 0px" }}
       transition={{ duration: 0.9, delay, ease: PRESS_EASE }}

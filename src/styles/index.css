@@ -136,9 +136,23 @@
   text-wrap: balance;
   color: var(--np-ink);
   margin: 1.6rem 0;
-  padding: 1.1rem 0.5rem;
+  padding: 1.1rem 0.75rem;
   border-top: 2px solid var(--np-rule-strong);
   border-bottom: 1px solid var(--np-rule);
+  /* Pasted clipping: a strip of slightly brighter stock glued on at a small
+     angle, lifting off the page — it straightens under the reader's gaze. */
+  background: color-mix(in srgb, var(--np-ink) 4%, transparent);
+  transform: rotate(-0.5deg);
+  box-shadow: 0 12px 28px -18px rgba(0, 0, 0, 0.55);
+  transition: transform 0.45s cubic-bezier(0.6, 0, 0.2, 1);
+}
+.np-pullquote:hover { transform: rotate(0deg); }
+.daylight .np-pullquote {
+  box-shadow: 0 12px 26px -18px rgba(31, 25, 17, 0.35);
+}
+@media (prefers-reduced-motion: reduce) {
+  .np-pullquote,
+  .np-pullquote:hover { transform: none; transition: none; }
 }
 .np-pullquote::before {
   content: "\201C";
@@ -227,14 +241,23 @@
    mark against the entry being read. */
 .np-row {
   border-bottom: 1px solid var(--np-rule);
-  transition: background-color 0.18s ease, box-shadow 0.3s cubic-bezier(0.6, 0, 0.2, 1);
+  transition: background-color 0.18s ease, box-shadow 0.3s cubic-bezier(0.6, 0, 0.2, 1),
+              transform 0.3s cubic-bezier(0.6, 0, 0.2, 1);
 }
 .np-row:first-child { border-top: 1px solid var(--np-rule); }
+/* The clipping lifts a breath off the page toward the reader. */
 .np-row:hover {
   background-color: rgba(230, 224, 213, 0.05);
-  box-shadow: inset 3px 0 0 var(--np-rule-strong);
+  transform: translateY(-1px);
+  box-shadow: inset 3px 0 0 var(--np-rule-strong), 0 14px 26px -18px rgba(0, 0, 0, 0.55);
 }
-.daylight .np-row:hover { background-color: rgba(20, 17, 12, 0.045); }
+.daylight .np-row:hover {
+  background-color: rgba(20, 17, 12, 0.045);
+  box-shadow: inset 3px 0 0 var(--np-rule-strong), 0 14px 26px -20px rgba(31, 25, 17, 0.35);
+}
+@media (prefers-reduced-motion: reduce) {
+  .np-row:hover { transform: none; }
+}
 
 /* Ink-fill button: the label box floods with ink from the left on hover and
    the type reverses out of it — a plate being inked. Set the resting colors
@@ -295,9 +318,16 @@
   border: 1px solid var(--np-rule);
   pointer-events: none;
 }
-/* ::after paints above ::before, so it is the nearer sheet. */
+/* ::after paints above ::before, so it is the nearer sheet. On hover the
+   pile fans out, as if the reader riffled the clippings. */
+.np-stack::before,
+.np-stack::after {
+  transition: transform 0.45s cubic-bezier(0.2, 0, 0.2, 1);
+}
 .np-stack::after { transform: translate(7px, 8px) rotate(0.5deg); }
 .np-stack::before { transform: translate(14px, 16px) rotate(-0.45deg); opacity: 0.55; }
+.np-stack:hover::after { transform: translate(11px, 12px) rotate(1.1deg); }
+.np-stack:hover::before { transform: translate(21px, 24px) rotate(-1.2deg); }
 
 /* Letterpress type: night raises the cream ink off the dark stock with a soft
    under-shadow; day presses the ink into the paper (light spills below the
@@ -307,6 +337,27 @@
 }
 .daylight .np-letterpress {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6), 0 -1px 0 rgba(28, 22, 15, 0.16);
+}
+
+/* Misregistered plate: on hover the headline's colour plates slip apart —
+   a brass ghost right, a pale one left — then the pressman pulls them back
+   into register. Pure flourish; reverts to the resting letterpress. */
+:root {
+  --misreg-a: rgba(196, 164, 106, 0.55);
+  --misreg-b: rgba(230, 224, 213, 0.35);
+}
+.daylight {
+  --misreg-a: rgba(122, 90, 40, 0.42);
+  --misreg-b: rgba(33, 28, 20, 0.3);
+}
+@keyframes np-slip {
+  0%   { text-shadow: 7px 0 0 var(--misreg-a), -7px 0 0 var(--misreg-b); }
+  55%  { text-shadow: 2px 0 0 var(--misreg-a), -2px 0 0 var(--misreg-b); }
+  100% { text-shadow: 0 0 0 var(--misreg-a), 0 0 0 var(--misreg-b); }
+}
+.np-misprint:hover { animation: np-slip 0.55s cubic-bezier(0.2, 0, 0.2, 1); }
+@media (prefers-reduced-motion: reduce) {
+  .np-misprint:hover { animation: none; }
 }
 
 /* Sheet seam: a breath of shadow along a section's top edge, so each section
@@ -453,6 +504,147 @@
   --foreground: #211c14;
 }
 
+/* ============ ALTERNATE PRINTINGS — window.hh.setTheme(name) ============
+   Each printing re-inks the same token ramp. Declared after .daylight so a
+   light printing (which also carries the daylight class for its behavioural
+   rules) still takes its colours from here. */
+
+/* Sepia — an aged copy: tanned stock, umber ink. (light) */
+.theme-sepia {
+  --c-121110: #ecdfc9;
+  --c-151414: #e8dbc4;
+  --c-161413: #e9dcc5;
+  --c-1a1816: #e6d8c0;
+  --c-201e1c: #ded0b8;
+  --c-2f2c28: #d2c3a9;
+  --c-3a352f: #cabb9f;
+  --c-443f39: #c1b194;
+  --c-5e564f: #a99a7e;
+  --c-7b7267: #8f7f63;
+  --c-8a8071: #877654;
+  --c-9a927f: #7a6a49;
+  --c-a1998a: #70603f;
+  --c-a59b89: #6e5e3d;
+  --c-b5ab98: #604f31;
+  --c-bcb3a3: #57462a;
+  --c-c2b9ab: #4f3f24;
+  --c-cbc2b0: #493a1f;
+  --c-dfd6c7: #382b15;
+  --c-e6e0d5: #2e2310;
+  --c-eee8dd: #271e0c;
+  --c-f0ead8: #241b0a;
+  --seam: rgba(46,35,16,0.16);
+  --seam-strong: rgba(46,35,16,0.2);
+  --guide: rgba(46,35,16,0.07);
+  --np-ink: #2e2310;
+  --np-rule: rgba(46,35,16,0.42);
+  --np-rule-strong: rgba(46,35,16,0.75);
+  --background: #ecdfc9;
+  --foreground: #2e2310;
+}
+
+/* Midnight — the cold pressing: blue-black stone, silver ink. (dark) */
+.theme-midnight {
+  --c-121110: #0f1114;
+  --c-151414: #121418;
+  --c-161413: #131519;
+  --c-1a1816: #171a1f;
+  --c-201e1c: #1c2026;
+  --c-2f2c28: #2a2f38;
+  --c-3a352f: #353b45;
+  --c-443f39: #404754;
+  --c-5e564f: #57606e;
+  --c-7b7267: #747e8c;
+  --c-8a8071: #848e9c;
+  --c-9a927f: #95a0ad;
+  --c-a1998a: #9ca7b3;
+  --c-a59b89: #a1abb7;
+  --c-b5ab98: #b0bac5;
+  --c-bcb3a3: #b8c1cb;
+  --c-c2b9ab: #bfc8d1;
+  --c-cbc2b0: #c8d0d8;
+  --c-dfd6c7: #dae1e8;
+  --c-e6e0d5: #e2e8ee;
+  --c-eee8dd: #eaf0f5;
+  --c-f0ead8: #eef3f8;
+  --seam: rgba(226,232,238,0.13);
+  --seam-strong: rgba(226,232,238,0.16);
+  --guide: rgba(226,232,238,0.05);
+  --np-ink: #e2e8ee;
+  --np-rule: rgba(226,232,238,0.42);
+  --np-rule-strong: rgba(226,232,238,0.85);
+  --background: #0f1114;
+  --foreground: #e2e8ee;
+}
+
+/* Verdigris — the conservatory pressing: green-black, sage ink. (dark) */
+.theme-verdigris {
+  --c-121110: #0f1210;
+  --c-151414: #121614;
+  --c-161413: #131715;
+  --c-1a1816: #171c19;
+  --c-201e1c: #1c231f;
+  --c-2f2c28: #2a332d;
+  --c-3a352f: #343f38;
+  --c-443f39: #3f4b43;
+  --c-5e564f: #56655c;
+  --c-7b7267: #72837a;
+  --c-8a8071: #82938a;
+  --c-9a927f: #93a49a;
+  --c-a1998a: #9aaba1;
+  --c-a59b89: #9fafa5;
+  --c-b5ab98: #aebfb4;
+  --c-bcb3a3: #b6c6bb;
+  --c-c2b9ab: #bdccc2;
+  --c-cbc2b0: #c6d4ca;
+  --c-dfd6c7: #d8e5dd;
+  --c-e6e0d5: #e0ebe4;
+  --c-eee8dd: #e8f2ec;
+  --c-f0ead8: #ecf5ef;
+  --seam: rgba(224,235,228,0.13);
+  --seam-strong: rgba(224,235,228,0.16);
+  --guide: rgba(224,235,228,0.05);
+  --np-ink: #e0ebe4;
+  --np-rule: rgba(224,235,228,0.42);
+  --np-rule-strong: rgba(224,235,228,0.85);
+  --background: #0f1210;
+  --foreground: #e0ebe4;
+}
+
+/* Oxblood — the opera pressing: burgundy-black, rose-cream ink. (dark) */
+.theme-oxblood {
+  --c-121110: #141010;
+  --c-151414: #181212;
+  --c-161413: #191313;
+  --c-1a1816: #1e1616;
+  --c-201e1c: #251b1b;
+  --c-2f2c28: #362827;
+  --c-3a352f: #423230;
+  --c-443f39: #4d3b39;
+  --c-5e564f: #675250;
+  --c-7b7267: #846c69;
+  --c-8a8071: #947b77;
+  --c-9a927f: #a58c88;
+  --c-a1998a: #ac9490;
+  --c-a59b89: #b09893;
+  --c-b5ab98: #bfa8a2;
+  --c-bcb3a3: #c6b0aa;
+  --c-c2b9ab: #ccb8b1;
+  --c-cbc2b0: #d4c1ba;
+  --c-dfd6c7: #e5d3cd;
+  --c-e6e0d5: #ecdcd6;
+  --c-eee8dd: #f2e5df;
+  --c-f0ead8: #f5e9e2;
+  --seam: rgba(236,220,214,0.13);
+  --seam-strong: rgba(236,220,214,0.16);
+  --guide: rgba(236,220,214,0.05);
+  --np-ink: #ecdcd6;
+  --np-rule: rgba(236,220,214,0.42);
+  --np-rule-strong: rgba(236,220,214,0.85);
+  --background: #141010;
+  --foreground: #ecdcd6;
+}
+
 
 /* ============ HERO EDITION (photo + overlays swap with the theme) ============ */
 :root {
@@ -474,6 +666,158 @@
   --hero-credit: "Photograph — Matthias Kohler / Pexels";
 }
 .hero-credit::after { content: var(--hero-credit); }
+
+/* ==================== PAPER STOCK — the sheet itself ====================
+   Laid lines, watermark, fold and dog-ear: the material the paper is
+   printed on, not the printing. */
+
+/* Laid paper: fine horizontal wire lines and sparse vertical chain lines,
+   blended so they emboss the tone beneath rather than draw on top of it. */
+.np-laid {
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(230, 224, 213, 0.05) 0px,
+      rgba(230, 224, 213, 0.05) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    repeating-linear-gradient(
+      to right,
+      rgba(230, 224, 213, 0.07) 0px,
+      rgba(230, 224, 213, 0.07) 1px,
+      transparent 1px,
+      transparent 28px
+    );
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+}
+.daylight .np-laid {
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(20, 17, 12, 0.045) 0px,
+      rgba(20, 17, 12, 0.045) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    repeating-linear-gradient(
+      to right,
+      rgba(20, 17, 12, 0.06) 0px,
+      rgba(20, 17, 12, 0.06) 1px,
+      transparent 1px,
+      transparent 28px
+    );
+}
+
+/* The fold — where the broadsheet was creased in half. A shade gathers just
+   above the crease, a thin light catches just below it. */
+.np-fold {
+  height: 20px;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 0, 0, 0.2) 42%,
+    rgba(0, 0, 0, 0.3) 50%,
+    rgba(230, 224, 213, 0.045) 58%,
+    transparent
+  );
+}
+.daylight .np-fold {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(31, 25, 17, 0.1) 42%,
+    rgba(31, 25, 17, 0.16) 50%,
+    rgba(255, 255, 255, 0.55) 58%,
+    transparent
+  );
+}
+
+/* Dog-ear: the sheet's corner turned down, its underside catching the light,
+   a soft shadow pooling beneath the curl. */
+.np-dogear {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  pointer-events: none;
+  background: linear-gradient(
+    225deg,
+    transparent 0%,
+    transparent 49%,
+    rgba(0, 0, 0, 0.4) 50%,
+    var(--c-201e1c) 54%,
+    var(--c-2f2c28) 78%,
+    var(--c-3a352f) 100%
+  );
+  filter: drop-shadow(-2px 2px 3px rgba(0, 0, 0, 0.35));
+}
+.daylight .np-dogear {
+  background: linear-gradient(
+    225deg,
+    transparent 0%,
+    transparent 49%,
+    rgba(31, 25, 17, 0.22) 50%,
+    var(--c-201e1c) 54%,
+    var(--c-2f2c28) 78%,
+    var(--c-3a352f) 100%
+  );
+  filter: drop-shadow(-2px 2px 3px rgba(31, 25, 17, 0.2));
+}
+
+/* ============ THE SORT — a piece of metal type turning in space ============
+   A CSS cube: six faces of worn type-metal, the letter H cast mirror-wise on
+   its face the way a real sort carries its glyph reversed. It turns slowly on
+   a tilted axis; reduced motion parks it at a readable three-quarter view. */
+.sort-scene {
+  perspective: 560px;
+}
+.sort-cube {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  animation: sort-turn 16s linear infinite;
+}
+.sort-scene:hover .sort-cube { animation-duration: 4s; }
+@keyframes sort-turn {
+  from { transform: rotateX(-16deg) rotateY(0deg); }
+  to   { transform: rotateX(-16deg) rotateY(360deg); }
+}
+.sort-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(230, 224, 213, 0.14);
+  background: linear-gradient(145deg, var(--c-3a352f), var(--c-201e1c) 55%, var(--c-2f2c28));
+}
+.daylight .sort-face {
+  border-color: rgba(20, 17, 12, 0.22);
+  background: linear-gradient(145deg, var(--c-3a352f), var(--c-443f39) 55%, var(--c-2f2c28));
+}
+/* The nick — the groove cast into a sort's side so the compositor can feel
+   its orientation. */
+.sort-face--nick::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 58%;
+  height: 12%;
+  background: rgba(0, 0, 0, 0.38);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(230, 224, 213, 0.06);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sort-cube {
+    animation: none;
+    transform: rotateX(-16deg) rotateY(-28deg);
+  }
+}
 
 /* ============ SCROLLBAR — a thin brass rail on the page's stone ============
    Styled through the edition tokens so it flips with the theme. */

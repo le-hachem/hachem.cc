@@ -43,10 +43,11 @@ export function CompositionModal({ composition, onClose }: CompositionModalProps
           role="dialog"
           aria-modal="true"
           className="relative z-10 w-full sm:max-w-3xl max-h-[92vh] sm:max-h-[88vh] bg-[var(--c-161413)] flex flex-col shadow-2xl sm:border sm:border-[var(--c-2f2c28)]"
-          initial={{ y: 40, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 20, opacity: 0 }}
-          transition={{ type: "spring", damping: 32, stiffness: 400 }}
+          style={{ transformOrigin: "center 65%" }}
+          initial={{ y: 40, opacity: 0, transformPerspective: 1100, rotateX: 9 }}
+          animate={{ y: 0, opacity: 1, transformPerspective: 1100, rotateX: 0 }}
+          exit={{ y: 24, opacity: 0, transformPerspective: 1100, rotateX: 5 }}
+          transition={{ type: "spring", damping: 30, stiffness: 320 }}
           onClick={e => e.stopPropagation()}
         >
           {/* Header */}

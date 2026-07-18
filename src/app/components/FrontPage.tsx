@@ -1,5 +1,6 @@
 import { DropCap } from "./DropCap";
 import { InkReveal, Reveal, RuleReveal } from "./Reveal";
+import { Tilt } from "./Tilt";
 import { useLanguage } from "../i18n/LanguageContext";
 import { hideDispatches } from "../i18n/dispatches";
 
@@ -44,6 +45,10 @@ export function FrontPage() {
 
   return (
     <section className="relative bg-[var(--c-121110)] px-4 pt-8 pb-12 sm:pt-10 sm:pb-16">
+      {/* The sheet's corner, turned down where a reader marked the page. */}
+      <span aria-hidden className="np-dogear" />
+      {/* The crease where the broadsheet was folded — above the fold, below it. */}
+      <div aria-hidden className="np-fold absolute inset-x-0 top-[57%]" />
       <div className="max-w-6xl mx-auto">
         {/* Stop-press / edition strip — the cipher masthead now leads above,
             so the page opens straight onto the edition line. */}
@@ -65,8 +70,8 @@ export function FrontPage() {
         <div className="mt-6 sm:mt-8 grid gap-8 lg:grid-cols-[1fr_17rem] lg:gap-12 xl:grid-cols-1">
           <article className="lg:border-r lg:border-[var(--np-rule)] lg:pr-12 xl:border-r-0 xl:pr-0">
             <Reveal as="p" delay={0.25} y={6} className="np-kicker text-[var(--c-cbc2b0)]">{f.theLead}</Reveal>
-            <InkReveal delay={0.3}>
-              <h1 className="np-head np-letterpress mt-3 text-5xl font-black leading-[0.94] tracking-tight text-[var(--c-f0ead8)] sm:text-7xl [text-wrap:balance] [overflow-wrap:break-word]">
+            <InkReveal delay={0.3} tilt>
+              <h1 className="np-head np-letterpress np-misprint mt-3 text-5xl font-black leading-[0.94] tracking-tight text-[var(--c-f0ead8)] sm:text-7xl [text-wrap:balance] [overflow-wrap:break-word]">
                 {t.about.headline}
               </h1>
             </InkReveal>
@@ -89,7 +94,9 @@ export function FrontPage() {
 
           <Reveal as="div" delay={0.45} y={16} className="h-fit xl:hidden">
             {/* The index prints on its own slip of paper, stacked on two more
-                beneath — np-stack needs the opaque background to occlude. */}
+                beneath — np-stack needs the opaque background to occlude. The
+                whole pile tips gently toward the pointer, held in the hand. */}
+            <Tilt max={3}>
             <aside className="np-stack np-box-double bg-[var(--c-121110)] p-5">
               <p className="np-kicker np-smallcaps border-b border-[var(--np-rule)] pb-3 text-center text-[var(--c-cbc2b0)]">
                 {f.inThisIssue}
@@ -112,6 +119,7 @@ export function FrontPage() {
               <div className="np-rule mt-4 mb-3" />
               <p className="np-body text-[12px] italic text-[var(--c-7b7267)]">{f.motto}</p>
             </aside>
+            </Tilt>
           </Reveal>
         </div>
       </div>

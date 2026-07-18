@@ -1,4 +1,11 @@
-import { motion, useScroll, useSpring } from "motion/react";
+import {
+  motion,
+  useMotionValueEvent,
+  useScroll,
+  useSpring,
+  useVelocity,
+} from "motion/react";
+import { useState } from "react";
 import { Sun, Moon } from "lucide-react";
 import { AnimatedCipher } from "./AnimatedCipher";
 import { playCipher } from "./EasterEggs";
@@ -52,11 +59,27 @@ export function MastheadDesktop({
     )
     .replace(/^\w/, (c) => c.toUpperCase());
 
-  const { scrollYProgress } = useScroll();
+  const { scrollY, scrollYProgress } = useScroll();
   const playhead = useSpring(scrollYProgress, {
     stiffness: 140,
     damping: 28,
     mass: 0.4,
+  });
+
+  // Tempo di lettura — the paper marks how fast it is being read. Scroll
+  // velocity maps onto the classical tempo terms; at rest the reading sits
+  // at a contemplative Adagio.
+  const velocity = useVelocity(scrollY);
+  const [tempo, setTempo] = useState("Adagio");
+  useMotionValueEvent(velocity, "change", (v) => {
+    const s = Math.abs(v);
+    setTempo(
+      s < 80 ? "Adagio"
+      : s < 600 ? "Andante"
+      : s < 1600 ? "Allegro"
+      : s < 3400 ? "Presto"
+      : "Prestissimo"
+    );
   });
 
   return (
@@ -71,12 +94,24 @@ export function MastheadDesktop({
       />
 
       <div className="relative flex h-full items-center justify-center px-10">
-        {/* Dateline — left */}
+        {/* Dateline — left, with the live tempo marking beneath it */}
         <p className="np-kicker absolute left-10 top-1/2 -translate-y-1/2 max-w-[13rem] leading-relaxed text-[var(--c-8a8071)]">
           <span className="np-smallcaps block text-[var(--c-cbc2b0)]">
             {t.front?.edition ?? "Edition"}
           </span>
           {dateline}
+          <span className="mt-1.5 block text-[9px] text-[var(--c-5e564f)]">
+            Tempo&nbsp;—&nbsp;
+            <motion.span
+              key={tempo}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              className="inline-block font-serif text-[11px] normal-case italic tracking-normal text-[var(--c-9a927f)]"
+            >
+              {tempo}
+            </motion.span>
+          </span>
         </p>
 
         {/* The nameplate — click to hear the motif */}

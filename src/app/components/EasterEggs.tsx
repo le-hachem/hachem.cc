@@ -67,6 +67,11 @@ export function playCipher() {
   ]);
 }
 
+/** A single soft bell tone — the rail's reading scale speaks through this. */
+export function playTone(freq: number, dur = 0.7) {
+  playSeq([[freq, dur]]);
+}
+
 /** The BACH motif — B♭ · A · C · B♮ — a nod to the elder cipher. */
 export function playBach() {
   playSeq([

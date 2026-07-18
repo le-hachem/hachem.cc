@@ -22,16 +22,38 @@ import { MastheadDesktop } from "./components/MastheadDesktop";
 import { MastheadMobile } from "./components/MastheadMobile";
 import { TocRail } from "./components/TocRail";
 import { FrontPage } from "./components/FrontPage";
-import { StaffDivider } from "./components/StaffDivider";
-import { Reveal } from "./components/Reveal";
+import { RippedEdge } from "./components/RippedEdge";
+import { RegistrationMarks } from "./components/Ornaments";
 import { EasterEggs } from "./components/EasterEggs";
 import { getCompositions } from "./i18n/compositions";
 import { hideDispatches } from "./i18n/dispatches";
 import { useLanguage } from "./i18n/LanguageContext";
 import backgroundSvg from "../assets/background.svg";
 
+/**
+ * The paper's printings. Each theme is a class (or pair of classes) on the
+ * root element; the palettes themselves live in index.css as overrides of the
+ * same --c-* token ramp. Light printings include `daylight` so every
+ * light-mode behavioural rule follows automatically.
+ */
+const THEMES: Record<string, { cls: string[]; light: boolean }> = {
+  night: { cls: [], light: false },
+  day: { cls: ["daylight"], light: true },
+  sepia: { cls: ["daylight", "theme-sepia"], light: true },
+  midnight: { cls: ["theme-midnight"], light: false },
+  verdigris: { cls: ["theme-verdigris"], light: false },
+  oxblood: { cls: ["theme-oxblood"], light: false },
+};
+const ALL_THEME_CLASSES = [
+  "daylight",
+  "theme-sepia",
+  "theme-midnight",
+  "theme-verdigris",
+  "theme-oxblood",
+];
+
 export default function App() {
-  const { lang, t } = useLanguage();
+  const { lang } = useLanguage();
   // Compositions are rebuilt in the active language. We track the selected
   // piece by id so the open modal follows language changes too.
   const compositions = useMemo(() => getCompositions(lang), [lang]);
@@ -40,43 +62,79 @@ export default function App() {
   // A path that resolves to no piece (and isn't the root) shows the 404 view.
   const [notFound, setNotFound] = useState(false);
 
-  // Night (default, dark) or Day (light "newsprint") edition, remembered.
-  const [edition, setEdition] = useState<"night" | "day">(() => {
+  // Editions of the paper — each a full palette over the same token system.
+  // `night` and `day` are the house pair (the sun/moon toggle flips between
+  // them); the rest are alternate printings pickable from the console:
+  //   window.hh.setTheme("midnight")   — see window.hh.themes for the list.
+  // Light themes also carry the `daylight` class so every light-mode
+  // behavioural rule (hover tints, letterpress, fold shading…) follows.
+  const themeState = useState<string>(() => {
     try {
+      const saved = localStorage.getItem("hh-theme");
+      if (saved && saved in THEMES) return saved;
       return localStorage.getItem("hh-edition-theme") === "day" ? "day" : "night";
     } catch {
       return "night";
     }
   });
+  const theme = themeState[0];
+  const setTheme = themeState[1];
+  const isLight = THEMES[theme].light;
   useEffect(() => {
-    const day = edition === "day";
-    document.documentElement.classList.toggle("daylight", day);
-    // Flip the favicon to match the edition.
+    const root = document.documentElement;
+    ALL_THEME_CLASSES.forEach((c) => root.classList.remove(c));
+    THEMES[theme].cls.forEach((c) => root.classList.add(c));
+    // Flip the favicon with the paper's tone.
     document
       .getElementById("favicon-svg")
-      ?.setAttribute("href", day ? "/favicon-day.svg" : "/favicon.svg");
+      ?.setAttribute("href", THEMES[theme].light ? "/favicon-day.svg" : "/favicon.svg");
     try {
-      localStorage.setItem("hh-edition-theme", edition);
+      localStorage.setItem("hh-theme", theme);
+      localStorage.setItem("hh-edition-theme", THEMES[theme].light ? "day" : "night");
     } catch {
       /* ignore */
     }
-  }, [edition]);
+  }, [theme]);
+
+  // The console API — pick any printing without waiting for a UI.
+  useEffect(() => {
+    (window as unknown as { hh?: object }).hh = {
+      themes: Object.keys(THEMES),
+      theme,
+      setTheme: (name: string) => {
+        if (name in THEMES) setTheme(name);
+        else console.warn(`Unknown theme "${name}". Try: ${Object.keys(THEMES).join(", ")}`);
+      },
+    };
+  }, [theme, setTheme]);
+  useEffect(() => {
+    try {
+      console.info(
+        "%c🎨 Other printings of this paper — window.hh.setTheme(name): " +
+          Object.keys(THEMES).join(" · "),
+        "font: italic 12px Georgia, serif; color: #8a8071"
+      );
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
   // Theme change: an ink bar wipes across, the edition swaps while it covers
   // the page, then it wipes off revealing the new edition (.ink-sweep in CSS).
   const [sweepKey, setSweepKey] = useState(0);
   const [sweeping, setSweeping] = useState(false);
   const toggleEdition = () => {
-    const next = edition === "day" ? "night" : "day";
+    const next = isLight ? "night" : "day";
     const reduce =
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) {
-      setEdition(next);
+      setTheme(next);
       return;
     }
     setSweepKey((k) => k + 1);
     setSweeping(true);
-    window.setTimeout(() => setEdition(next), 340); // swap while covered
+    window.setTimeout(() => setTheme(next), 340); // swap while covered
     window.setTimeout(() => setSweeping(false), 720); // panel gone
   };
 
@@ -131,12 +189,12 @@ export default function App() {
     <div className="relative min-h-screen overflow-x-hidden bg-[var(--c-121110)]">
       {/* Mobile / tablet nav (below xl) — the pocket edition's hamburger. */}
       <div className="xl:hidden">
-        <NavHeader edition={edition} onToggleEdition={toggleEdition} />
+        <NavHeader edition={isLight ? "day" : "night"} onToggleEdition={toggleEdition} />
       </div>
 
       {/* Desktop "digital broadsheet" chrome (xl+): the cipher becomes a fixed
           nameplate up top and the table of contents runs fixed down the left. */}
-      <MastheadDesktop edition={edition} onToggleEdition={toggleEdition} />
+      <MastheadDesktop edition={isLight ? "day" : "night"} onToggleEdition={toggleEdition} />
       <TocRail />
 
       {/* Background SVG — a parallax layer beneath the page, drifting slower
@@ -149,7 +207,7 @@ export default function App() {
         <img
           src={backgroundSvg}
           alt=""
-          className={`h-full w-full object-cover ${edition === "night" ? "invert" : ""}`}
+          className={`h-full w-full object-cover ${isLight ? "" : "invert"}`}
         />
       </motion.div>
 
@@ -213,43 +271,14 @@ export default function App() {
         <ContactSection />
       </div>
 
-      {/* Colophon — the paper signs off with a closing measure of music. */}
-      <footer className="relative z-10 bg-[var(--c-121110)] px-4 pt-12 pb-16">
-        <div className="max-w-5xl mx-auto text-center">
-          <StaffDivider className="mb-10" />
-          <div className="np-rule-strong" />
-          <Reveal as="p" y={10} className="np-smallcaps np-head mt-5 text-xl sm:text-2xl tracking-[0.05em] text-[var(--c-e6e0d5)]">
-            {t.masthead}
-          </Reveal>
-
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-            {[
-              { label: "YouTube",   href: "https://www.youtube.com/@hachem.mp3" },
-              { label: "Instagram", href: "https://www.instagram.com/hachem.mp3/" },
-              { label: "Ko-fi",     href: "https://ko-fi.com/hachem_mp3" },
-              { label: "Email",     href: "mailto:contact@hachem.cc" },
-            ].map((l, i) => (
-              <Reveal as="span" key={l.label} index={i} y={6} className="flex items-center gap-x-6">
-                {i > 0 && <span className="text-[var(--c-2f2c28)]" aria-hidden>·</span>}
-                <a
-                  href={l.href}
-                  target={l.href.startsWith("http") ? "_blank" : undefined}
-                  rel={l.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  className="np-kicker np-link-grow text-[var(--c-8a8071)] hover:text-[var(--c-e6e0d5)] transition-colors"
-                >
-                  {l.label}
-                </a>
-              </Reveal>
-            ))}
-          </div>
-
-          <div className="np-rule mt-6 mb-5" />
-          <Reveal as="p" y={6} className="np-body italic text-sm text-[var(--c-7b7267)]">
-            © 2026 Hachem <span className="mx-1.5" aria-hidden>·</span>
-            {t.footer.fine}
-          </Reveal>
-        </div>
-      </footer>
+      {/* End of the paper — the last sheet simply tears off, the dark stone
+          showing beneath the ragged edge. */}
+      <RippedEdge
+        direction="down"
+        color={hideDispatches ? "var(--c-151414)" : "var(--c-1a1816)"}
+        className="relative z-10"
+      />
+      <div aria-hidden className="h-16" />
       </div>
 
       {/* Full-screen modal */}
@@ -281,6 +310,11 @@ export default function App() {
         />
       </div>
 
+      {/* Laid stock — the papermaker's wire and chain lines pressed into the
+          sheet, laid over everything at a whisper so the flat tones read as
+          paper rather than pixels. */}
+      <div aria-hidden className="np-laid pointer-events-none fixed inset-0 z-[56]" />
+
       {/* Film grain — a static texture layer over the whole page (below nav and
           modals). Mid-grey noise under an overlay blend adds tooth to the flat
           dark sections without tinting them. */}
@@ -295,6 +329,9 @@ export default function App() {
           opacity: 0.32,
         }}
       />
+
+      {/* Pressmen's registration crosshairs at the printable corners. */}
+      <RegistrationMarks />
 
       {/* Quiet delights for the curious */}
       <EasterEggs />
