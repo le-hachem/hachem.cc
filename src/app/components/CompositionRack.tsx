@@ -3,6 +3,7 @@ import { SectionHeading } from "./SectionHeading";
 import { DropCap } from "./DropCap";
 import { Reveal, RuleReveal } from "./Reveal";
 import { SectionEnd } from "./Ornaments";
+import { MaintenanceNotice } from "./MaintenanceNotice";
 import { useLanguage } from "../i18n/LanguageContext";
 import { tInstrument } from "../i18n/translations";
 import { featuredCompositionIds } from "../i18n/compositions";
@@ -41,9 +42,11 @@ export function CompositionRack({ compositions, onCompositionClick, onViewAllCli
         />
 
         {isHidden ? (
-          <p className="np-body italic text-center text-[var(--c-7b7267)] py-10">
-            {t.rack.maintenanceLine1} {t.rack.maintenanceLine2}
-          </p>
+          <MaintenanceNotice
+            kicker={t.rack.maintenanceKicker}
+            line1={t.rack.maintenanceLine1}
+            line2={t.rack.maintenanceLine2}
+          />
         ) : (
           <>
             {/* Lead review */}

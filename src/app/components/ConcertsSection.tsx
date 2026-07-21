@@ -4,6 +4,7 @@ import { Ticket, ArrowUpRight } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { Reveal, PRESS_EASE } from "./Reveal";
 import { CoffeeRing } from "./Ornaments";
+import { MaintenanceNotice } from "./MaintenanceNotice";
 import { useLanguage } from "../i18n/LanguageContext";
 import { getConcerts, showPastConcerts, type Concert } from "../i18n/concerts";
 
@@ -204,18 +205,26 @@ export function ConcertsSection() {
           </Reveal>
         )}
 
-        {showPastConcerts && past.length > 0 && (
+        {past.length > 0 && (
           <>
             <GroupLabel>{t.agenda.past}</GroupLabel>
-            {past.map((c, i) => (
-              <ConcertRow
-                key={c.id}
-                c={c}
-                lang={lang}
-                upcoming={false}
-                index={i}
+            {showPastConcerts ? (
+              past.map((c, i) => (
+                <ConcertRow
+                  key={c.id}
+                  c={c}
+                  lang={lang}
+                  upcoming={false}
+                  index={i}
+                />
+              ))
+            ) : (
+              <MaintenanceNotice
+                kicker={t.agenda.pastHiddenKicker}
+                line1={t.agenda.pastHiddenLine1}
+                line2={t.agenda.pastHiddenLine2}
               />
-            ))}
+            )}
           </>
         )}
       </div>

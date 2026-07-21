@@ -162,6 +162,9 @@ const en = {
     past: "Past",
     tickets: "Tickets",
     none: "No dates announced just now. Check back soon, or drop me a line and I'll tell you first.",
+    pastHiddenKicker: "Under revision",
+    pastHiddenLine1: "The archive of past dates is undergoing a change of architecture.",
+    pastHiddenLine2: "Please bear with me while things are being reworked.",
     roles: {
       composer: "Composer",
       pianist: "Pianist",
@@ -230,8 +233,9 @@ const en = {
     listen: "Listen",
     instrumentation: "Instrumentation",
     open: "Open →",
-    maintenanceLine1: "Currently compositions are hidden due to maintenance,",
-    maintenanceLine2: "check back in a few days.",
+    maintenanceKicker: "Under revision",
+    maintenanceLine1: "This section is undergoing a change of architecture.",
+    maintenanceLine2: "Please bear with me while things are being reworked.",
   },
 
   modal: {
@@ -468,6 +472,9 @@ const fr: Dict = {
     past: "Passés",
     tickets: "Billetterie",
     none: "Aucune date annoncée pour l'instant. Revenez bientôt, ou écrivez-moi et je vous préviendrai en premier.",
+    pastHiddenKicker: "En révision",
+    pastHiddenLine1: "L'archive des dates passées fait l'objet d'un changement d'architecture.",
+    pastHiddenLine2: "Merci de votre patience pendant que tout est retravaillé.",
     roles: {
       composer: "Compositeur",
       pianist: "Pianiste",
@@ -536,8 +543,9 @@ const fr: Dict = {
     listen: "Écouter",
     instrumentation: "Instrumentation",
     open: "Ouvrir →",
-    maintenanceLine1: "Les compositions sont momentanément masquées pour maintenance,",
-    maintenanceLine2: "revenez dans quelques jours.",
+    maintenanceKicker: "En révision",
+    maintenanceLine1: "Cette section fait l'objet d'un changement d'architecture.",
+    maintenanceLine2: "Merci de votre patience pendant que tout est retravaillé.",
   },
 
   modal: {
@@ -771,6 +779,9 @@ const de: Dict = {
     past: "Vergangen",
     tickets: "Karten",
     none: "Zurzeit sind keine Termine angekündigt. Schauen Sie bald wieder vorbei, oder schreiben Sie mir, dann erfahren Sie es als Erster.",
+    pastHiddenKicker: "In Überarbeitung",
+    pastHiddenLine1: "Das Archiv vergangener Termine wird derzeit umstrukturiert.",
+    pastHiddenLine2: "Bitte haben Sie etwas Geduld, während alles überarbeitet wird.",
     roles: {
       composer: "Komponist",
       pianist: "Pianist",
@@ -839,8 +850,9 @@ const de: Dict = {
     listen: "Anhören",
     instrumentation: "Besetzung",
     open: "Öffnen →",
-    maintenanceLine1: "Die Kompositionen sind derzeit wegen Wartungsarbeiten ausgeblendet,",
-    maintenanceLine2: "schauen Sie in ein paar Tagen wieder vorbei.",
+    maintenanceKicker: "In Überarbeitung",
+    maintenanceLine1: "Dieser Bereich wird derzeit umstrukturiert.",
+    maintenanceLine2: "Bitte haben Sie etwas Geduld, während alles überarbeitet wird.",
   },
 
   modal: {
