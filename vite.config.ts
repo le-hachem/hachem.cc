@@ -27,7 +27,11 @@ const HOME_TITLE_TAG = "<title>Hachem — Composer's Record</title>"
 const HOME_OGTW_TITLE = 'Hachem — Composer · Pianist · Conductor'
 const HOME_DESC =
   'Composer, pianist, and conductor in Paris, studying at the Sorbonne, creating new works from solo piano to orchestra, publishing free Lili Boulanger editions on IMSLP, and accepting commissions.'
-const HOME_BARE_URL = 'https://hachem.cc"'
+// Only the canonical and og:url are per-piece. The Person/WebSite urls in the
+// JSON-LD graph must keep pointing at the homepage, so these are matched as
+// whole tags rather than by swapping every bare occurrence of the domain.
+const HOME_CANONICAL_TAG = '<link rel="canonical" href="https://hachem.cc" />'
+const HOME_OG_URL = 'property="og:url"         content="https://hachem.cc"'
 
 function prerenderPieces(outDir: string) {
   const templatePath = path.join(outDir, 'index.html')
@@ -35,6 +39,7 @@ function prerenderPieces(outDir: string) {
   const template = fs.readFileSync(templatePath, 'utf8')
   for (const p of SEO_PIECES) {
     const pageTitle = `${p.title} · Hachem`
+    const url = `https://hachem.cc/${p.id}`
     const html = template
       .split(HOME_TITLE_TAG)
       .join(`<title>${pageTitle}</title>`)
@@ -42,8 +47,17 @@ function prerenderPieces(outDir: string) {
       .join(`content="${pageTitle}"`)
       .split(HOME_DESC)
       .join(p.desc)
-      .split(HOME_BARE_URL)
-      .join(`https://hachem.cc/${p.id}"`)
+      .split(HOME_CANONICAL_TAG)
+      .join(`<link rel="canonical" href="${url}" />`)
+      .split(HOME_OG_URL)
+      .join(`property="og:url"         content="${url}"`)
+    // Write the flat file, not just a directory index: GitHub Pages serves
+    // /trois-melodies straight from trois-melodies.html, whereas with only
+    // trois-melodies/index.html it 301s to the trailing-slash URL — and the
+    // no-slash form is what the sitemap, canonical and JSON-LD all advertise.
+    // The directory copy stays so the slash form resolves without a redirect
+    // for anyone who already has that link.
+    fs.writeFileSync(path.join(outDir, `${p.id}.html`), html)
     const dir = path.join(outDir, p.id)
     fs.mkdirSync(dir, { recursive: true })
     fs.writeFileSync(path.join(dir, 'index.html'), html)
