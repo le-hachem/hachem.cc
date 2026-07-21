@@ -14,7 +14,7 @@ type L = Record<Lang, string>;
 /** The hat worn at a given date — rendered from a localized label. */
 export type ConcertRole = "composer" | "pianist" | "conductor";
 
-interface ConcertSource {
+export interface ConcertSource {
   id: string;
   /**
    * ISO date (YYYY-MM-DD), used both to sort and to decide upcoming vs. past.
@@ -53,6 +53,10 @@ export interface Concert {
  * The concert diary. Add new dates here — the Agenda section splits them into
  * "Upcoming" and "Past" automatically by comparing `date` to today, so nothing
  * needs to be moved as events pass.
+ *
+ * The admin console at /admin edits these and regenerates this array, which is
+ * easier than writing three translations by hand — but editing it here is
+ * still perfectly fine.
  */
 const source: ConcertSource[] = [
   {
@@ -185,6 +189,9 @@ const source: ConcertSource[] = [
     },
   },
 ];
+
+/** The unflattened diary, in every language — read by the admin console. */
+export const concertSource: readonly ConcertSource[] = source;
 
 /** Flatten the diary to a single language. */
 export function getConcerts(lang: Lang): Concert[] {

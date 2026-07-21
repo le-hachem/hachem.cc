@@ -12,7 +12,7 @@ export const hideDispatches =
 /** A localized string: one value per language. */
 type L = Record<Lang, string>;
 
-interface DispatchSource {
+export interface DispatchSource {
   id: string;
   /** ISO date (YYYY-MM-DD); the column is ordered newest first. */
   date: string;
@@ -38,6 +38,10 @@ export interface Dispatch {
  * The news column — short bulletins, most recent first. Add a new entry at the
  * top (or anywhere; they're sorted by date) whenever there's something to
  * report: a premiere, a prize, a new edition.
+ *
+ * The admin console at /admin edits these and regenerates this array, which is
+ * easier than writing three translations by hand — but editing it here is
+ * still perfectly fine.
  */
 const source: DispatchSource[] = [
   {
@@ -69,16 +73,10 @@ const source: DispatchSource[] = [
       de: "Die Faust-Kantate errang den ersten Platz in Harmonik & Orchestrierung und den vierten in der Gesamtwertung — eine spätromantische Partitur mit breiter, filmischer Orchesterfarbe in ihren Höllenszenen.",
     },
   },
-  // Add newer bulletins above this line, e.g.:
-  // {
-  //   id: "new-edition",
-  //   date: "2026-09-01",
-  //   headline: { en: "…", fr: "…", de: "…" },
-  //   body: { en: "…", fr: "…", de: "…" },
-  //   href: "https://imslp.org/…",
-  //   linkLabel: { en: "Read the edition", fr: "…", de: "…" },
-  // },
 ];
+
+/** The unflattened column, in every language — read by the admin console. */
+export const dispatchSource: readonly DispatchSource[] = source;
 
 /** Flatten the column to a single language, newest first. */
 export function getDispatches(lang: Lang): Dispatch[] {

@@ -28,29 +28,8 @@ import { EasterEggs } from "./components/EasterEggs";
 import { getCompositions } from "./i18n/compositions";
 import { hideDispatches } from "./i18n/dispatches";
 import { useLanguage } from "./i18n/LanguageContext";
+import { THEMES, applyTheme, readStoredTheme } from "./theme";
 import backgroundSvg from "../assets/background.svg";
-
-/**
- * The paper's printings. Each theme is a class (or pair of classes) on the
- * root element; the palettes themselves live in index.css as overrides of the
- * same --c-* token ramp. Light printings include `daylight` so every
- * light-mode behavioural rule follows automatically.
- */
-const THEMES: Record<string, { cls: string[]; light: boolean }> = {
-  night: { cls: [], light: false },
-  day: { cls: ["daylight"], light: true },
-  sepia: { cls: ["daylight", "theme-sepia"], light: true },
-  midnight: { cls: ["theme-midnight"], light: false },
-  verdigris: { cls: ["theme-verdigris"], light: false },
-  oxblood: { cls: ["theme-oxblood"], light: false },
-};
-const ALL_THEME_CLASSES = [
-  "daylight",
-  "theme-sepia",
-  "theme-midnight",
-  "theme-verdigris",
-  "theme-oxblood",
-];
 
 export default function App() {
   const { lang } = useLanguage();
@@ -68,32 +47,12 @@ export default function App() {
   //   window.hh.setTheme("midnight")   — see window.hh.themes for the list.
   // Light themes also carry the `daylight` class so every light-mode
   // behavioural rule (hover tints, letterpress, fold shading…) follows.
-  const themeState = useState<string>(() => {
-    try {
-      const saved = localStorage.getItem("hh-theme");
-      if (saved && saved in THEMES) return saved;
-      return localStorage.getItem("hh-edition-theme") === "day" ? "day" : "night";
-    } catch {
-      return "night";
-    }
-  });
+  const themeState = useState<string>(readStoredTheme);
   const theme = themeState[0];
   const setTheme = themeState[1];
   const isLight = THEMES[theme].light;
   useEffect(() => {
-    const root = document.documentElement;
-    ALL_THEME_CLASSES.forEach((c) => root.classList.remove(c));
-    THEMES[theme].cls.forEach((c) => root.classList.add(c));
-    // Flip the favicon with the paper's tone.
-    document
-      .getElementById("favicon-svg")
-      ?.setAttribute("href", THEMES[theme].light ? "/favicon-day.svg" : "/favicon.svg");
-    try {
-      localStorage.setItem("hh-theme", theme);
-      localStorage.setItem("hh-edition-theme", THEMES[theme].light ? "day" : "night");
-    } catch {
-      /* ignore */
-    }
+    applyTheme(theme);
   }, [theme]);
 
   // The console API — pick any printing without waiting for a UI.

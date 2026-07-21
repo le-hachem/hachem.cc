@@ -31,6 +31,7 @@ const HOME_DESC =
 // JSON-LD graph must keep pointing at the homepage, so these are matched as
 // whole tags rather than by swapping every bare occurrence of the domain.
 const HOME_CANONICAL_TAG = '<link rel="canonical" href="https://hachem.cc" />'
+const HOME_ROBOTS_TAG = '<meta name="robots" content="index, follow" />'
 const HOME_OG_URL = 'property="og:url"         content="https://hachem.cc"'
 
 function prerenderPieces(outDir: string) {
@@ -62,6 +63,33 @@ function prerenderPieces(outDir: string) {
     fs.mkdirSync(dir, { recursive: true })
     fs.writeFileSync(path.join(dir, 'index.html'), html)
   }
+}
+
+/**
+ * A real page at /admin, so the console loads with a 200 rather than through
+ * the 404 fallback, and a robots meta so it never reaches an index even if the
+ * address is guessed. The admin bundle itself is loaded lazily by main.tsx —
+ * this is the same shell HTML as the homepage, only re-titled.
+ */
+function writeAdminPage(outDir: string) {
+  const templatePath = path.join(outDir, 'index.html')
+  if (!fs.existsSync(templatePath)) return
+  const source = fs.readFileSync(templatePath, 'utf8')
+  // The homepage's robots tag has to be swapped out, not merely joined by a
+  // second one — two conflicting directives are worse than none.
+  if (!source.includes(HOME_ROBOTS_TAG)) {
+    console.warn('[admin page] robots tag not found; skipping so /admin is not left indexable')
+    return
+  }
+  const html = source
+    .split(HOME_TITLE_TAG)
+    .join("<title>Desk — Composer's Record</title>")
+    .split(HOME_ROBOTS_TAG)
+    .join('<meta name="robots" content="noindex, nofollow" />')
+  fs.writeFileSync(path.join(outDir, 'admin.html'), html)
+  const dir = path.join(outDir, 'admin')
+  fs.mkdirSync(dir, { recursive: true })
+  fs.writeFileSync(path.join(dir, 'index.html'), html)
 }
 
 export default defineConfig({
@@ -98,6 +126,11 @@ export default defineConfig({
           prerenderPieces(spaFallbackOutDir)
         } catch (err) {
           console.warn('[prerender] skipped:', err)
+        }
+        try {
+          writeAdminPage(spaFallbackOutDir)
+        } catch (err) {
+          console.warn('[admin page] skipped:', err)
         }
       },
     },

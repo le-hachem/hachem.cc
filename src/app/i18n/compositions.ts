@@ -27,7 +27,7 @@ export interface Composition {
 /** A localized string: same value per language. */
 type L = Record<Lang, string>;
 
-interface CompositionSource {
+export interface CompositionSource {
   id: string;
   title: string;
   subtitle: L;
@@ -237,6 +237,13 @@ const source: CompositionSource[] = [
 
 /** Only these appear in the featured rack on the homepage. */
 export const featuredCompositionIds = ["myrrha", "mephistopheles"];
+
+/**
+ * The unflattened catalogue, in every language — read by the admin console.
+ * Kept below `featuredCompositionIds` so the two declarations the console
+ * regenerates sit in one contiguous block, replaceable in a single paste.
+ */
+export const compositionSource: readonly CompositionSource[] = source;
 
 /** Build the composition list flattened to a single language. */
 export function getCompositions(lang: Lang): Composition[] {

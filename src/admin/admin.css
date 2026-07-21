@@ -1,0 +1,437 @@
+/* ─────────────────────────────── THE DESK ───────────────────────────────
+   Chrome for the admin console. It borrows the site's palette tokens and
+   headline face so the two read as one publication, but everything here is a
+   working surface: denser, plainer, and set in a UI sans where the site would
+   use a serif. Nothing in this file affects the public pages — it is only
+   loaded by the console. */
+
+/* Everything below is in Tailwind's `components` layer so the utility classes
+   used alongside these in JSX (`pl-9`, `mb-0`, `px-1.5`…) still win. Plain CSS
+   sitting outside a layer would beat them regardless of specificity. */
+@layer components {
+  .adm {
+    min-height: 100vh;
+    background: var(--c-121110);
+    color: var(--c-dfd6c7);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .adm-serif {
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  }
+
+  .adm-kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--c-8a8071);
+  }
+
+  /* ── Surfaces ─────────────────────────────────────────────────────────── */
+
+  .adm-panel {
+    background: var(--c-1a1816);
+    border: 1px solid var(--seam);
+    border-radius: 3px;
+  }
+
+  .adm-hairline {
+    border-top: 1px solid var(--seam);
+  }
+
+  /* ── Controls ─────────────────────────────────────────────────────────── */
+
+  .adm-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--c-a1998a);
+    margin-bottom: 6px;
+  }
+
+  .adm-help {
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--c-7b7267);
+    margin-top: 5px;
+  }
+
+  .adm-input,
+  .adm-textarea,
+  .adm-select {
+    width: 100%;
+    background: var(--c-121110);
+    border: 1px solid var(--seam-strong);
+    border-radius: 2px;
+    padding: 8px 10px;
+    color: var(--c-eee8dd);
+    font: inherit;
+    line-height: 1.5;
+    transition: border-color 120ms ease, background 120ms ease;
+  }
+
+  .adm-textarea {
+    resize: vertical;
+    min-height: 64px;
+  }
+
+  .adm-input:hover,
+  .adm-textarea:hover,
+  .adm-select:hover {
+    border-color: var(--c-5e564f);
+  }
+
+  .adm-input:focus,
+  .adm-textarea:focus,
+  .adm-select:focus {
+    outline: none;
+    border-color: var(--c-8a8071);
+    background: var(--c-151414);
+  }
+
+  .adm-input::placeholder,
+  .adm-textarea::placeholder {
+    color: var(--c-5e564f);
+  }
+
+  .adm-select {
+    appearance: none;
+    padding-right: 30px;
+    background-image: linear-gradient(45deg, transparent 50%, var(--c-8a8071) 50%),
+      linear-gradient(135deg, var(--c-8a8071) 50%, transparent 50%);
+    background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+  }
+
+  .adm-select option {
+    background: var(--c-1a1816);
+    color: var(--c-eee8dd);
+  }
+
+  .adm-mono {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    font-size: 12.5px;
+  }
+
+  .adm-invalid,
+  .adm-invalid:hover,
+  .adm-invalid:focus {
+    border-color: var(--adm-alarm);
+  }
+
+  /* ── Buttons ──────────────────────────────────────────────────────────── */
+
+  .adm-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 13px;
+    border: 1px solid var(--seam-strong);
+    border-radius: 2px;
+    background: var(--c-201e1c);
+    color: var(--c-dfd6c7);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+  }
+
+  .adm-btn:hover:not(:disabled) {
+    background: var(--c-2f2c28);
+    border-color: var(--c-5e564f);
+    color: var(--c-f0ead8);
+  }
+
+  .adm-btn:disabled {
+    opacity: 0.42;
+    cursor: not-allowed;
+  }
+
+  .adm-btn-primary {
+    background: var(--c-dfd6c7);
+    border-color: var(--c-dfd6c7);
+    color: var(--c-121110);
+    font-weight: 600;
+  }
+
+  .adm-btn-primary:hover:not(:disabled) {
+    background: var(--c-f0ead8);
+    border-color: var(--c-f0ead8);
+    color: var(--c-121110);
+  }
+
+  .adm-btn-ghost {
+    background: transparent;
+    border-color: transparent;
+    color: var(--c-a1998a);
+  }
+
+  .adm-btn-ghost:hover:not(:disabled) {
+    background: var(--c-201e1c);
+    border-color: var(--seam);
+  }
+
+  .adm-btn-danger {
+    color: var(--adm-alarm);
+    border-color: color-mix(in srgb, var(--adm-alarm) 40%, transparent);
+    background: transparent;
+  }
+
+  .adm-btn-danger:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--adm-alarm) 14%, transparent);
+    border-color: var(--adm-alarm);
+    color: var(--adm-alarm);
+  }
+
+  .adm-btn-sm {
+    padding: 4px 9px;
+    font-size: 12px;
+  }
+
+  /* ── Navigation ───────────────────────────────────────────────────────── */
+
+  .adm-nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 11px;
+    border-radius: 2px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--c-a1998a);
+    font: inherit;
+    font-size: 13.5px;
+    text-align: left;
+    transition: background 120ms ease, color 120ms ease;
+  }
+
+  .adm-nav:hover {
+    background: var(--c-1a1816);
+    color: var(--c-e6e0d5);
+  }
+
+  .adm-nav[aria-current="page"] {
+    background: var(--c-201e1c);
+    border-color: var(--seam);
+    color: var(--c-f0ead8);
+    font-weight: 600;
+  }
+
+  /* ── Record rows ──────────────────────────────────────────────────────── */
+
+  .adm-row {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 13px 15px;
+    border: 1px solid transparent;
+    border-bottom-color: var(--seam);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    transition: background 110ms ease;
+  }
+
+  .adm-row:hover {
+    background: var(--c-1a1816);
+  }
+
+  .adm-row:last-child {
+    border-bottom-color: transparent;
+  }
+
+  /* ── Badges ───────────────────────────────────────────────────────────── */
+
+  .adm-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 7px;
+    border-radius: 2px;
+    border: 1px solid var(--seam-strong);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--c-a1998a);
+    white-space: nowrap;
+  }
+
+  .adm-badge-warn {
+    color: var(--adm-caution);
+    border-color: color-mix(in srgb, var(--adm-caution) 38%, transparent);
+    background: color-mix(in srgb, var(--adm-caution) 10%, transparent);
+  }
+
+  .adm-badge-error {
+    color: var(--adm-alarm);
+    border-color: color-mix(in srgb, var(--adm-alarm) 38%, transparent);
+    background: color-mix(in srgb, var(--adm-alarm) 10%, transparent);
+  }
+
+  .adm-badge-ok {
+    color: var(--adm-assent);
+    border-color: color-mix(in srgb, var(--adm-assent) 34%, transparent);
+    background: color-mix(in srgb, var(--adm-assent) 9%, transparent);
+  }
+
+  /* Per-language completeness pips beside a translated field. */
+  .adm-pip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 2px;
+    border: 1px solid var(--seam-strong);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--c-5e564f);
+    background: transparent;
+    text-transform: uppercase;
+  }
+
+  .adm-pip-filled {
+    color: var(--c-121110);
+    background: var(--c-8a8071);
+    border-color: var(--c-8a8071);
+  }
+
+  .adm-pip-active {
+    outline: 1px solid var(--c-dfd6c7);
+    outline-offset: 1px;
+  }
+
+  /* ── Messages ─────────────────────────────────────────────────────────── */
+
+  .adm-note {
+    display: flex;
+    gap: 9px;
+    padding: 10px 13px;
+    border-radius: 2px;
+    border: 1px solid var(--seam-strong);
+    background: var(--c-1a1816);
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--c-bcb3a3);
+  }
+
+  .adm-note-error {
+    border-color: color-mix(in srgb, var(--adm-alarm) 42%, transparent);
+    background: color-mix(in srgb, var(--adm-alarm) 9%, transparent);
+    color: var(--adm-alarm);
+  }
+
+  .adm-note-warn {
+    border-color: color-mix(in srgb, var(--adm-caution) 40%, transparent);
+    background: color-mix(in srgb, var(--adm-caution) 8%, transparent);
+    color: var(--adm-caution);
+  }
+
+  .adm-field-error {
+    font-size: 12px;
+    color: var(--adm-alarm);
+    margin-top: 5px;
+  }
+
+  /* ── Code / export ────────────────────────────────────────────────────── */
+
+  .adm-code {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    font-size: 12px;
+    line-height: 1.65;
+    white-space: pre;
+    overflow: auto;
+    padding: 15px 17px;
+    background: var(--c-121110);
+    border: 1px solid var(--seam);
+    border-radius: 3px;
+    color: var(--c-bcb3a3);
+    max-height: 60vh;
+    tab-size: 2;
+  }
+
+  /* ── Toast ────────────────────────────────────────────────────────────── */
+
+  .adm-toast {
+    position: fixed;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 17px;
+    border-radius: 3px;
+    border: 1px solid var(--seam-strong);
+    background: var(--c-201e1c);
+    color: var(--c-eee8dd);
+    font-size: 13px;
+    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.44);
+    animation: adm-rise 180ms ease-out;
+  }
+
+  @keyframes adm-rise {
+    from {
+      opacity: 0;
+      transform: translate(-50%, 8px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .adm-toast {
+      animation: none;
+    }
+  }
+}
+
+/* ── Signal colours ───────────────────────────────────────────────────── */
+
+/* Kept as their own tokens rather than raw hex at the use sites, and retuned
+   for the light printings so the warnings stay legible on cream. */
+:root {
+  --adm-alarm: #d98b7a;
+  --adm-caution: #cfa96a;
+  --adm-assent: #93a97f;
+}
+
+.daylight {
+  --adm-alarm: #9c3d24;
+  --adm-caution: #8a6317;
+  --adm-assent: #4a6236;
+}
+
+/* ── Scrollbars ───────────────────────────────────────────────────────── */
+
+.adm ::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+
+.adm ::-webkit-scrollbar-track {
+  background: var(--c-121110);
+}
+
+.adm ::-webkit-scrollbar-thumb {
+  background: var(--c-3a352f);
+  border: 3px solid var(--c-121110);
+  border-radius: 6px;
+}
+
+.adm ::-webkit-scrollbar-thumb:hover {
+  background: var(--c-5e564f);
+}

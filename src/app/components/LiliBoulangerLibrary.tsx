@@ -1,65 +1,27 @@
 import { motion, AnimatePresence } from "motion/react";
 import { createPortal } from "react-dom";
 import { X, ExternalLink } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "../i18n/LanguageContext";
-import { tLiliInstrumentation, tLiliText } from "../i18n/translations";
+import {
+  getLiliWorks,
+  liliCategoryOrder,
+  type LiliCategory,
+} from "../i18n/lili";
 
-type Category = "All" | "Piano" | "Chamber" | "Voice" | "Choral";
-
-interface LibraryWork {
-  title: string;
-  year: string;
-  instrumentation: string;
-  text?: string;
-  category: Category;
-  edition?: { imslp: string; pdf: string };
-}
+/** The rail's filter: the real categories plus the "everything" option. */
+type Category = "All" | LiliCategory;
 
 interface LiliBoulangerLibraryProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const works: LibraryWork[] = [
-  { title: "Prélude",                         year: "1911", instrumentation: "Piano",                                               category: "Piano" },
-  { title: "Sous bois",                        year: "1911", instrumentation: "Choir (SATB) and piano",                               category: "Choral",  text: "Philippe Gille" },
-  { title: "Nocturne",                         year: "1911", instrumentation: "Violin and piano",                                     category: "Chamber" },
-  { title: "Renouveau",                        year: "1911", instrumentation: "Vocal quartet (SATT) and piano/orchestra",              category: "Choral",  text: "Armand Silvestre" },
-  { title: "Les sirènes",                      year: "1911", instrumentation: "Soprano, chorus and piano",                            category: "Choral",  text: "Charles Grandmougin" },
-  { title: "Reflets",                          year: "1911", instrumentation: "Voice and piano",                                      category: "Voice",   text: "Maurice Maeterlinck" },
-  {
-    title: "Attente",                          year: "1912", instrumentation: "Voice and piano/orchestra",                            category: "Voice",   text: "Maurice Maeterlinck",
-    edition: { imslp: "https://imslp.org/wiki/Attente_(Boulanger,_Lili)", pdf: "https://s9.imslp.org/files/imglnks/usimg/c/cc/IMSLP974938-PMLP707817-Attente_-_Full_Score_(2025_Hachem).pdf" },
-  },
-  { title: "Hymne au Soleil",                  year: "1912", instrumentation: "Contralto, chorus and piano",                          category: "Choral",  text: "Casimir Delavigne" },
-  { title: "Le Retour",                        year: "1912", instrumentation: "Voice and piano",                                      category: "Voice",   text: "Georges Delaquys" },
-  { title: "Pour les funérailles d'un soldat", year: "1912", instrumentation: "Baritone, chorus and piano",                           category: "Choral",  text: "Alfred de Musset" },
-  { title: "Soir sur la plaine",               year: "1913", instrumentation: "Soprano, tenor and orchestra",                         category: "Choral",  text: "Albert Samain" },
-  { title: "Faust et Hélène",                  year: "1913", instrumentation: "Mezzo-soprano, tenor, baritone, chorus and orchestra", category: "Choral",  text: "Eugène Adenis" },
-  { title: "D'un jardin clair",                year: "1914", instrumentation: "Piano",                                               category: "Piano" },
-  { title: "D'un vieux jardin",                year: "1914", instrumentation: "Piano",                                               category: "Piano" },
-  { title: "Cortège",                          year: "1914", instrumentation: "Violin and piano",                                     category: "Chamber" },
-  { title: "Clairières dans le ciel",          year: "1914", instrumentation: "Voice and piano",                                      category: "Voice",   text: "Francis Jammes" },
-  {
-    title: "Pièce",                            year: "c. 1910", instrumentation: "Piano",                                            category: "Piano",
-    edition: { imslp: "https://imslp.org/wiki/Pi%C3%A8ce_(Boulanger,_Lili)", pdf: "https://ks15.imslp.org/files/imglnks/usimg/6/6f/IMSLP975917-PMLP1475962-Piece_-_Full_Score_(2025_Hachem).pdf" },
-  },
-  { title: "Psaume 24",                        year: "1916", instrumentation: "Chorus, organ and orchestra",                          category: "Choral",  text: "Psalm 24" },
-  { title: "Psaume 129",                       year: "1916", instrumentation: "Baritone and orchestra",                               category: "Choral",  text: "Psalm 129" },
-  { title: "Dans l'immense tristesse",         year: "1916", instrumentation: "Voice and piano",                                      category: "Voice",   text: "Bertha Galeron de Calonne" },
-  { title: "Psaume 130",                       year: "1917", instrumentation: "Two solo voices, chorus, organ and orchestra",         category: "Choral",  text: "Psalm 130" },
-  { title: "Vieille prière bouddhique",        year: "1917", instrumentation: "Tenor, chorus and orchestra",                         category: "Choral",  text: "Extract from the Metta Sutta" },
-  { title: "D'un matin de printemps",          year: "1918", instrumentation: "Violin and piano",                                    category: "Chamber" },
-  { title: "Pie Jesu",                         year: "1918", instrumentation: "Voice, string quartet, harp and organ",               category: "Chamber", text: "Tridentine Missal" },
-  { title: "D'un soir triste",                 year: "1918", instrumentation: "Orchestra",                                           category: "Chamber" },
-];
-
-const categoryOrder: Category[] = ["Piano", "Chamber", "Voice", "Choral"];
 
 export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryProps) {
   const { lang, t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<Category>("All");
+  const works = useMemo(() => getLiliWorks(lang), [lang]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -72,7 +34,7 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
   }, [isOpen]);
 
   const editionCount = works.filter(w => w.edition).length;
-  const populated = categoryOrder.filter(cat => works.some(w => w.category === cat));
+  const populated = liliCategoryOrder.filter(cat => works.some(w => w.category === cat));
   const visibleCategories = activeCategory === "All" ? populated : [activeCategory];
   const filtered = activeCategory === "All" ? works : works.filter(w => w.category === activeCategory);
 
@@ -205,7 +167,7 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
                             {/* Work rows */}
                             {catWorks.map((work, i) => (
                               <motion.div
-                                key={work.title}
+                                key={work.id}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 0.2, delay: i * 0.025 }}
@@ -232,23 +194,27 @@ export function LiliBoulangerLibrary({ isOpen, onClose }: LiliBoulangerLibraryPr
                                       )}
                                     </div>
                                     <p className="text-xs sm:text-sm font-serif italic text-[var(--c-7b7267)] mt-0.5">
-                                      {tLiliInstrumentation(work.instrumentation, lang)}
+                                      {work.instrumentation}
                                       {work.text && (
-                                        <span className="not-italic text-[var(--c-5e564f)]"> · {tLiliText(work.text, lang)}</span>
+                                        <span className="not-italic text-[var(--c-5e564f)]"> · {work.text}</span>
                                       )}
                                     </p>
                                     {work.edition && (
                                       <div className="flex gap-4 mt-2">
-                                        <a href={work.edition.pdf} target="_blank" rel="noopener noreferrer"
-                                           className="inline-flex items-center gap-1 text-[10px] tracking-widest uppercase text-[var(--c-7b7267)] hover:text-[var(--c-eee8dd)] transition-colors"
-                                           style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                                          PDF <ExternalLink className="h-2.5 w-2.5" />
-                                        </a>
-                                        <a href={work.edition.imslp} target="_blank" rel="noopener noreferrer"
-                                           className="inline-flex items-center gap-1 text-[10px] tracking-widest uppercase text-[var(--c-7b7267)] hover:text-[var(--c-eee8dd)] transition-colors"
-                                           style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                                          IMSLP <ExternalLink className="h-2.5 w-2.5" />
-                                        </a>
+                                        {work.edition.pdf && (
+                                          <a href={work.edition.pdf} target="_blank" rel="noopener noreferrer"
+                                             className="inline-flex items-center gap-1 text-[10px] tracking-widest uppercase text-[var(--c-7b7267)] hover:text-[var(--c-eee8dd)] transition-colors"
+                                             style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+                                            PDF <ExternalLink className="h-2.5 w-2.5" />
+                                          </a>
+                                        )}
+                                        {work.edition.imslp && (
+                                          <a href={work.edition.imslp} target="_blank" rel="noopener noreferrer"
+                                             className="inline-flex items-center gap-1 text-[10px] tracking-widest uppercase text-[var(--c-7b7267)] hover:text-[var(--c-eee8dd)] transition-colors"
+                                             style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+                                            IMSLP <ExternalLink className="h-2.5 w-2.5" />
+                                          </a>
+                                        )}
                                       </div>
                                     )}
                                   </div>
