@@ -1,3 +1,4 @@
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { DropCap } from "./DropCap";
 import { InkReveal, Reveal, RuleReveal } from "./Reveal";
 import { Tilt } from "./Tilt";
@@ -32,6 +33,19 @@ export function FrontPage() {
     )
     .replace(/^\w/, (c) => c.toUpperCase());
 
+  // Above-the-fold parallax. Tied to window scroll from 0, so nothing shifts at
+  // rest — the layers only part into depth once the reader begins to scroll:
+  // the lead rises slowly (foreground), the index slip drifts faster and fades
+  // back (a sheet settling behind). Bows out entirely under reduced motion.
+  const reduceMotion = useReducedMotion();
+  const { scrollY } = useScroll();
+  const leadY = useTransform(scrollY, [0, 720], [0, -150]);
+  const leadScale = useTransform(scrollY, [0, 720], [1, 0.9]);
+  const leadOpacity = useTransform(scrollY, [0, 620], [1, 0.12]);
+  const stripY = useTransform(scrollY, [0, 720], [0, -70]);
+  const indexY = useTransform(scrollY, [0, 720], [0, -260]);
+  const indexOpacity = useTransform(scrollY, [0, 520], [1, 0]);
+
   const index = [
     { dept: t.about.dept, href: "#about" },
     { dept: t.rack.dept, href: "#works" },
@@ -52,6 +66,7 @@ export function FrontPage() {
       <div className="max-w-6xl mx-auto">
         {/* Stop-press / edition strip — the cipher masthead now leads above,
             so the page opens straight onto the edition line. */}
+        <motion.div style={reduceMotion ? undefined : { y: stripY }}>
         <RuleReveal className="np-rule-strong" />
         <Reveal as="p" delay={0.15} y={6} className="np-kicker flex flex-wrap items-center justify-center gap-x-4 gap-y-1 py-2 text-[var(--c-8a8071)]">
           <span className="np-smallcaps text-[var(--c-cbc2b0)]">{f.edition}</span>
@@ -65,10 +80,18 @@ export function FrontPage() {
           <span className="np-smallcaps hidden text-[var(--c-7b7267)] sm:inline">{t.masthead}</span>
         </Reveal>
         <RuleReveal className="np-rule-strong" delay={0.1} />
+        </motion.div>
 
         {/* Above the fold: lead story + index box */}
         <div className="mt-6 sm:mt-8 grid gap-8 lg:grid-cols-[1fr_17rem] lg:gap-12 xl:grid-cols-1">
-          <article className="lg:border-r lg:border-[var(--np-rule)] lg:pr-12 xl:border-r-0 xl:pr-0">
+          <motion.article
+            style={
+              reduceMotion
+                ? undefined
+                : { y: leadY, scale: leadScale, opacity: leadOpacity, transformOrigin: "left top" }
+            }
+            className="lg:border-r lg:border-[var(--np-rule)] lg:pr-12 xl:border-r-0 xl:pr-0"
+          >
             <Reveal as="p" delay={0.25} y={6} className="np-kicker text-[var(--c-cbc2b0)]">{f.theLead}</Reveal>
             <InkReveal delay={0.3} tilt>
               <h1 className="np-head np-letterpress np-misprint mt-3 text-5xl font-black leading-[0.94] tracking-tight text-[var(--c-f0ead8)] sm:text-7xl [text-wrap:balance] [overflow-wrap:break-word]">
@@ -90,9 +113,13 @@ export function FrontPage() {
                 {f.continued}
               </button>
             </Reveal>
-          </article>
+          </motion.article>
 
-          <Reveal as="div" delay={0.45} y={16} className="h-fit xl:hidden">
+          <motion.div
+            style={reduceMotion ? undefined : { y: indexY, opacity: indexOpacity }}
+            className="h-fit xl:hidden"
+          >
+          <Reveal as="div" delay={0.45} y={16} className="h-fit">
             {/* The index prints on its own slip of paper, stacked on two more
                 beneath — np-stack needs the opaque background to occlude. The
                 whole pile tips gently toward the pointer, held in the hand. */}
@@ -121,6 +148,7 @@ export function FrontPage() {
             </aside>
             </Tilt>
           </Reveal>
+          </motion.div>
         </div>
       </div>
     </section>

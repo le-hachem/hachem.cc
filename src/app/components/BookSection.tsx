@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useMotionTemplate, useReducedMotion, useTransform } from "motion/react";
+import { useScrubProgress } from "./scroll";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { Library } from "lucide-react";
 import { LiliBoulangerLibrary } from "./LiliBoulangerLibrary";
@@ -18,19 +19,22 @@ const LILI_BOULANGER_PORTRAIT =
 export function BookSection() {
   const { t } = useLanguage();
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
-
-  // The inset portrait drifts a touch slower than the column around it — the
-  // slight parallax of a tipped-in plate. Disabled under reduced motion.
-  const figureRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: figureRef,
-    offset: ["start end", "end start"],
-  });
-  const figureY = useTransform(scrollYProgress, [0, 1], [26, -26]);
+
+  // The portrait "develops" as the section scrolls through — an old print
+  // pulling into focus, from soft, flat and faded to sharp and resolved — while
+  // it stays pinned beside the restoration story. Reduced motion gets the
+  // finished, resolved plate with no scrub.
+  const sectionRef = useRef<HTMLElement>(null);
+  const develop = useScrubProgress(sectionRef, ["start 0.9", "start 0.2"]);
+  const devContrast = useTransform(develop, [0, 1], [0.5, 1.08]);
+  const devBright = useTransform(develop, [0, 1], [1.3, 1]);
+  const devSat = useTransform(develop, [0, 1], [0.35, 1]);
+  const devScale = useTransform(develop, [0, 1], [1.16, 1]);
+  const devFilter = useMotionTemplate`contrast(${devContrast}) brightness(${devBright}) saturate(${devSat})`;
 
   return (
-    <section className={`relative px-4 py-14 sm:py-28 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
+    <section ref={sectionRef} className={`relative px-4 py-14 sm:py-28 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
       <div className="max-w-6xl mx-auto">
         <SectionHeading
           index={hideDispatches ? "04" : "05"}
@@ -71,18 +75,27 @@ export function BookSection() {
             </Reveal>
           </article>
 
-          {/* Inset figure */}
-          <Reveal as="figure" y={20} amount={0.2} className="md:pt-1">
-            <motion.div ref={figureRef} style={reduceMotion ? undefined : { y: figureY }}>
+          {/* Inset figure — pinned beside the story, developing into focus */}
+          <Reveal as="figure" y={20} amount={0.2} className="md:pt-1 md:sticky md:top-24 md:self-start">
+            <div>
             <div className="relative">
               <PlateCorners />
               <Tilt max={5}>
                 <div className="np-screen aspect-[3/4] overflow-hidden border border-[var(--c-201e1c)] bg-[var(--c-161413)] shadow-[0_22px_44px_-26px_rgba(0,0,0,0.75)]">
-                  <ImageWithFallback
-                    src={LILI_BOULANGER_PORTRAIT}
-                    alt="Lili Boulanger, portrait photograph (Bain News Service, 1918, Library of Congress)"
-                    className="np-halftone h-full w-full object-cover object-top"
-                  />
+                  <motion.div
+                    className="h-full w-full"
+                    style={
+                      reduceMotion
+                        ? undefined
+                        : { scale: devScale, filter: devFilter, transformOrigin: "center 30%" }
+                    }
+                  >
+                    <ImageWithFallback
+                      src={LILI_BOULANGER_PORTRAIT}
+                      alt="Lili Boulanger, portrait photograph (Bain News Service, 1918, Library of Congress)"
+                      className="np-halftone h-full w-full object-cover object-top"
+                    />
+                  </motion.div>
                 </div>
               </Tilt>
             </div>
@@ -96,7 +109,7 @@ export function BookSection() {
                 {t.book.portraitCaption}
               </p>
             </figcaption>
-            </motion.div>
+            </div>
           </Reveal>
         </div>
 

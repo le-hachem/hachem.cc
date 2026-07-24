@@ -25,6 +25,7 @@ import { FrontPage } from "./components/FrontPage";
 import { RippedEdge } from "./components/RippedEdge";
 import { RegistrationMarks } from "./components/Ornaments";
 import { EasterEggs } from "./components/EasterEggs";
+import { Sheet } from "./components/scroll";
 import { getCompositions } from "./i18n/compositions";
 import { hideDispatches } from "./i18n/dispatches";
 import { useLanguage } from "./i18n/LanguageContext";
@@ -145,7 +146,7 @@ export default function App() {
 
   return (
     <MotionConfig reducedMotion="user">
-    <div className="relative min-h-screen overflow-x-hidden bg-[var(--c-121110)]">
+    <div className="relative min-h-screen bg-[var(--c-121110)]" style={{ overflowX: "clip" }}>
       {/* Mobile / tablet nav (below xl) — the pocket edition's hamburger. */}
       <div className="xl:hidden">
         <NavHeader edition={isLight ? "day" : "night"} onToggleEdition={toggleEdition} />
@@ -185,50 +186,50 @@ export default function App() {
       </div>
 
       {/* About */}
-      <div id="about" className="np-sheet relative z-10 border-t border-[var(--seam)] bg-[var(--c-151414)] scroll-mt-12 xl:scroll-mt-32">
+      <Sheet id="about" className="np-sheet relative z-10 border-t border-[var(--seam)] bg-[var(--c-151414)] scroll-mt-12 xl:scroll-mt-32">
         <AboutSection />
-      </div>
+      </Sheet>
 
       {/* Featured works */}
-      <div id="works" className="np-sheet relative z-10 border-t border-[var(--seam)] bg-[var(--c-1a1816)] scroll-mt-12 xl:scroll-mt-32">
+      <Sheet id="works" className="np-sheet relative z-10 border-t border-[var(--seam)] bg-[var(--c-1a1816)] scroll-mt-12 xl:scroll-mt-32">
         <CompositionRack
           compositions={compositions}
           onCompositionClick={(c) => setSelectedId(c.id)}
           onViewAllClick={() => setIsLibraryOpen(true)}
         />
-      </div>
+      </Sheet>
 
       {/* Concert diary / Agenda */}
-      <div id="agenda" className="np-sheet relative z-10 border-t border-[var(--seam)] bg-[var(--c-151414)] scroll-mt-12 xl:scroll-mt-32">
+      <Sheet id="agenda" className="np-sheet relative z-10 border-t border-[var(--seam)] bg-[var(--c-151414)] scroll-mt-12 xl:scroll-mt-32">
         <ConcertsSection />
-      </div>
+      </Sheet>
 
       {/* Dispatches — the news column (optional, via VITE_HIDE_DISPATCHES) */}
       {!hideDispatches && (
-        <div id="dispatches" className="np-sheet relative z-10 border-t border-[var(--seam)] bg-[var(--c-1a1816)] scroll-mt-12 xl:scroll-mt-32">
+        <Sheet id="dispatches" className="np-sheet relative z-10 border-t border-[var(--seam)] bg-[var(--c-1a1816)] scroll-mt-12 xl:scroll-mt-32">
           <DispatchesSection />
-        </div>
+        </Sheet>
       )}
 
       {/* Lili Boulanger Restoration Project */}
-      <div id="projects" className={`np-sheet relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
+      <Sheet id="projects" className={`np-sheet relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
         <BookSection />
-      </div>
+      </Sheet>
 
       {/* Services */}
-      <div id="services" className={`np-sheet relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
+      <Sheet id="services" className={`np-sheet relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
         <ServicesSection />
-      </div>
+      </Sheet>
 
       {/* Commissions */}
-      <div id="commissions" className={`np-sheet relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
+      <Sheet id="commissions" className={`np-sheet relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-1a1816)]" : "bg-[var(--c-151414)]"}`}>
         <CommissionsSection />
-      </div>
+      </Sheet>
 
-      {/* Contact */}
-      <div id="contact" className={`np-sheet relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
+      {/* Contact — the final sheet; grows in and holds (never shrinks off-foot) */}
+      <Sheet exit={false} id="contact" className={`np-sheet relative z-10 border-t border-[var(--seam)] scroll-mt-12 xl:scroll-mt-32 ${hideDispatches ? "bg-[var(--c-151414)]" : "bg-[var(--c-1a1816)]"}`}>
         <ContactSection />
-      </div>
+      </Sheet>
 
       {/* End of the paper — the last sheet simply tears off, the dark stone
           showing beneath the ragged edge. */}
