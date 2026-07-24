@@ -92,9 +92,9 @@ const source: CompositionSource[] = [
     durationSeconds: 1447.97,
     category: "Large Ensemble",
     description: {
-      en: "A dramatic cantata after Goethe's Faust, following the pact between the restless scholar and Mephistopheles. Written in January 2025, it alternates aria and chorus in the tradition of the German oratorio, moving through temptation, rapture and reckoning. The harmonic language is late Romantic, with a broader, almost cinematic orchestral colour in the infernal scenes.",
-      fr: "Cantate dramatique d'après le Faust de Goethe, retraçant le pacte entre le savant tourmenté et Méphistophélès. Composée en janvier 2025, elle alterne airs et chœurs dans la tradition de l'oratorio allemand, traversant la tentation, l'extase et le jugement. Le langage harmonique est postromantique, avec une couleur orchestrale plus ample, presque cinématographique, dans les scènes infernales.",
-      de: "Eine dramatische Kantate nach Goethes Faust, die den Pakt zwischen dem ruhelosen Gelehrten und Mephistopheles verfolgt. Im Januar 2025 geschrieben, wechselt sie zwischen Arie und Chor in der Tradition des deutschen Oratoriums und durchschreitet Versuchung, Verzückung und Abrechnung. Die harmonische Sprache ist spätromantisch, mit einer breiteren, fast filmischen Orchesterfarbe in den Höllenszenen.",
+      en: "A dramatic cantata after Goethe's Faust, written in January 2025. It follows the pact between the restless scholar and Mephistopheles, and alternates aria and chorus in the tradition of the German oratorio. The harmonic language is late Romantic, turning darker and almost cinematic in the infernal scenes.",
+      fr: "Cantate dramatique d'après le Faust de Goethe, composée en janvier 2025. Elle retrace le pacte entre le savant tourmenté et Méphistophélès et alterne airs et chœurs dans la tradition de l'oratorio allemand. Le langage harmonique est postromantique ; il s'assombrit et devient presque cinématographique dans les scènes infernales.",
+      de: "Eine dramatische Kantate nach Goethes Faust, geschrieben im Januar 2025. Sie verfolgt den Pakt zwischen dem ruhelosen Gelehrten und Mephistopheles und wechselt zwischen Arie und Chor in der Tradition des deutschen Oratoriums. Die harmonische Sprache ist spätromantisch; in den Höllenszenen wird sie dunkler und fast filmisch.",
     },
     instrumentation: [
       "Piccolo", "2 Flutes", "2 Oboes", "Cor Anglais",
